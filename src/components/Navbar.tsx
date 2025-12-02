@@ -32,12 +32,7 @@ export default function Navbar() {
                     <Link to="/post" className="hover:text-[#00ff99] transition">
             Post
           </Link>
-  <Link
-    to="/login"
-    className="bg-[#00ff99] text-black font-semibold px-4 py-2 rounded hover:bg-[#00cc77] transition"
-  >
-    Login
-  </Link>
+
         </div>
       </div>
     </nav>
