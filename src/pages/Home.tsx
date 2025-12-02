@@ -102,7 +102,7 @@ export default function Home() {
           {posts.map((p, idx) => (
             <a
               key={p.slug}
-              href={`/posts/${p.slug}`}
+              href={`/post/${p.slug}`}
               className="block p-6 rounded-xl bg-[#00ff99]/10 border border-[#00ff99]/20 
                          hover:bg-[#00ff99]/20 hover:scale-105 hover:shadow-xl transition-transform animate-fadeIn"
               style={{ animationDelay: `${idx * 200}ms` }}

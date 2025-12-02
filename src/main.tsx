@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/posts/:slug" element={<PostPage />} />
+        <Route path="/post/:slug" element={<PostPage />} />
         <Route path="/about" element={<About />} />
       </Routes>
     </BrowserRouter>
