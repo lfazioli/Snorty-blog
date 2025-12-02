@@ -1,4 +1,5 @@
 
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { posts } from "../posts/posts";
@@ -6,21 +7,24 @@ import { posts } from "../posts/posts";
 export default function PostPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+
+  // Trova il post corrispondente
   const post = posts.find(p => p.slug === slug);
 
-  if (!post) return (
-    <Layout>
-      <div className="text-white text-center py-20">
-        <p className="mb-4">Post not found...</p>
-        <button
-          onClick={() => navigate("/")}
-          className="px-4 py-2 bg-[#00ff99]/20 border border-[#00ff99] text-[#00ff99] rounded-md hover:bg-[#00ff99]/30 transition transform hover:scale-105"
-        >
-          Go Back Home
-        </button>
-      </div>
-    </Layout>
-  );
+  if (!post)
+    return (
+      <Layout>
+        <div className="text-white text-center py-20">
+          <p className="mb-4">Post not found...</p>
+          <button
+            onClick={() => navigate("/")}
+            className="px-4 py-2 bg-[#00ff99]/20 border border-[#00ff99] text-[#00ff99] rounded-md hover:bg-[#00ff99]/30 transition transform hover:scale-105"
+          >
+            Go Back Home
+          </button>
+        </div>
+      </Layout>
+    );
 
   return (
     <Layout>
@@ -44,7 +48,8 @@ export default function PostPage() {
 
         {/* Post Content */}
         <article className="prose prose-invert max-w-none space-y-6 animate-fadeIn">
-          {post.content}
+          {/* Se post.content è JSX, renderizzalo direttamente */}
+          {React.isValidElement(post.content) ? post.content : <>{post.content}</>}
         </article>
 
         {/* Back Button */}
