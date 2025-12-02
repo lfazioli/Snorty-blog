@@ -1,4 +1,4 @@
-import Post1 from './Post1';
+import Post1 from './Post1'; // ← senza .tsx
 
 export const posts = [
   {
