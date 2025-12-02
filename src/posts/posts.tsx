@@ -6,7 +6,7 @@ export const posts = [
     slug: "kali-virtualbox",
     title: "⚡ Kali Linux on VirtualBox",
     date: "2025-12-02",
-    image: "https://raw.githubusercontent.com/USERNAME/REPO/main/images/kali-virtualbox.png",
+    image: "https://www.kali.org/wallpapers/images/2024/kali-ferrofluid.jpg",
     content: <Post1 />
   },
   // altri post...
