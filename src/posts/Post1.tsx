@@ -1,61 +1,65 @@
+// src/posts/Post1.tsx
 const Post1 = () => (
-  <div className="space-y-6 text-white">
+  <div className="space-y-6">
     <p>
-      Kali Linux is a powerful penetration testing and ethical hacking distribution. 
-      Running it inside a VirtualBox VM ensures your host system stays safe and isolated.
+      Keep your host clean and your Kali Linux contained. ISO = full control, OVA = speed.
     </p>
 
-    {/* Image 1 */}
-    <img 
-      src="https://upload.wikimedia.org/wikipedia/commons/9/9f/Kali_Linux_2020.png" 
-      alt="Kali Linux logo" 
-      className="w-full rounded-lg shadow-2xl border border-[#00ff99]/50" 
+    <img
+      src="https://raw.githubusercontent.com/USERNAME/REPO/main/images/kali-virtualbox.png"
+      alt="Kali Linux on VirtualBox"
+      className="w-full rounded-lg shadow-lg"
     />
 
-    <h2 className="text-2xl font-bold text-[#00ff99] mt-4">📥 Option 1 — Install from ISO</h2>
-    <p>
-      Installing Kali from the ISO gives you full control over the system. Follow these steps:
-    </p>
-    <ol className="list-decimal list-inside space-y-2">
-      <li>Open VirtualBox → click "New" → Name: <code>Kali Linux</code> → Type: Linux → Version: Debian (64-bit)</li>
-      <li>Allocate RAM: 2048MB minimum (better 4096MB+)</li>
-      <li>Create a virtual hard disk: VDI, dynamically allocated, 20–30GB</li>
-      <li>Start VM and attach the Kali ISO</li>
-      <li>Select <strong>Graphical Install</strong> and configure language, keyboard, and user</li>
-      <li>Partitioning: Guided – Use Entire Disk → Install GRUB → Reboot</li>
-    </ol>
-
-    {/* Image 2 */}
-    <img 
-      src="https://www.kali.org/images/kali-virtualbox-vm.png" 
-      alt="Kali VirtualBox setup" 
-      className="w-full rounded-lg shadow-2xl border border-[#00ff99]/50" 
-    />
-
-    <h2 className="text-2xl font-bold text-[#00ff99] mt-4">🚀 Option 2 — Preconfigured OVA</h2>
-    <p>
-      If you want to get started fast, download the official VirtualBox OVA and import it:
-    </p>
-    <ol className="list-decimal list-inside space-y-2">
-      <li>Download the OVA from the official Kali Linux site</li>
-      <li>VirtualBox → File → Import Appliance → select the OVA → Import</li>
-      <li>Login with default credentials and update the system</li>
-    </ol>
-
-    <h2 className="text-2xl font-bold text-[#00ff99] mt-4">🔧 Tips & Tweaks</h2>
-    <ul className="list-disc list-inside space-y-2">
-      <li>Enable 3D acceleration and 128MB video memory for better performance</li>
-      <li>Use 2+ CPU cores if your host allows</li>
-      <li>Enable NAT or Bridged networking depending on your needs</li>
-      <li>Install VirtualBox Guest Additions for clipboard sharing and drag’n’drop</li>
+    <h2 className="text-2xl font-bold text-[#00ff99]">Prerequisites 🧰</h2>
+    <ul className="list-disc list-inside">
+      <li>VirtualBox → official download</li>
+      <li>Kali Linux ISO → for full control</li>
+      <li>Kali OVA → preconfigured, fast setup</li>
+      <li>RAM: 4GB minimum (8GB+ recommended)</li>
+      <li>Disk: 20–30GB</li>
     </ul>
 
-    <h2 className="text-2xl font-bold text-[#00ff99] mt-4">✅ Ready to go</h2>
-    <p>
-      Your Kali lab is now isolated, safe, and ready for ethical hacking experiments. ISO = full control, OVA = speed.
+    <h2 className="text-2xl font-bold text-[#00ff99]">Installation Option 1 — ISO</h2>
+    <p>For full manual control of the VM:</p>
+    <ol className="list-decimal list-inside space-y-1">
+      <li>Create a new VM in VirtualBox: Type Linux → Debian 64-bit</li>
+      <li>Assign RAM and create a dynamically allocated VDI disk</li>
+      <li>Attach the Kali ISO and boot → Graphical Install</li>
+      <li>Set language, keyboard, user, password</li>
+      <li>Guided partition → install GRUB → reboot</li>
+      <li>Update system: <code>sudo apt update && sudo apt upgrade -y</code></li>
+    </ol>
+
+    <h2 className="text-2xl font-bold text-[#00ff99]">Installation Option 2 — OVA</h2>
+    <p>Quick setup with preconfigured VM:</p>
+    <ol className="list-decimal list-inside space-y-1">
+      <li>Download the official OVA for VirtualBox</li>
+      <li>Import in VirtualBox → File → Import Appliance</li>
+      <li>Start VM → login with default credentials</li>
+      <li>Update system: <code>sudo apt update && sudo apt upgrade -y</code></li>
+    </ol>
+
+    <h2 className="text-2xl font-bold text-[#00ff99]">Performance Tweaks 🔧</h2>
+    <ul className="list-disc list-inside">
+      <li>Video Memory: 128MB+, enable 3D acceleration if needed</li>
+      <li>Processors: 2+ cores if host supports</li>
+      <li>Network: NAT or Bridged</li>
+      <li>Enable Shared Clipboard + Drag’n’Drop</li>
+      <li>Optional: install Guest Additions for better integration</li>
+    </ul>
+
+    <h2 className="text-2xl font-bold text-[#00ff99]">Post-install Essentials 🛡️</h2>
+    <ul className="list-disc list-inside">
+      <li>Install extended Kali tools: <code>sudo apt install -y kali-linux-large</code></li>
+      <li>Create a clean snapshot</li>
+      <li>Keep networks isolated, always test ethically</li>
+    </ul>
+
+    <p className="font-semibold">
+      Your Kali lab is ready! ISO = full control, OVA = speed. Stay safe, test ethically.
     </p>
   </div>
 );
 
 export default Post1;
-
