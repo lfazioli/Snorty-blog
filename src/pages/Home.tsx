@@ -1,4 +1,4 @@
-import React from "react";
+
 import Layout from "../components/Layout";
 import { TypeAnimation } from "react-type-animation";
 
