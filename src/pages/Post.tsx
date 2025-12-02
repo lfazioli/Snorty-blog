@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { posts } from "../posts/posts";
