@@ -1,14 +1,16 @@
-import { Link } from "react-router-dom";
+interface CardProps {
+  title: string;
+  date: string;
+  image: string;
+  slug: string;
+}
 
-export default function PostCard({ meta }: any) {
+export default function Card({ title, date, image, slug }: CardProps) {
   return (
-    <Link
-      to={`/post/${meta.slug}`}
-      className="block border border-[#009966] rounded-lg p-4 hover:bg-[#00ff9915] transition duration-200"
-    >
-      <h2 className="text-2xl font-semibold">{meta.title}</h2>
-      <p className="opacity-70 text-sm">{meta.date}</p>
-      {meta.excerpt && <p className="mt-2 opacity-90">{meta.excerpt}</p>}
-    </Link>
+    <a href={`/posts/${slug}`} className="block p-4 rounded-xl bg-[#00ff99]/10 hover:scale-105 hover:shadow-lg transition transform">
+      <img src={image} alt={title} className="w-full rounded-lg mb-2 border border-[#00ff99]/50" />
+      <h3 className="text-xl font-bold text-[#00ff99]">{title}</h3>
+      <p className="text-gray-400">{date}</p>
+    </a>
   );
 }
