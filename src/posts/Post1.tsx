@@ -6,7 +6,7 @@ const Post1 = () => (
 
     {/* Immagine desktop Kali su VirtualBox */}
     <img
-      src="https://upload.wikimedia.org/wikipedia/commons/6/69/VirtualBox_Kali_Linux_29_03_2022_11_10_35.png"
+      src="https://i.ytimg.com/vi/V_Payl5FlgQ/sddefault.jpg"
       alt="Kali Linux on VirtualBox screenshot"
       className="w-full rounded-lg shadow-2xl border border-[#00ff99]/50"
     />
