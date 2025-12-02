@@ -1,6 +1,7 @@
 import Layout from "../components/Layout";
 import { TypeAnimation } from "react-type-animation";
-import { posts } from "../posts/posts"; // lista dei post in formato JS/TS
+import { posts } from "../posts/posts";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -28,12 +29,12 @@ export default function Home() {
 
         {/* Buttons */}
         <div className="flex gap-4 mb-12">
-          <a
-            href="/about"
+          <Link
+            to="/about"
             className="px-5 py-2 rounded-md bg-[#00ff99]/20 text-[#00ff99] border border-[#00ff99] hover:bg-[#00ff99]/30 transition transform hover:scale-105"
           >
             About Me
-          </a>
+          </Link>
 
           <a
             href="https://github.com/USERNAME"
@@ -100,9 +101,9 @@ export default function Home() {
 
         <div className="grid md:grid-cols-3 gap-6">
           {posts.map((p, idx) => (
-            <a
+            <Link
               key={p.slug}
-              href={`/post/${p.slug}`}
+              to={`/post/${p.slug}`}
               className="block p-6 rounded-xl bg-[#00ff99]/10 border border-[#00ff99]/20 
                          hover:bg-[#00ff99]/20 hover:scale-105 hover:shadow-xl transition-transform animate-fadeIn"
               style={{ animationDelay: `${idx * 200}ms` }}
@@ -110,10 +111,11 @@ export default function Home() {
               <img src={p.image} alt={p.title} className="w-full rounded-lg mb-4 border border-[#00ff99]/50" />
               <h3 className="text-xl font-bold text-[#00ff99] mb-2">{p.title}</h3>
               <p className="text-gray-400">{p.date}</p>
-            </a>
+            </Link>
           ))}
         </div>
       </section>
     </Layout>
   );
 }
+
