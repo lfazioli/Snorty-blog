@@ -9,7 +9,7 @@ export default function Post() {
 
   React.useEffect(() => {
     if (!slug) return;
-    const posts = getPosts();
+    const posts: any[] = getPosts();
     const found = posts.find((p: any) => p.meta?.slug === slug);
     setPost(found ?? null);
   }, [slug]);
