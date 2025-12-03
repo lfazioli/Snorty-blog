@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.png"; // Assicurati che il percorso sia corretto
+import logo from "../assets/logo.png";
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <nav className="border-b border-[#009966] bg-black/30 backdrop-blur-md">
+    <nav className="border-b border-[#009966] bg-black/30 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo + Nome blog */}
+        {/* Logo + Nome */}
         <div className="flex items-center gap-3">
-          {/* Logo a forma di cerchio */}
           <img
             src={logo}
             alt="Logo"
@@ -21,20 +23,65 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Menu + Bottone */}
-        <div className="flex gap-4 items-center text-[#eaffea]">
-          <Link to="/" className="hover:text-[#00ff99] transition">
+        {/* Desktop Menu */}
+        <div className="hidden md:flex gap-6 items-center text-[#eaffea]">
+          <Link to="/" className="hover:text-[#00ff99] transition">Home</Link>
+          <Link to="/about" className="hover:text-[#00ff99] transition">About</Link>
+          <Link to="/Posts" className="hover:text-[#00ff99] transition">Post</Link>
+
+          <Link
+            to="/login"
+            className="bg-[#00ff99] text-black font-semibold px-4 py-2 rounded hover:bg-[#00cc77] transition"
+          >
+            Login
+          </Link>
+        </div>
+
+        {/* Mobile Hamburger */}
+        <button
+          className="md:hidden text-[#00ff99] text-3xl"
+          onClick={() => setOpen(!open)}
+        >
+          {open ? "✕" : "☰"}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {open && (
+        <div className="md:hidden bg-black/50 backdrop-blur-md border-t border-[#009966] px-6 py-4 space-y-4 text-[#eaffea] animate-fadeIn">
+          <Link
+            to="/"
+            onClick={() => setOpen(false)}
+            className="block hover:text-[#00ff99] transition"
+          >
             Home
           </Link>
-          <Link to="/about" className="hover:text-[#00ff99] transition">
+
+          <Link
+            to="/about"
+            onClick={() => setOpen(false)}
+            className="block hover:text-[#00ff99] transition"
+          >
             About
           </Link>
-                    <Link to="/post" className="hover:text-[#00ff99] transition">
+
+          <Link
+            to="/Posts"
+            onClick={() => setOpen(false)}
+            className="block hover:text-[#00ff99] transition"
+          >
             Post
           </Link>
 
+          <Link
+            to="/login"
+            onClick={() => setOpen(false)}
+            className="block bg-[#00ff99] text-black text-center font-semibold px-4 py-2 rounded hover:bg-[#00cc77] transition"
+          >
+            Login
+          </Link>
         </div>
-      </div>
+      )}
     </nav>
   );
 }
