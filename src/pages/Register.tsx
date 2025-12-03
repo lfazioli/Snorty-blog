@@ -1,21 +1,53 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import Layout from "../components/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (password !== confirmPassword) {
       alert("Le password non coincidono!");
       return;
     }
-    console.log("Register:", { email, password });
-    alert("Registrazione eseguita (demo)!");
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "register",
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        alert(data.error);
+        setLoading(false);
+        return;
+      }
+
+      alert("Registrazione completata! Ora puoi fare login.");
+      navigate("/login");
+
+    } catch (err) {
+      console.error(err);
+      alert("Errore durante la registrazione.");
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -23,6 +55,7 @@ export default function Register() {
       <div className="flex flex-col items-center justify-center min-h-[70vh] px-6">
         <img src={logo} alt="Logo" className="w-24 h-24 rounded-full mb-6" />
         <h1 className="text-3xl font-bold text-[#00ff99] mb-6">Register</h1>
+
         <form
           onSubmit={handleRegister}
           className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4"
@@ -62,13 +95,16 @@ export default function Register() {
 
           <button
             type="submit"
+            disabled={loading}
             className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition"
           >
-            Register
+            {loading ? "Loading..." : "Register"}
           </button>
 
           <div className="flex justify-between text-xs text-[#00ff99]/80 mt-2">
- <Link to="/login" className="hover:underline">Already have an account?</Link>
+            <Link to="/login" className="hover:underline">
+              Already have an account?
+            </Link>
           </div>
         </form>
       </div>

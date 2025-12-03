@@ -1,17 +1,50 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import logo from "../assets/logo.png"; // Assicurati che il percorso sia corretto
-import Layout from "../components/Layout"; // Se vuoi usare lo stesso layout delle altre pagine
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
+import Layout from "../components/Layout";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Qui in futuro collegherai il database / autenticazione
-    console.log("Login:", { email, password });
-    alert("Login eseguito (demo)!");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "login",
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        alert(data.error);
+        setLoading(false);
+        return;
+      }
+
+      // Salvo il token JWT
+      localStorage.setItem("token", data.token);
+
+      alert("Login effettuato!");
+
+      navigate("/"); // reindirizza alla home
+
+    } catch (err) {
+      console.error(err);
+      alert("Errore durante il login.");
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -52,14 +85,15 @@ export default function Login() {
 
           <button
             type="submit"
+            disabled={loading}
             className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition"
           >
-            Login
+            {loading ? "Loading..." : "Login"}
           </button>
 
           <div className="flex justify-between text-xs text-[#00ff99]/80 mt-2">
-         <Link to="/register" className="hover:underline">Register</Link>
-         <Link to="/forgot-password" className="hover:underline">Forgot-Password</Link>
+            <Link to="/register" className="hover:underline">Register</Link>
+            <Link to="/forgot-password" className="hover:underline">Forgot-Password</Link>
           </div>
         </form>
       </div>
