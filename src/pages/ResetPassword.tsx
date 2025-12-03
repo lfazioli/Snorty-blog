@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function ResetPassword() {
   const { token } = useParams();
@@ -18,6 +18,7 @@ export default function ResetPassword() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword: password }),
       });
+
       const data = await res.json();
       alert(data.message);
       navigate("/login");
@@ -62,3 +63,4 @@ export default function ResetPassword() {
     </Layout>
   );
 }
+

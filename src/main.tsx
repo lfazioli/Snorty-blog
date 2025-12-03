@@ -10,6 +10,8 @@ import About from "./pages/about";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -22,7 +24,8 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+       <Route path="/reset-password/:token" element={<ResetPassword />} />
+
  
       </Routes>
     </HashRouter>
