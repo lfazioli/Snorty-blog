@@ -2,9 +2,9 @@
 import "dotenv/config";
 import { Pool } from "pg";
 
-const databaseUrl = process.env.DATABASE_URK;
+const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
-  throw new Error("DATABASE_URK non impostata nelle variabili d'ambiente");
+  throw new Error("DATABASE_URL non impostata nelle variabili d'ambiente");
 }
 
 export const pool = new Pool({
