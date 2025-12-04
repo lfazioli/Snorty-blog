@@ -20,17 +20,17 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/reset-password", {
+      const res = await fetch("/api/auth/reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword: password }),
       });
 
-      const data = await res.json();
+      const isJson = res.headers.get("content-type")?.includes("application/json");
+      const data = isJson ? await res.json() : null;
 
       if (!res.ok) {
-        alert(data.error || "Errore durante il reset");
-        setLoading(false);
+        alert((data && data.error) || "Errore durante il reset");
         return;
       }
 
@@ -71,11 +71,7 @@ export default function ResetPassword() {
             />
           </label>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition"
-          >
+          <button type="submit" disabled={loading} className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition">
             {loading ? "Aggiornamento..." : "Reset Password"}
           </button>
         </form>

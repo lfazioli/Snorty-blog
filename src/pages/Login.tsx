@@ -15,29 +15,25 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "login",
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const isJson = res.headers.get("content-type")?.includes("application/json");
+      const data = isJson ? await res.json() : null;
 
       if (!res.ok) {
-        alert(data.error || "Errore durante il login.");
-        setLoading(false);
+        alert((data && data.error) || `Errore durante il login (HTTP ${res.status})`);
         return;
       }
 
-      // Salvo il token JWT in localStorage (coerente con il backend /api/auth)
+      // Salva JWT nel localStorage (coerente con tua scelta)
       localStorage.setItem("token", data.token);
 
       alert("Login effettuato!");
-      navigate("/"); // reindirizza alla home
+      navigate("/");
     } catch (err) {
       console.error(err);
       alert("Errore durante il login.");
@@ -49,17 +45,10 @@ export default function Login() {
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center min-h-[70vh] px-6">
-        {/* Logo */}
         <img src={logo} alt="Logo" className="w-24 h-24 rounded-full mb-6" />
-
-        {/* Titolo */}
         <h1 className="text-3xl font-bold text-[#00ff99] mb-6">Login</h1>
 
-        {/* Form */}
-        <form
-          onSubmit={handleLogin}
-          className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4"
-        >
+        <form onSubmit={handleLogin} className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4">
           <label className="flex flex-col text-white text-sm">
             Email
             <input
@@ -82,11 +71,7 @@ export default function Login() {
             />
           </label>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition"
-          >
+          <button type="submit" disabled={loading} className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition">
             {loading ? "Loading..." : "Login"}
           </button>
 

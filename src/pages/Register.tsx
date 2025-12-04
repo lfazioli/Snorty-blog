@@ -1,3 +1,4 @@
+// src/pages/Register.tsx
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import Layout from "../components/Layout";
@@ -21,33 +22,28 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "register",
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const isJson = res.headers.get("content-type")?.includes("application/json");
+      const data = isJson ? await res.json() : null;
 
-      if (data.error) {
-        alert(data.error);
-        setLoading(false);
+      if (!res.ok) {
+        alert((data && data.error) || `Errore durante la registrazione (HTTP ${res.status})`);
         return;
       }
 
       alert("Registrazione completata! Ora puoi fare login.");
       navigate("/login");
-
     } catch (err) {
       console.error(err);
       alert("Errore durante la registrazione.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -56,10 +52,7 @@ export default function Register() {
         <img src={logo} alt="Logo" className="w-24 h-24 rounded-full mb-6" />
         <h1 className="text-3xl font-bold text-[#00ff99] mb-6">Register</h1>
 
-        <form
-          onSubmit={handleRegister}
-          className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4"
-        >
+        <form onSubmit={handleRegister} className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4">
           <label className="flex flex-col text-white text-sm">
             Email
             <input
@@ -93,18 +86,12 @@ export default function Register() {
             />
           </label>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition"
-          >
+          <button type="submit" disabled={loading} className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition">
             {loading ? "Loading..." : "Register"}
           </button>
 
           <div className="flex justify-between text-xs text-[#00ff99]/80 mt-2">
-            <Link to="/login" className="hover:underline">
-              Already have an account?
-            </Link>
+            <Link to="/login" className="hover:underline">Already have an account?</Link>
           </div>
         </form>
       </div>

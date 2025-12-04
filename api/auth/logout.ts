@@ -1,4 +1,5 @@
 // api/auth/logout.ts
+// Evita dipendenze da '@vercel/node' — usa i tipi built-in di Node.js
 import type { IncomingMessage, ServerResponse } from "http";
 
 export type VercelRequest = IncomingMessage & {

@@ -14,21 +14,21 @@ export default function ForgotPassword() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/password", {
+      const res = await fetch("/api/auth/forgot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
-      const data = await res.json();
+      const isJson = res.headers.get("content-type")?.includes("application/json");
+      const data = isJson ? await res.json() : null;
 
       if (!res.ok) {
-        alert(data.error || "Errore durante la richiesta di reset.");
+        alert((data && data.error) || "Errore durante la richiesta di reset.");
       } else {
-        // In dev: mostriamo link/token, e reindirizziamo alla pagina di reset
-        alert(data.message);
+        alert(data.message || "Controlla la tua email per il link di reset.");
         if (data.resetLink) {
-          navigate(data.resetLink);
+          navigate(data.resetLink); // es. /reset-password/<token>
         }
       }
     } catch (err) {
@@ -45,10 +45,7 @@ export default function ForgotPassword() {
         <img src={logo} alt="Logo" className="w-24 h-24 rounded-full mb-6" />
         <h1 className="text-3xl font-bold text-[#00ff99] mb-6">Forgot Password</h1>
 
-        <form
-          onSubmit={handleReset}
-          className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4"
-        >
+        <form onSubmit={handleReset} className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4">
           <label className="flex flex-col text-white text-sm">
             Inserisci la tua email
             <input
@@ -60,11 +57,7 @@ export default function ForgotPassword() {
             />
           </label>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition"
-          >
+          <button type="submit" disabled={loading} className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition">
             {loading ? "Invio in corso..." : "Reset Password"}
           </button>
 
