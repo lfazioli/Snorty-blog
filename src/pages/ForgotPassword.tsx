@@ -1,11 +1,13 @@
+// src/pages/ForgotPassword.tsx
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import Layout from "../components/Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,18 +22,21 @@ export default function ForgotPassword() {
 
       const data = await res.json();
 
-      if (data.error) {
-        alert(data.error);
+      if (!res.ok) {
+        alert(data.error || "Errore durante la richiesta di reset.");
       } else {
-        alert(data.message); // mostra link di reset (in demo loggato in console)
+        // In dev: mostriamo link/token, e reindirizziamo alla pagina di reset
+        alert(data.message);
+        if (data.resetLink) {
+          navigate(data.resetLink);
+        }
       }
-
     } catch (err) {
       console.error(err);
       alert("Errore durante la richiesta di reset.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

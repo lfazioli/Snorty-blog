@@ -1,3 +1,4 @@
+// src/pages/Login.tsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
@@ -26,25 +27,23 @@ export default function Login() {
 
       const data = await res.json();
 
-      if (data.error) {
-        alert(data.error);
+      if (!res.ok) {
+        alert(data.error || "Errore durante il login.");
         setLoading(false);
         return;
       }
 
-      // Salvo il token JWT
+      // Salvo il token JWT in localStorage (coerente con il backend /api/auth)
       localStorage.setItem("token", data.token);
 
       alert("Login effettuato!");
-
       navigate("/"); // reindirizza alla home
-
     } catch (err) {
       console.error(err);
       alert("Errore durante il login.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

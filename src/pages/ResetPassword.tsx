@@ -1,3 +1,4 @@
+// src/pages/ResetPassword.tsx
 import React, { useState } from "react";
 import Layout from "../components/Layout";
 import { useParams, useNavigate } from "react-router-dom";
@@ -6,11 +7,17 @@ export default function ResetPassword() {
   const { token } = useParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) return alert("Password non coincidono");
+    if (password !== confirmPassword) {
+      alert("Password non coincidono");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const res = await fetch("/api/reset-password", {
@@ -20,11 +27,20 @@ export default function ResetPassword() {
       });
 
       const data = await res.json();
-      alert(data.message);
+
+      if (!res.ok) {
+        alert(data.error || "Errore durante il reset");
+        setLoading(false);
+        return;
+      }
+
+      alert(data.message || "Password aggiornata");
       navigate("/login");
     } catch (err) {
       console.error(err);
       alert("Errore durante il reset");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -55,12 +71,15 @@ export default function ResetPassword() {
             />
           </label>
 
-          <button type="submit" className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition">
-            Reset Password
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition"
+          >
+            {loading ? "Aggiornamento..." : "Reset Password"}
           </button>
         </form>
       </div>
     </Layout>
   );
 }
-
