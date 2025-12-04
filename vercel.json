@@ -1,11 +1,10 @@
-
 {
   "routes": [
-    { "src": "/api/auth/register", "dest": "api/auth/register.ts" },
     { "src": "/api/auth/login", "dest": "api/auth/login.ts" },
-    { "src": "/api/auth/logout", "dest": "api/auth/logout.ts" },
+    { "src": "/api/auth/register", "dest": "api/auth/register.ts" },
     { "src": "/api/auth/forgot", "dest": "api/auth/forgot.ts" },
     { "src": "/api/auth/reset", "dest": "api/auth/reset.ts" },
+    { "src": "/api/auth/health", "dest": "api/auth/health.ts" },
     { "src": "/api/posts", "dest": "api/posts.ts" }
   ]
 }
