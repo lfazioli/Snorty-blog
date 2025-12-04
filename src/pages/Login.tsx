@@ -3,12 +3,14 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Layout from "../components/Layout";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,8 +31,8 @@ export default function Login() {
         return;
       }
 
-      // Salva JWT nel localStorage (coerente con tua scelta)
-      localStorage.setItem("token", data.token);
+      // Imposta stato auth (salva token e decodifica utente)
+      login(data.token);
 
       alert("Login effettuato!");
       navigate("/");
@@ -48,7 +50,10 @@ export default function Login() {
         <img src={logo} alt="Logo" className="w-24 h-24 rounded-full mb-6" />
         <h1 className="text-3xl font-bold text-[#00ff99] mb-6">Login</h1>
 
-        <form onSubmit={handleLogin} className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4">
+        <form
+          onSubmit={handleLogin}
+          className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4"
+        >
           <label className="flex flex-col text-white text-sm">
             Email
             <input
@@ -71,7 +76,11 @@ export default function Login() {
             />
           </label>
 
-          <button type="submit" disabled={loading} className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition">
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition"
+          >
             {loading ? "Loading..." : "Login"}
           </button>
 
