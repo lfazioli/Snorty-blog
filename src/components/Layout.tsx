@@ -2,6 +2,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
@@ -11,12 +12,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-[#0a0f0a] text-[#eaffea] font-mono">
       <header className="border-b border-[#00ff99]/30">
         <div className="max-w-4xl mx-auto px-6 py-3 flex items-center justify-between">
-          <nav className="flex gap-4">
-            <Link to="/" className="text-[#00ff99] hover:underline">Home</Link>
-            <Link to="/about" className="text-[#00ff99] hover:underline">About</Link>
-            <Link to="/Posts" className="text-[#00ff99] hover:underline">Post</Link>
-          </nav>
+          {/* Sinistra: logo + nav */}
+          <div className="flex items-center gap-4">
+            <img
+              src={logo}
+              alt="Logo"
+              className="w-8 h-8 rounded-full ring-2 ring-[#00ff99]"
+            />
+            <nav className="flex gap-4">
+              <Link to="/" className="text-[#00ff99] hover:underline">Home</Link>
+              <Link to="/about" className="text-[#00ff99] hover:underline">About</Link>
+              <Link to="/Posts" className="text-[#00ff99] hover:underline">Post</Link>
+            </nav>
+          </div>
 
+          {/* Destra: stato auth */}
           <div className="flex items-center gap-3">
             {user ? (
               <>
