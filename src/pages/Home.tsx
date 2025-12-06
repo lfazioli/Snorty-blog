@@ -37,7 +37,7 @@ export default function Home() {
           </Link>
 
           <a
-            href="https://github.com/USERNAME"
+            href="https://github.com/lfazioli"
             target="_blank"
             className="px-5 py-2 rounded-md bg-[#00ff99]/20 text-[#00ff99] border border-[#00ff99] text-center hover:bg-[#00ff99]/30 transition transform hover:scale-105"
           >
