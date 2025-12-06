@@ -5,7 +5,7 @@ const Post1 = () => (
 <Layout>
   <div className="max-w-3xl mx-auto py-10 px-4 text-white space-y-8 leading-relaxed">
         <h1 className="pacity-90 max-w-2xl mb-8 text-4xl font-bold text-center text-[#00ff99]">
-    title: "⚡ Kali Linux on VirtualBox",
+    ⚡ Kali Linux on VirtualBox
       
     </h1>
 
