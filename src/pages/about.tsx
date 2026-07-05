@@ -24,7 +24,7 @@ export default function About() {
           {/* Testo descrittivo */}
           <div className="flex-1 space-y-4">
             <p className="text-lg opacity-90">
-              Hi! I’m Lorenzo, also known online as Snorty. I’m an 18-year-old tech enthusiast from Rome, Italy, with a strong passion for cybersecurity, ethical hacking, and programming.
+              Hi! I’m Lorenzo, also known online as Snorty. I’m an 19-year-old tech enthusiast from Rome, Italy, with a strong passion for cybersecurity, ethical hacking, and programming.
             </p>
             <p className="text-lg opacity-90">
               I love exploring how systems work, breaking them down, understanding their weaknesses, and learning how to make them stronger. Over the years, I’ve worked on several projects — one of the most notable being IPScan, a Raycast extension I built to speed up and simplify network scanning tasks.
