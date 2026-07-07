@@ -1,6 +1,7 @@
 // api/auth/health.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { pool, ensureSchema } from "../../server/db";
+import { pool, ensureSchema } from "../../server/db.js";
+
 
 export default async function handler(_req: VercelRequest, res: VercelResponse) {
   try {

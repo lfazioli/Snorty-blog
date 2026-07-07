@@ -3,8 +3,8 @@
 // PUT/PATCH      /api/posts/:slug -> modifica (solo admin)
 // DELETE         /api/posts/:slug -> elimina (solo admin)
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { pool, ensureSchema } from "../../server/db";
-import { getSessionFromRequest, requireAdmin } from "../../server/auth";
+import { pool, ensureSchema } from "../../server/db.js";
+import { getSessionFromRequest, requireAdmin } from "../../server/auth.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {

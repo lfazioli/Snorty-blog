@@ -1,8 +1,8 @@
 // api/auth/forgot.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import crypto from "crypto";
-import { pool, ensureSchema } from "../../server/db";
-import { sendPasswordResetEmail } from "../../server/email";
+import { pool, ensureSchema } from "../../server/db.js";
+import { sendPasswordResetEmail } from "../../server/email.js";
 
 function getSiteUrl(req: VercelRequest): string {
   const envUrl = process.env.SITE_URL;

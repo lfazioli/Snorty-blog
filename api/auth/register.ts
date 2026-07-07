@@ -1,8 +1,8 @@
 // api/auth/register.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import bcrypt from "bcryptjs";
-import { pool, ensureSchema } from "../../server/db";
-import { signSession } from "../../server/auth";
+import { pool, ensureSchema } from "../../server/db.js";
+import { signSession } from "../../server/auth.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {

@@ -2,8 +2,8 @@
 // GET  /api/posts  -> lista dei post (pubblici vedono solo quelli pubblicati, l'admin li vede tutti)
 // POST /api/posts  -> crea un nuovo post (solo admin)
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { pool, ensureSchema } from "../../server/db";
-import { getSessionFromRequest, requireAdmin } from "../../server/auth";
+import { pool, ensureSchema } from "../../server/db.js";
+import { getSessionFromRequest, requireAdmin } from "../../server/auth.js";
 
 function slugify(input: string): string {
   return input
