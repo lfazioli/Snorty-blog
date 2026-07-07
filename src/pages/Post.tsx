@@ -33,7 +33,7 @@ export default function Post() {
   if (loading) {
     return (
       <Layout>
-        <p className="text-gray-400 text-center py-16">Caricamento...</p>
+        <p className="text-dim text-sm text-center py-16">Caricamento...</p>
       </Layout>
     );
   }
@@ -42,8 +42,8 @@ export default function Post() {
     return (
       <Layout>
         <div className="text-center py-16">
-          <p className="text-red-400 mb-4">{error || "Post non trovato."}</p>
-          <Link to="/Posts" className="text-[#00ff99] hover:underline">Torna a tutti i post</Link>
+          <p className="text-danger text-sm mb-4">{error || "Post non trovato."}</p>
+          <Link to="/Posts" className="text-signal text-sm hover:underline">Torna a tutti gli articoli</Link>
         </div>
       </Layout>
     );
@@ -51,25 +51,27 @@ export default function Post() {
 
   return (
     <Layout>
-      <article className="max-w-3xl mx-auto py-10 px-4 text-white space-y-6 leading-relaxed">
+      <article>
         {!post.published && (
-          <p className="text-xs px-2 py-1 inline-block rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/40">
-            Bozza (visibile solo a te)
+          <p className="font-mono text-[10px] px-2 py-1 inline-block rounded border border-warn/40 text-warn mb-4">
+            bozza — visibile solo a te
           </p>
         )}
 
-        <h1 className="text-3xl md:text-4xl font-bold text-center text-[#00ff99]">{post.title}</h1>
-        <p className="text-center text-gray-400 text-sm">{post.created_at?.slice(0, 10)}</p>
+        <p className="font-mono text-xs text-dim mb-2">{post.created_at?.slice(0, 10)}</p>
+        <h1 className="text-2xl sm:text-3xl font-semibold text-ink leading-snug tracking-tight mb-6">
+          {post.title}
+        </h1>
 
         {post.image && (
           <img
             src={post.image}
             alt={post.title}
-            className="w-full max-w-2xl mx-auto rounded-lg shadow-2xl border border-[#00ff99]/50"
+            className="w-full rounded-lg border border-line mb-8"
           />
         )}
 
-        <div className="max-w-none">
+        <div className="text-ink">
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
             {post.content}
           </ReactMarkdown>

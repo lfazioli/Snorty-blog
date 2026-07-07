@@ -45,59 +45,60 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <section className="text-white max-w-5xl mx-auto py-12">
-        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-[#00ff99]">Gestione Post</h1>
-          <Link
-            to="/dashboard/new"
-            className="px-4 py-2 rounded bg-[#00ff99] text-black font-semibold hover:bg-[#00cc77] transition"
+      <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+        <div>
+          <p className="font-mono text-xs text-signal mb-2 tracking-wide">// gestione contenuti</p>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-ink tracking-tight">Articoli</h1>
+        </div>
+        <Link
+          to="/dashboard/new"
+          className="px-4 py-2 rounded-md bg-signal text-white text-sm font-medium hover:bg-signal-600 transition-colors"
+        >
+          + Nuovo articolo
+        </Link>
+      </div>
+
+      {loading && <p className="text-dim text-sm">Caricamento...</p>}
+      {error && <p className="text-danger text-sm">{error}</p>}
+      {!loading && !error && posts.length === 0 && (
+        <p className="text-dim text-sm">Nessun post ancora. Creane uno!</p>
+      )}
+
+      <div className="flex flex-col gap-2">
+        {posts.map((post) => (
+          <div
+            key={post.slug}
+            className="flex items-center justify-between gap-4 p-4 rounded-lg border border-line bg-panel flex-wrap"
           >
-            + Nuovo Post
-          </Link>
-        </div>
-
-        {loading && <p className="text-gray-400">Caricamento...</p>}
-        {error && <p className="text-red-400">{error}</p>}
-        {!loading && !error && posts.length === 0 && (
-          <p className="text-gray-400">Nessun post ancora. Creane uno!</p>
-        )}
-
-        <div className="flex flex-col gap-3">
-          {posts.map((post) => (
-            <div
-              key={post.slug}
-              className="flex items-center justify-between gap-4 p-4 rounded-xl bg-[#00ff99]/10 border border-[#00ff99]/20 flex-wrap"
-            >
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="text-lg font-bold text-[#00ff99] truncate">{post.title}</h3>
-                  {!post.published && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/40 shrink-0">
-                      Bozza
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm text-gray-400 truncate">/post/{post.slug}</p>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-sm font-semibold text-ink truncate">{post.title}</h3>
+                {!post.published && (
+                  <span className="text-[10px] px-1.5 py-0.5 rounded border border-warn/40 text-warn font-mono shrink-0">
+                    bozza
+                  </span>
+                )}
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <Link
-                  to={`/dashboard/edit/${post.slug}`}
-                  className="px-3 py-1.5 rounded bg-[#00ff99]/20 text-[#00ff99] border border-[#00ff99]/40 hover:bg-[#00ff99]/30 transition text-sm"
-                >
-                  Modifica
-                </Link>
-                <button
-                  onClick={() => handleDelete(post.slug)}
-                  disabled={deletingSlug === post.slug}
-                  className="px-3 py-1.5 rounded bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30 transition text-sm disabled:opacity-50"
-                >
-                  {deletingSlug === post.slug ? "..." : "Elimina"}
-                </button>
-              </div>
+              <p className="text-xs text-dim font-mono truncate mt-0.5">/post/{post.slug}</p>
             </div>
-          ))}
-        </div>
-      </section>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                to={`/dashboard/edit/${post.slug}`}
+                className="px-3 py-1.5 rounded-md border border-line text-dim hover:text-ink hover:border-signal/50 transition-colors text-sm"
+              >
+                Modifica
+              </Link>
+              <button
+                onClick={() => handleDelete(post.slug)}
+                disabled={deletingSlug === post.slug}
+                className="px-3 py-1.5 rounded-md border border-danger/30 text-danger hover:bg-danger/10 transition-colors text-sm disabled:opacity-50"
+              >
+                {deletingSlug === post.slug ? "..." : "Elimina"}
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </Layout>
   );
 }

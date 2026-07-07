@@ -1,9 +1,11 @@
 // src/pages/ForgotPassword.tsx
 import React, { useState } from "react";
-import logo from "../assets/logo.png";
 import Layout from "../components/Layout";
 import { Link } from "react-router-dom";
 import { apiFetch, ApiError } from "../lib/api";
+
+const inputClass =
+  "mt-1.5 p-2.5 rounded-md bg-panel border border-line text-ink focus:outline-none focus:border-signal transition-colors";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -30,21 +32,18 @@ export default function ForgotPassword() {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center min-h-[70vh] px-6">
-        <img src={logo} alt="Logo" className="w-24 h-24 rounded-full mb-6" />
-        <h1 className="text-3xl font-bold text-[#00ff99] mb-6">Forgot Password</h1>
+      <div className="max-w-sm mx-auto py-8">
+        <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// recupero password</p>
+        <h1 className="text-2xl font-semibold text-ink mb-8 text-center tracking-tight">Password dimenticata</h1>
 
-        <form
-          onSubmit={handleReset}
-          className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4"
-        >
-          <label className="flex flex-col text-white text-sm">
+        <form onSubmit={handleReset} className="rounded-lg border border-line bg-panel p-7 flex flex-col gap-4">
+          <label className="flex flex-col text-sm text-dim">
             Inserisci la tua email
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-[#00ff99]"
+              className={inputClass}
               required
             />
           </label>
@@ -52,20 +51,16 @@ export default function ForgotPassword() {
           <button
             type="submit"
             disabled={loading || !email}
-            className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition disabled:opacity-60"
+            className="mt-2 bg-signal text-white font-medium py-2.5 rounded-md hover:bg-signal-600 transition-colors disabled:opacity-60"
           >
-            {loading ? "Invio in corso..." : "Reset Password"}
+            {loading ? "Invio in corso..." : "Invia link di reset"}
           </button>
 
-          {msg && (
-            <p className="text-sm text-[#00ff99] mt-2 whitespace-pre-line">
-              {msg}
-            </p>
-          )}
+          {msg && <p className="text-sm text-dim mt-1 whitespace-pre-line text-center">{msg}</p>}
 
-          <div className="flex justify-between text-xs text-[#00ff99]/80 mt-2">
-            <Link to="/login" className="hover:underline">Back to Login</Link>
-            <Link to="/register" className="hover:underline">Register</Link>
+          <div className="flex justify-between text-xs text-dim mt-2">
+            <Link to="/login" className="hover:text-ink transition-colors">Torna al login</Link>
+            <Link to="/register" className="hover:text-ink transition-colors">Registrati</Link>
           </div>
         </form>
       </div>

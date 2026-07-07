@@ -14,8 +14,9 @@ export default function RequireAdmin({ children }: { children: React.ReactNode }
     return (
       <Layout>
         <div className="text-center py-20">
-          <h1 className="text-2xl font-bold text-[#00ff99] mb-3">Accesso negato</h1>
-          <p className="text-gray-400">Questa sezione è riservata all'amministratore del blog.</p>
+          <p className="font-mono text-xs text-danger mb-3 tracking-wide">// accesso negato</p>
+          <h1 className="text-xl font-semibold text-ink mb-2">Non hai i permessi</h1>
+          <p className="text-dim text-sm">Questa sezione è riservata all'amministratore del blog.</p>
         </div>
       </Layout>
     );

@@ -1,10 +1,12 @@
 // src/pages/Register.tsx
 import React, { useState } from "react";
-import logo from "../assets/logo.png";
 import Layout from "../components/Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch, ApiError } from "../lib/api";
+
+const inputClass =
+  "mt-1.5 p-2.5 rounded-md bg-panel border border-line text-ink focus:outline-none focus:border-signal transition-colors";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -30,7 +32,6 @@ export default function Register() {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-      // Login automatico: niente bisogno di rifare il login subito dopo la registrazione.
       login(data.token);
       navigate("/");
     } catch (err) {
@@ -42,52 +43,56 @@ export default function Register() {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center min-h-[70vh] px-6">
-        <img src={logo} alt="Logo" className="w-24 h-24 rounded-full mb-6" />
-        <h1 className="text-3xl font-bold text-[#00ff99] mb-6">Register</h1>
+      <div className="max-w-sm mx-auto py-8">
+        <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// crea account</p>
+        <h1 className="text-2xl font-semibold text-ink mb-8 text-center tracking-tight">Registrati</h1>
 
-        <form onSubmit={handleRegister} className="bg-black/50 backdrop-blur-md p-8 rounded-lg w-full max-w-sm flex flex-col gap-4">
-          <label className="flex flex-col text-white text-sm">
+        <form onSubmit={handleRegister} className="rounded-lg border border-line bg-panel p-7 flex flex-col gap-4">
+          <label className="flex flex-col text-sm text-dim">
             Email
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-[#00ff99]"
+              className={inputClass}
               required
             />
           </label>
 
-          <label className="flex flex-col text-white text-sm">
+          <label className="flex flex-col text-sm text-dim">
             Password
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-[#00ff99]"
+              className={inputClass}
               required
             />
           </label>
 
-          <label className="flex flex-col text-white text-sm">
-            Conferma Password
+          <label className="flex flex-col text-sm text-dim">
+            Conferma password
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="mt-1 p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-[#00ff99]"
+              className={inputClass}
               required
             />
           </label>
 
-          <button type="submit" disabled={loading} className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition disabled:opacity-60">
-            {loading ? "Loading..." : "Register"}
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-2 bg-signal text-white font-medium py-2.5 rounded-md hover:bg-signal-600 transition-colors disabled:opacity-60"
+          >
+            {loading ? "Registrazione..." : "Registrati"}
           </button>
 
-          {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+          {error && <p className="text-danger text-sm text-center">{error}</p>}
 
-          <div className="flex justify-between text-xs text-[#00ff99]/80 mt-2">
-            <Link to="/login" className="hover:underline">Already have an account?</Link>
+          <div className="text-xs text-dim mt-2 text-center">
+            <Link to="/login" className="hover:text-ink transition-colors">Hai già un account? Accedi</Link>
           </div>
         </form>
       </div>

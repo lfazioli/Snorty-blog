@@ -18,32 +18,30 @@ export default function PostsPage() {
 
   return (
     <Layout>
-      <section className="text-white max-w-5xl mx-auto py-12">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-[#00ff99] mb-8 animate-fadeIn">
-          All Posts
-        </h1>
+      <p className="font-mono text-xs text-signal mb-3 tracking-wide">// tutti gli articoli</p>
+      <h1 className="text-2xl sm:text-3xl font-semibold text-ink mb-8 tracking-tight">
+        Articoli
+      </h1>
 
-        {loading && <p className="text-gray-400">Caricamento...</p>}
-        {error && <p className="text-red-400">{error}</p>}
-        {!loading && !error && posts.length === 0 && (
-          <p className="text-gray-400">Nessun post ancora.</p>
-        )}
+      {loading && <p className="text-dim text-sm">Caricamento...</p>}
+      {error && <p className="text-danger text-sm">{error}</p>}
+      {!loading && !error && posts.length === 0 && (
+        <p className="text-dim text-sm">Nessun post ancora.</p>
+      )}
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {posts.map((post, idx) => (
-            <div key={post.slug} className="animate-fadeIn" style={{ animationDelay: `${idx * 150}ms` }}>
-              <PostCard
-                title={post.title}
-                date={post.created_at}
-                image={post.image}
-                slug={post.slug}
-                excerpt={post.excerpt}
-                draft={!post.published}
-              />
-            </div>
-          ))}
-        </div>
-      </section>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+        {posts.map((post) => (
+          <PostCard
+            key={post.slug}
+            title={post.title}
+            date={post.created_at}
+            image={post.image}
+            slug={post.slug}
+            excerpt={post.excerpt}
+            draft={!post.published}
+          />
+        ))}
+      </div>
     </Layout>
   );
 }

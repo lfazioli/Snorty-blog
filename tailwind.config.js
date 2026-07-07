@@ -3,21 +3,32 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      colors: {
+        // Palette "security dashboard": grafite freddo + blu segnale.
+        night: "#0A0D12",   // sfondo pagina
+        panel: "#12161D",   // card / superfici
+        panel2: "#1A2029",  // superfici sollevate / hover
+        line: "#232A35",    // bordi hairline
+        ink: "#E7EBF1",     // testo primario
+        dim: "#8992A3",     // testo secondario
+        signal: {
+          DEFAULT: "#4C8DFF",
+          600: "#3B74E0",
+        },
+        warn: "#E8A33D",    // bozze / avvisi
+        danger: "#E5484D",  // eliminazione / errori
+      },
+      fontFamily: {
+        sans: ['"IBM Plex Sans"', "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ['"IBM Plex Mono"', "ui-monospace", "SFMono-Regular", "monospace"],
+      },
       keyframes: {
-       fadeIn: { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
-    slideIn: { "0%": { transform: "translateY(20px)", opacity: 0 }, "100%": { transform: "translateY(0)", opacity: 1 } },
-    slideInLeft: { "0%": { transform: "translateX(-100px)", opacity: 0 }, "100%": { transform: "translateX(0)", opacity: 1 } },
-    slideInRight: { "0%": { transform: "translateX(100px)", opacity: 0 }, "100%": { transform: "translateX(0)", opacity: 1 } },
-    slideInUp: { "0%": { transform: "translateY(50px)", opacity: 0 }, "100%": { transform: "translateY(0)", opacity: 1 } },
-    spinSlow: { "0%": { transform: "rotate(0deg)" }, "100%": { transform: "rotate(360deg)" } },
+        fadeIn: { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
+        slideUp: { "0%": { transform: "translateY(10px)", opacity: 0 }, "100%": { transform: "translateY(0)", opacity: 1 } },
       },
       animation: {
-        fadeIn: "fadeIn 0.8s ease-out forwards",
-    slideIn: "slideIn 0.8s ease-out forwards",
-    slideInLeft: "slideInLeft 0.8s ease-out forwards",
-    slideInRight: "slideInRight 0.8s ease-out forwards",
-    slideInUp: "slideInUp 0.8s ease-out forwards",
-    spinSlow: "spinSlow 10s linear infinite",
+        fadeIn: "fadeIn 0.6s ease-out forwards",
+        slideUp: "slideUp 0.5s ease-out forwards",
       },
     },
   },

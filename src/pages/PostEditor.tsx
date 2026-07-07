@@ -17,6 +17,9 @@ function slugify(input: string): string {
     .replace(/(^-+|-+$)/g, "");
 }
 
+const inputClass =
+  "p-2.5 rounded-md bg-panel border border-line text-ink placeholder:text-dim/60 focus:outline-none focus:border-signal transition-colors";
+
 export default function PostEditor() {
   const { slug } = useParams();
   const isEditing = Boolean(slug);
@@ -85,134 +88,131 @@ export default function PostEditor() {
   if (loading) {
     return (
       <Layout>
-        <p className="text-gray-400 text-center py-12">Caricamento...</p>
+        <p className="text-dim text-sm text-center py-12">Caricamento...</p>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <section className="text-white max-w-3xl mx-auto py-12">
-        <h1 className="text-3xl font-extrabold text-[#00ff99] mb-8">
-          {isEditing ? "Modifica Post" : "Nuovo Post"}
-        </h1>
+      <p className="font-mono text-xs text-signal mb-2 tracking-wide">
+        // {isEditing ? "modifica" : "nuovo"} articolo
+      </p>
+      <h1 className="text-2xl sm:text-3xl font-semibold text-ink tracking-tight mb-8">
+        {isEditing ? "Modifica articolo" : "Nuovo articolo"}
+      </h1>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <label className="flex flex-col text-sm gap-1">
-            Titolo
-            <input
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                if (!isEditing) setCustomSlug(slugify(e.target.value));
-              }}
-              className="p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-[#00ff99]"
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <label className="flex flex-col text-sm gap-1.5 text-dim">
+          Titolo
+          <input
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              if (!isEditing) setCustomSlug(slugify(e.target.value));
+            }}
+            className={inputClass}
+            required
+          />
+        </label>
+
+        <label className="flex flex-col text-sm gap-1.5 text-dim">
+          Slug (URL)
+          <input
+            value={customSlug}
+            onChange={(e) => setCustomSlug(slugify(e.target.value))}
+            disabled={isEditing}
+            className={`${inputClass} disabled:opacity-50 font-mono text-sm`}
+          />
+          <span className="text-xs text-dim/70 font-mono">
+            /post/{customSlug || "..."}
+            {isEditing && " — non modificabile"}
+          </span>
+        </label>
+
+        <label className="flex flex-col text-sm gap-1.5 text-dim">
+          Immagine di copertina (URL, opzionale)
+          <input
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            className={inputClass}
+            placeholder="https://..."
+          />
+        </label>
+
+        <label className="flex flex-col text-sm gap-1.5 text-dim">
+          Estratto (opzionale, mostrato nelle card)
+          <input value={excerpt} onChange={(e) => setExcerpt(e.target.value)} className={inputClass} />
+        </label>
+
+        <div>
+          <div className="flex gap-1 mb-2 border border-line rounded-md p-1 w-fit">
+            <button
+              type="button"
+              onClick={() => setTab("write")}
+              className={`px-3 py-1 rounded text-sm transition-colors ${
+                tab === "write" ? "bg-signal text-white" : "text-dim hover:text-ink"
+              }`}
+            >
+              Scrivi
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("preview")}
+              className={`px-3 py-1 rounded text-sm transition-colors ${
+                tab === "preview" ? "bg-signal text-white" : "text-dim hover:text-ink"
+              }`}
+            >
+              Anteprima
+            </button>
+          </div>
+
+          {tab === "write" ? (
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={16}
+              className={`${inputClass} w-full font-mono text-sm`}
+              placeholder="Scrivi in Markdown... (# Titolo, **grassetto**, - lista, ecc.)"
               required
             />
-          </label>
-
-          <label className="flex flex-col text-sm gap-1">
-            Slug (URL)
-            <input
-              value={customSlug}
-              onChange={(e) => setCustomSlug(slugify(e.target.value))}
-              disabled={isEditing}
-              className="p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-[#00ff99] disabled:opacity-50"
-            />
-            <span className="text-xs text-gray-500">
-              /post/{customSlug || "..."}
-              {isEditing && " (non modificabile per non rompere i link già condivisi)"}
-            </span>
-          </label>
-
-          <label className="flex flex-col text-sm gap-1">
-            Immagine di copertina (URL, opzionale)
-            <input
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              className="p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-[#00ff99]"
-              placeholder="https://..."
-            />
-          </label>
-
-          <label className="flex flex-col text-sm gap-1">
-            Estratto (opzionale, mostrato nelle card)
-            <input
-              value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
-              className="p-2 rounded bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-[#00ff99]"
-            />
-          </label>
-
-          <div>
-            <div className="flex gap-2 mb-2">
-              <button
-                type="button"
-                onClick={() => setTab("write")}
-                className={`px-3 py-1 rounded text-sm transition ${
-                  tab === "write" ? "bg-[#00ff99] text-black" : "bg-[#00ff99]/10 text-[#00ff99]"
-                }`}
-              >
-                Scrivi
-              </button>
-              <button
-                type="button"
-                onClick={() => setTab("preview")}
-                className={`px-3 py-1 rounded text-sm transition ${
-                  tab === "preview" ? "bg-[#00ff99] text-black" : "bg-[#00ff99]/10 text-[#00ff99]"
-                }`}
-              >
-                Anteprima
-              </button>
+          ) : (
+            <div className="p-4 rounded-md bg-panel border border-line min-h-[300px] text-ink">
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                {content || "*Niente da mostrare*"}
+              </ReactMarkdown>
             </div>
+          )}
+        </div>
 
-            {tab === "write" ? (
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                rows={16}
-                className="w-full p-3 rounded bg-gray-900 text-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#00ff99]"
-                placeholder="Scrivi in Markdown... (# Titolo, **grassetto**, - lista, ecc.)"
-                required
-              />
-            ) : (
-              <div className="p-4 rounded bg-black/40 border border-[#00ff99]/20 min-h-[300px] text-white">
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-                  {content || "*Niente da mostrare*"}
-                </ReactMarkdown>
-              </div>
-            )}
-          </div>
+        <label className="flex items-center gap-2 text-sm text-dim">
+          <input
+            type="checkbox"
+            checked={published}
+            onChange={(e) => setPublished(e.target.checked)}
+            className="accent-signal"
+          />
+          Pubblicato (disattiva per salvare come bozza, visibile solo a te)
+        </label>
 
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={published}
-              onChange={(e) => setPublished(e.target.checked)}
-              className="accent-[#00ff99]"
-            />
-            Pubblicato (disattiva per salvare come bozza, visibile solo a te)
-          </label>
+        {error && <p className="text-danger text-sm">{error}</p>}
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-
-          <div className="flex gap-3 mt-2">
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-5 py-2 rounded bg-[#00ff99] text-black font-semibold hover:bg-[#00cc77] transition disabled:opacity-60"
-            >
-              {saving ? "Salvataggio..." : "Salva"}
-            </button>
-            <Link
-              to="/dashboard"
-              className="px-5 py-2 rounded border border-[#00ff99]/40 text-[#00ff99] hover:bg-[#00ff99]/10 transition"
-            >
-              Annulla
-            </Link>
-          </div>
-        </form>
-      </section>
+        <div className="flex gap-3 mt-2">
+          <button
+            type="submit"
+            disabled={saving}
+            className="px-5 py-2 rounded-md bg-signal text-white text-sm font-medium hover:bg-signal-600 transition-colors disabled:opacity-60"
+          >
+            {saving ? "Salvataggio..." : "Salva"}
+          </button>
+          <Link
+            to="/dashboard"
+            className="px-5 py-2 rounded-md border border-line text-dim hover:text-ink transition-colors text-sm"
+          >
+            Annulla
+          </Link>
+        </div>
+      </form>
     </Layout>
   );
 }
