@@ -1,78 +1,36 @@
 // api/auth/forgot.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { Pool } from "pg";
 import crypto from "crypto";
+import { pool, ensureSchema } from "../../server/db";
+import { sendPasswordResetEmail } from "../../server/email";
 
-function normalizeDatabaseUrl(url?: string): string {
-  if (!url) throw new Error("DATABASE_URL non impostata nelle variabili d'ambiente");
-  try {
-    const u = new URL(url);
-    const params = u.searchParams;
-    if (!params.get("sslmode")) params.set("sslmode", "require");
-    if (params.get("channel_binding")) params.delete("channel_binding");
-    u.search = params.toString();
-    return u.toString();
-  } catch {
-    return url;
-  }
-}
-
-const pool = new Pool({
-  connectionString: normalizeDatabaseUrl(process.env.DATABASE_URL),
-  ssl: { rejectUnauthorized: false },
-});
-
-async function ensureTables() {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      email TEXT UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT NOW()
-    );
-  `);
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS password_resets (
-      id SERIAL PRIMARY KEY,
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      token TEXT UNIQUE NOT NULL,
-      expires_at TIMESTAMP NOT NULL,
-      used BOOLEAN NOT NULL DEFAULT FALSE,
-      created_at TIMESTAMP NOT NULL DEFAULT NOW()
-    );
-  `);
+function getSiteUrl(req: VercelRequest): string {
+  const envUrl = process.env.SITE_URL;
+  if (envUrl) return envUrl.replace(/\/$/, "");
+  const host = req.headers["x-forwarded-host"] || req.headers.host;
+  const proto = (req.headers["x-forwarded-proto"] as string) || "https";
+  return `${proto}://${host}`;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method !== "POST") return res.status(405).json({ error: "Metodo non permesso" });
 
-    const ct = req.headers["content-type"] || req.headers["Content-Type"];
-    if (!ct || !String(ct).includes("application/json")) {
-      return res.status(400).json({ error: "Content-Type application/json richiesto" });
-    }
-
     const { email } = req.body ?? {};
     if (!email || typeof email !== "string") {
-      return res.status(400).json({ error: "email richiesto" });
+      return res.status(400).json({ error: "email richiesta" });
     }
+    const normalizedEmail = email.trim().toLowerCase();
 
-    // Test connessione
-    try {
-      await pool.query("SELECT 1");
-    } catch (connErr: any) {
-      console.error("FORGOT_CONN_ERROR:", connErr?.message || connErr);
-      return res.status(500).json({ error: "Connessione al database fallita" });
-    }
+    await ensureSchema();
 
-    await ensureTables();
+    // Risposta identica sia che l'utente esista o meno: non riveliamo quali email sono registrate.
+    const genericResponse = { message: "Se l'email esiste, riceverai un link di reset." };
 
-    const users = await pool.query("SELECT id FROM users WHERE email = $1 LIMIT 1", [email]);
+    const users = await pool.query("SELECT id FROM users WHERE email = $1 LIMIT 1", [normalizedEmail]);
     const user = users.rows[0];
-
-    // Risposta privacy-preserving
     if (!user) {
-      return res.status(200).json({ message: "Se l'email esiste, invieremo un link di reset" });
+      return res.status(200).json(genericResponse);
     }
 
     const token = crypto.randomBytes(32).toString("hex");
@@ -83,12 +41,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       [user.id, token, expiresAt]
     );
 
-    // Link compatibile con la tua route client /reset-password/:token
-    return res.status(200).json({
-      message: "Link di reset generato",
-      resetToken: token,
-      resetLink: `/reset-password/${token}`,
-    });
+    // IMPORTANTE: il token NON viene mai restituito in questa risposta HTTP.
+    // Prima veniva incluso nel JSON (resetToken/resetLink): chiunque conoscesse
+    // l'email di un utente poteva così resettargli la password senza accedere
+    // alla sua casella email. Ora l'unico modo per ottenere il link è riceverlo
+    // via email (o leggerlo nei log della function, se non hai ancora configurato
+    // RESEND_API_KEY — vedi server/email.ts).
+    // Usa l'hash (#) perché il sito usa HashRouter: un link "reale" cliccato da
+    // un client email deve contenere #/... per essere riconosciuto da React Router.
+    const resetLink = `${getSiteUrl(req)}/#/reset-password/${token}`;
+    await sendPasswordResetEmail(normalizedEmail, resetLink);
+
+    return res.status(200).json(genericResponse);
   } catch (e: any) {
     console.error("FORGOT_ERROR:", e?.message || e, e?.stack);
     return res.status(500).json({ error: "Errore interno" });

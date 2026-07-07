@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from "react";
 import Layout from "../components/Layout";
 import { useParams, useNavigate } from "react-router-dom";
+import { apiFetch, ApiError } from "../lib/api";
 
 export default function ResetPassword() {
   const { token } = useParams();
@@ -35,29 +36,14 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/reset", {
+      const data = await apiFetch<{ message: string }>("/api/auth/reset", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword: password }),
       });
-
-      const isJson = res.headers.get("content-type")?.includes("application/json");
-      const data = isJson ? await res.json() : null;
-
-      if (!res.ok) {
-        const errorText =
-          (data && data.error) ||
-          `Errore durante il reset (HTTP ${res.status})`;
-        setMsg(errorText);
-        return;
-      }
-
-      setMsg(data?.message || "Password aggiornata. Reindirizzamento al login...");
-      // Piccolo delay per UX, poi redirect
+      setMsg(data.message || "Password aggiornata. Reindirizzamento al login...");
       setTimeout(() => navigate("/login"), 800);
     } catch (err) {
-      console.error(err);
-      setMsg("Errore di rete durante il reset.");
+      setMsg(err instanceof ApiError ? err.message : "Errore di rete durante il reset.");
     } finally {
       setLoading(false);
     }

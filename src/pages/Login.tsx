@@ -4,41 +4,30 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Layout from "../components/Layout";
 import { useAuth } from "../context/AuthContext";
+import { apiFetch, ApiError } from "../lib/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const data = await apiFetch<{ token: string }>("/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
-      const isJson = res.headers.get("content-type")?.includes("application/json");
-      const data = isJson ? await res.json() : null;
-
-      if (!res.ok) {
-        alert((data && data.error) || `Errore durante il login (HTTP ${res.status})`);
-        return;
-      }
-
-      // Imposta stato auth (salva token e decodifica utente)
       login(data.token);
-
-      alert("Login effettuato!");
       navigate("/");
     } catch (err) {
-      console.error(err);
-      alert("Errore durante il login.");
+      setError(err instanceof ApiError ? err.message : "Errore durante il login.");
     } finally {
       setLoading(false);
     }
@@ -79,10 +68,12 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition"
+            className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition disabled:opacity-60"
           >
             {loading ? "Loading..." : "Login"}
           </button>
+
+          {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
           <div className="flex justify-between text-xs text-[#00ff99]/80 mt-2">
             <Link to="/register" className="hover:underline">Register</Link>

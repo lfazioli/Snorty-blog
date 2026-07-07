@@ -2,13 +2,13 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import Layout from "../components/Layout";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { apiFetch, ApiError } from "../lib/api";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string>("");
-  const navigate = useNavigate();
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,36 +16,13 @@ export default function ForgotPassword() {
     setMsg("");
 
     try {
-      const res = await fetch("/api/auth/forgot", {
+      const data = await apiFetch<{ message: string }>("/api/auth/forgot", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-
-      // Prova a leggere JSON solo se il content-type lo indica
-      const isJson = res.headers.get("content-type")?.includes("application/json");
-      const data = isJson ? await res.json() : null;
-
-      if (!res.ok) {
-        const errorText =
-          (data && data.error) ||
-          `Errore durante la richiesta di reset (HTTP ${res.status})`;
-        setMsg(errorText);
-        return;
-      }
-
-      const message =
-        (data && data.message) ||
-        "Se l'email esiste, riceverai un link di reset.";
-      setMsg(message);
-
-      // In dev/produzione: se il backend fornisce il resetLink, navighiamo direttamente
-      if (data?.resetLink) {
-        navigate(data.resetLink); // es: /reset-password/<token>
-      }
+      setMsg(data.message || "Se l'email esiste, riceverai un link di reset.");
     } catch (err) {
-      console.error(err);
-      setMsg("Errore di rete durante la richiesta di reset.");
+      setMsg(err instanceof ApiError ? err.message : "Errore di rete durante la richiesta di reset.");
     } finally {
       setLoading(false);
     }

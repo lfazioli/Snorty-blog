@@ -3,44 +3,38 @@ import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import Layout from "../components/Layout";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { apiFetch, ApiError } from "../lib/api";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     if (password !== confirmPassword) {
-      alert("Le password non coincidono!");
+      setError("Le password non coincidono!");
       return;
     }
 
     setLoading(true);
-
     try {
-      const res = await fetch("/api/auth/register", {
+      const data = await apiFetch<{ token: string }>("/api/auth/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
-      const isJson = res.headers.get("content-type")?.includes("application/json");
-      const data = isJson ? await res.json() : null;
-
-      if (!res.ok) {
-        alert((data && data.error) || `Errore durante la registrazione (HTTP ${res.status})`);
-        return;
-      }
-
-      alert("Registrazione completata! Ora puoi fare login.");
-      navigate("/login");
+      // Login automatico: niente bisogno di rifare il login subito dopo la registrazione.
+      login(data.token);
+      navigate("/");
     } catch (err) {
-      console.error(err);
-      alert("Errore durante la registrazione.");
+      setError(err instanceof ApiError ? err.message : "Errore durante la registrazione.");
     } finally {
       setLoading(false);
     }
@@ -86,9 +80,11 @@ export default function Register() {
             />
           </label>
 
-          <button type="submit" disabled={loading} className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition">
+          <button type="submit" disabled={loading} className="mt-4 bg-[#00ff99] text-black font-semibold py-2 rounded hover:bg-[#00cc77] transition disabled:opacity-60">
             {loading ? "Loading..." : "Register"}
           </button>
+
+          {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
           <div className="flex justify-between text-xs text-[#00ff99]/80 mt-2">
             <Link to="/login" className="hover:underline">Already have an account?</Link>
@@ -96,6 +92,5 @@ export default function Register() {
         </form>
       </div>
     </Layout>
-    
   );
 }

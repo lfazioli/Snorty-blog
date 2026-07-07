@@ -1,9 +1,22 @@
+import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
+import PostCard from "../components/PostCard";
 import { TypeAnimation } from "react-type-animation";
-import { posts } from "../posts/posts";
+import { apiFetch } from "../lib/api";
 import { Link } from "react-router-dom";
+import type { Post } from "../types/post";
 
 export default function Home() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    apiFetch<{ posts: Post[] }>("/api/posts")
+      .then((data) => setPosts(data.posts.slice(0, 3)))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <Layout>
       {/* HERO SECTION */}
@@ -88,18 +101,21 @@ export default function Home() {
           Latest Posts
         </h2>
 
+        {loading && <p className="text-gray-400">Caricamento...</p>}
+        {!loading && posts.length === 0 && <p className="text-gray-400">Nessun post ancora.</p>}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {posts.map((p, idx) => (
-            <Link
-              key={p.slug}
-              to={`/post/${p.slug}`}
-              className="block p-6 rounded-xl bg-[#00ff99]/10 border border-[#00ff99]/20 hover:bg-[#00ff99]/20 hover:scale-105 hover:shadow-xl transition-transform animate-fadeIn"
-              style={{ animationDelay: `${idx * 200}ms` }}
-            >
-              <img src={p.image} alt={p.title} className="w-full rounded-lg mb-4 border border-[#00ff99]/50" />
-              <h3 className="text-xl font-bold text-[#00ff99] mb-2">{p.title}</h3>
-              <p className="text-gray-400">{p.date}</p>
-            </Link>
+            <div key={p.slug} className="animate-fadeIn" style={{ animationDelay: `${idx * 200}ms` }}>
+              <PostCard
+                title={p.title}
+                date={p.created_at}
+                image={p.image}
+                slug={p.slug}
+                excerpt={p.excerpt}
+                draft={!p.published}
+              />
+            </div>
           ))}
         </div>
       </section>

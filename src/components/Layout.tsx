@@ -8,6 +8,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const isAdmin = user?.role === "admin";
 
   return (
     <div className="min-h-screen bg-[#0a0f0a] text-[#eaffea] font-mono">
@@ -36,6 +37,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link className="text-[#00ff99] hover:underline" to="/">Home</Link>
               <Link className="text-[#00ff99] hover:underline" to="/about">About</Link>
               <Link className="text-[#00ff99] hover:underline" to="/Posts">Post</Link>
+              {isAdmin && (
+                <Link className="text-[#00ff99] hover:underline" to="/dashboard">Dashboard</Link>
+              )}
             </nav>
 
             {/* Auth actions */}
@@ -86,6 +90,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link className="text-[#00ff99]" to="/" onClick={() => setOpen(false)}>Home</Link>
               <Link className="text-[#00ff99]" to="/about" onClick={() => setOpen(false)}>About</Link>
               <Link className="text-[#00ff99]" to="/Posts" onClick={() => setOpen(false)}>Post</Link>
+              {isAdmin && (
+                <Link className="text-[#00ff99]" to="/dashboard" onClick={() => setOpen(false)}>Dashboard</Link>
+              )}
 
               <div className="pt-2 border-t border-[#00ff99]/10 flex items-center justify-between">
                 {user ? (

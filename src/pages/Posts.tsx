@@ -1,9 +1,20 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { posts } from "../posts/posts";
+import PostCard from "../components/PostCard";
+import { apiFetch } from "../lib/api";
+import type { Post } from "../types/post";
 
 export default function PostsPage() {
-  const navigate = useNavigate();
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    apiFetch<{ posts: Post[] }>("/api/posts")
+      .then((data) => setPosts(data.posts))
+      .catch(() => setError("Errore nel caricamento dei post."))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <Layout>
@@ -12,23 +23,23 @@ export default function PostsPage() {
           All Posts
         </h1>
 
+        {loading && <p className="text-gray-400">Caricamento...</p>}
+        {error && <p className="text-red-400">{error}</p>}
+        {!loading && !error && posts.length === 0 && (
+          <p className="text-gray-400">Nessun post ancora.</p>
+        )}
+
         <div className="grid md:grid-cols-3 gap-6">
           {posts.map((post, idx) => (
-            <div
-              key={post.slug}
-              onClick={() => navigate(`/post/${post.slug}`)}
-              className="cursor-pointer p-6 rounded-xl bg-[#00ff99]/10 border border-[#00ff99]/20 hover:bg-[#00ff99]/20 hover:scale-105 hover:shadow-xl transition-transform animate-fadeIn"
-              style={{ animationDelay: `${idx * 150}ms` }}
-            >
-              {post.image && (
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full rounded-lg mb-4 border border-[#00ff99]/50"
-                />
-              )}
-              <h2 className="text-xl font-bold text-[#00ff99] mb-2">{post.title}</h2>
-              <p className="text-gray-400">{post.date}</p>
+            <div key={post.slug} className="animate-fadeIn" style={{ animationDelay: `${idx * 150}ms` }}>
+              <PostCard
+                title={post.title}
+                date={post.created_at}
+                image={post.image}
+                slug={post.slug}
+                excerpt={post.excerpt}
+                draft={!post.published}
+              />
             </div>
           ))}
         </div>
