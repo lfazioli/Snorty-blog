@@ -22,7 +22,7 @@ export default function Register() {
     setError("");
 
     if (password !== confirmPassword) {
-      setError("Le password non coincidono!");
+      setError("Passwords don't match!");
       return;
     }
 
@@ -35,7 +35,7 @@ export default function Register() {
       login(data.token);
       navigate("/");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Errore durante la registrazione.");
+      setError(err instanceof ApiError ? err.message : "Registration failed.");
     } finally {
       setLoading(false);
     }
@@ -44,8 +44,8 @@ export default function Register() {
   return (
     <Layout>
       <div className="max-w-sm mx-auto py-8">
-        <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// crea account</p>
-        <h1 className="text-2xl font-semibold text-ink mb-8 text-center tracking-tight">Registrati</h1>
+        <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// create account</p>
+        <h1 className="text-2xl font-semibold text-ink mb-8 text-center tracking-tight">Register</h1>
 
         <form onSubmit={handleRegister} className="rounded-lg border border-line bg-panel p-7 flex flex-col gap-4">
           <label className="flex flex-col text-sm text-dim">
@@ -71,7 +71,7 @@ export default function Register() {
           </label>
 
           <label className="flex flex-col text-sm text-dim">
-            Conferma password
+            Confirm password
             <input
               type="password"
               value={confirmPassword}
@@ -86,13 +86,13 @@ export default function Register() {
             disabled={loading}
             className="mt-2 bg-signal text-white font-medium py-2.5 rounded-md hover:bg-signal-600 transition-colors disabled:opacity-60"
           >
-            {loading ? "Registrazione..." : "Registrati"}
+            {loading ? "Registering..." : "Register"}
           </button>
 
           {error && <p className="text-danger text-sm text-center">{error}</p>}
 
           <div className="text-xs text-dim mt-2 text-center">
-            <Link to="/login" className="hover:text-ink transition-colors">Hai già un account? Accedi</Link>
+            <Link to="/login" className="hover:text-ink transition-colors">Already have an account? Log in</Link>
           </div>
         </form>
       </div>

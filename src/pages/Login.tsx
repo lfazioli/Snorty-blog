@@ -29,7 +29,7 @@ export default function Login() {
       login(data.token);
       navigate("/");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Errore durante il login.");
+      setError(err instanceof ApiError ? err.message : "Login failed.");
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ export default function Login() {
   return (
     <Layout>
       <div className="max-w-sm mx-auto py-8">
-        <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// accedi</p>
+        <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// log in</p>
         <h1 className="text-2xl font-semibold text-ink mb-8 text-center tracking-tight">Login</h1>
 
         <form onSubmit={handleLogin} className="rounded-lg border border-line bg-panel p-7 flex flex-col gap-4">
@@ -69,14 +69,14 @@ export default function Login() {
             disabled={loading}
             className="mt-2 bg-signal text-white font-medium py-2.5 rounded-md hover:bg-signal-600 transition-colors disabled:opacity-60"
           >
-            {loading ? "Accesso in corso..." : "Accedi"}
+            {loading ? "Logging in..." : "Log in"}
           </button>
 
           {error && <p className="text-danger text-sm text-center">{error}</p>}
 
           <div className="flex justify-between text-xs text-dim mt-2">
-            <Link to="/register" className="hover:text-ink transition-colors">Registrati</Link>
-            <Link to="/forgot-password" className="hover:text-ink transition-colors">Password dimenticata</Link>
+            <Link to="/register" className="hover:text-ink transition-colors">Register</Link>
+            <Link to="/forgot-password" className="hover:text-ink transition-colors">Forgot password</Link>
           </div>
         </form>
       </div>

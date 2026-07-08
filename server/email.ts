@@ -1,15 +1,15 @@
 // server/email.ts
-// Invio email di reset password.
+// Sends the password reset email.
 //
-// Se RESEND_API_KEY non e' configurata, il link viene semplicemente loggato
-// (visibile nei log della function su Vercel) invece di essere inviato via email.
-// Questo mantiene il flusso testabile in sviluppo SENZA mai esporre il token
-// nella risposta HTTP a chi chiama /api/auth/forgot (vedi nota di sicurezza li').
+// If RESEND_API_KEY is not configured, the link is simply logged (visible in the
+// function logs on Vercel) instead of being emailed. This keeps the flow testable
+// in development WITHOUT ever exposing the token in the HTTP response to whoever
+// calls /api/auth/forgot (see the security note there).
 export async function sendPasswordResetEmail(to: string, resetLink: string): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
-    console.log(`[DEV] Nessuna RESEND_API_KEY configurata. Link di reset per ${to}: ${resetLink}`);
+    console.log(`[DEV] No RESEND_API_KEY configured. Reset link for ${to}: ${resetLink}`);
     return;
   }
 
@@ -25,16 +25,16 @@ export async function sendPasswordResetEmail(to: string, resetLink: string): Pro
       body: JSON.stringify({
         from,
         to,
-        subject: "Reset della password",
-        html: `<p>Hai richiesto il reset della password.</p><p><a href="${resetLink}">Clicca qui per impostarne una nuova</a></p><p>Il link scade tra un'ora. Se non sei stato tu, ignora questa email.</p>`,
+        subject: "Reset your password",
+        html: `<p>You requested a password reset.</p><p><a href="${resetLink}">Click here to set a new one</a></p><p>This link expires in one hour. If this wasn't you, you can ignore this email.</p>`,
       }),
     });
 
     if (!response.ok) {
       const text = await response.text().catch(() => "");
       console.error("RESEND_ERROR:", response.status, text);
-      // Non blocchiamo la risposta all'utente per questo: l'errore resta nei log,
-      // cosi' l'endpoint continua comunque a rispondere in modo generico e sicuro.
+      // We don't block the response to the user for this: the error stays in the
+      // logs, so the endpoint still replies in a generic, safe way.
     }
   } catch (err) {
     console.error("RESEND_FETCH_ERROR:", err);

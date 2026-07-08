@@ -1,7 +1,5 @@
 // server/auth.ts
-// Firma/verifica delle sessioni JWT e helper di autorizzazione, condivisi da tutte
-// le funzioni in /api. NON importare questo file da src/ (client): usa jsonwebtoken
-// e JWT_SECRET, che devono restare lato server.
+// Signs/verifies JWT sessions and provides authorization helpers for the /api routes.
 import jwt from "jsonwebtoken";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
@@ -11,7 +9,7 @@ export type Role = "admin" | "reader";
 export type SessionPayload = { userId: number; email: string; role: Role };
 
 export function signSession(payload: SessionPayload): string {
-  if (!JWT_SECRET) throw new Error("JWT_SECRET non impostata nelle variabili d'ambiente");
+  if (!JWT_SECRET) throw new Error("JWT_SECRET is not set");
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
 }
 
@@ -19,12 +17,11 @@ export function verifySession(token: string): SessionPayload | null {
   if (!JWT_SECRET) return null;
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    if (decoded && typeof decoded === "object" && "userId" in decoded && "email" in decoded) {
-      const d = decoded as Record<string, unknown>;
+    if (typeof decoded === "object" && decoded && "userId" in decoded && "email" in decoded) {
       return {
-        userId: Number(d.userId),
-        email: String(d.email),
-        role: d.role === "admin" ? "admin" : "reader",
+        userId: (decoded as any).userId,
+        email: (decoded as any).email,
+        role: (decoded as any).role === "admin" ? "admin" : "reader",
       };
     }
     return null;
@@ -43,18 +40,18 @@ export function getSessionFromRequest(req: VercelRequest): SessionPayload | null
 }
 
 /**
- * Verifica che la richiesta provenga da un amministratore (il "writer" del blog).
- * Se non autorizzato, invia GIA' la risposta di errore (401/403) e ritorna null:
- * l'handler chiamante deve semplicemente fare `if (!session) return;` subito dopo.
+ * Checks that the request comes from an admin.
+ * If unauthorized, it already sends the error response and returns null:
+ * the calling handler should simply `return` in that case.
  */
 export function requireAdmin(req: VercelRequest, res: VercelResponse): SessionPayload | null {
   const session = getSessionFromRequest(req);
   if (!session) {
-    res.status(401).json({ error: "Autenticazione richiesta" });
+    res.status(401).json({ error: "Authentication required" });
     return null;
   }
   if (session.role !== "admin") {
-    res.status(403).json({ error: "Permessi insufficienti: solo l'amministratore puo' farlo" });
+    res.status(403).json({ error: "Insufficient permissions" });
     return null;
   }
   return session;

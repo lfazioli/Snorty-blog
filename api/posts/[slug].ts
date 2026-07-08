@@ -1,7 +1,7 @@
 // api/posts/[slug].ts
-// GET            /api/posts/:slug -> singolo post (i non pubblicati si vedono solo da admin)
-// PUT/PATCH      /api/posts/:slug -> modifica (solo admin)
-// DELETE         /api/posts/:slug -> elimina (solo admin)
+// GET            /api/posts/:slug -> single post (unpublished ones are only visible to admin)
+// PUT/PATCH      /api/posts/:slug -> update (admin only)
+// DELETE         /api/posts/:slug -> delete (admin only)
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { pool, ensureSchema } from "../../server/db.js";
 import { getSessionFromRequest, requireAdmin } from "../../server/auth.js";
@@ -12,7 +12,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const { slug } = req.query;
     const slugStr = Array.isArray(slug) ? slug[0] : slug;
-    if (!slugStr) return res.status(400).json({ error: "Slug mancante" });
+    if (!slugStr) return res.status(400).json({ error: "Missing slug" });
 
     if (req.method === "GET") {
       const session = getSessionFromRequest(req);
@@ -25,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       );
       const post = result.rows[0];
       if (!post || (!post.published && !isAdmin)) {
-        return res.status(404).json({ error: "Post non trovato" });
+        return res.status(404).json({ error: "Post not found" });
       }
       return res.status(200).json({ post });
     }
@@ -35,14 +35,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!session) return;
 
       const existing = await pool.query("SELECT id FROM posts WHERE slug = $1", [slugStr]);
-      if (existing.rows.length === 0) return res.status(404).json({ error: "Post non trovato" });
+      if (existing.rows.length === 0) return res.status(404).json({ error: "Post not found" });
 
       const { title, content, excerpt, image, published } = req.body ?? {};
       if (!title || typeof title !== "string" || !title.trim()) {
-        return res.status(400).json({ error: "Il titolo è obbligatorio" });
+        return res.status(400).json({ error: "Title is required" });
       }
       if (!content || typeof content !== "string" || !content.trim()) {
-        return res.status(400).json({ error: "Il contenuto è obbligatorio" });
+        return res.status(400).json({ error: "Content is required" });
       }
 
       const updated = await pool.query(
@@ -73,13 +73,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!session) return;
 
       await pool.query("DELETE FROM posts WHERE slug = $1", [slugStr]);
-      return res.status(200).json({ message: "Post eliminato" });
+      return res.status(200).json({ message: "Post deleted" });
     }
 
     res.setHeader("Allow", "GET, PUT, PATCH, DELETE");
-    return res.status(405).json({ error: "Metodo non permesso" });
+    return res.status(405).json({ error: "Method not allowed" });
   } catch (e: any) {
     console.error("POSTS_SLUG_ERROR:", e?.message || e);
-    return res.status(500).json({ error: "Errore interno" });
+    return res.status(500).json({ error: "Internal error" });
   }
 }

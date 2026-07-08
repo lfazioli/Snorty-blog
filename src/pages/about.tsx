@@ -9,8 +9,8 @@ const skills = [
 export default function About() {
   return (
     <Layout>
-      <p className="font-mono text-xs text-signal mb-3 tracking-wide">// chi sono</p>
-      <h1 className="text-2xl sm:text-3xl font-semibold text-ink mb-10 tracking-tight">About</h1>
+      <p className="font-mono text-xs text-signal mb-3 tracking-wide">// about</p>
+      <h1 className="text-2xl sm:text-3xl font-semibold text-ink mb-10 tracking-tight">About Me</h1>
 
       <div className="flex flex-col md:flex-row items-start gap-8 mb-14">
         <img
@@ -21,23 +21,29 @@ export default function About() {
 
         <div className="space-y-4 text-dim leading-relaxed">
           <p>
-            Ciao, sono Lorenzo, online conosciuto come Snorty. Ho 19 anni, vivo a Roma e mi
-            occupo di cybersecurity, ethical hacking e programmazione.
+            Hi! I'm Lorenzo, also known online as Snorty. I'm a 19-year-old tech enthusiast
+            from Rome, Italy, with a strong passion for cybersecurity, ethical hacking, and
+            programming.
           </p>
           <p>
-            Mi piace capire come funzionano i sistemi, scomporli, trovarne i punti deboli e
-            imparare a renderli più solidi. Tra i progetti più importanti c'è IPScan, un'estensione
-            per Raycast che ho costruito per velocizzare le scansioni di rete.
+            I love exploring how systems work, breaking them down, understanding their
+            weaknesses, and learning how to make them stronger. One of my most notable
+            projects is IPScan, a Raycast extension I built to speed up and simplify
+            network scanning tasks.
           </p>
           <p>
-            Questo blog è lo spazio dove condivido quello che imparo: guide, esperimenti e note
-            su sicurezza informatica e sviluppo.
+            This blog is my space to share what I learn: tips, guides, experiments, and
+            ideas related to cybersecurity and computer science.
+          </p>
+          <p>
+            If you're passionate about tech, hacking, or programming, you're in the right
+            place. Welcome to my corner of the internet.
           </p>
         </div>
       </div>
 
       <div className="mb-14">
-        <p className="font-mono text-xs text-signal mb-4 tracking-wide">// competenze</p>
+        <p className="font-mono text-xs text-signal mb-4 tracking-wide">// skills</p>
         <div className="flex flex-wrap gap-2">
           {skills.map((skill) => (
             <span
@@ -51,7 +57,7 @@ export default function About() {
       </div>
 
       <div>
-        <p className="font-mono text-xs text-signal mb-4 tracking-wide">// contatti</p>
+        <p className="font-mono text-xs text-signal mb-4 tracking-wide">// find me online</p>
         <div className="flex flex-wrap gap-3">
           <a
             href="https://github.com/lfazioli"

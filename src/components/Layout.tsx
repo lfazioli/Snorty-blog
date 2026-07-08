@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <button
               onClick={() => navigate("/")}
               className="flex items-center gap-3 shrink-0"
-              aria-label="Vai alla home"
+              aria-label="Go to home"
             >
               <img src={logo} alt="Logo" className="w-8 h-8 rounded-full border border-line" />
               <span className="font-mono text-sm text-ink tracking-tight">
@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <nav className="hidden sm:flex items-center gap-7 text-sm">
               <Link className="text-dim hover:text-ink transition-colors" to="/">Home</Link>
               <Link className="text-dim hover:text-ink transition-colors" to="/about">About</Link>
-              <Link className="text-dim hover:text-ink transition-colors" to="/Posts">Articoli</Link>
+              <Link className="text-dim hover:text-ink transition-colors" to="/Posts">Posts</Link>
               {isAdmin && (
                 <Link className="text-dim hover:text-ink transition-colors" to="/dashboard">Dashboard</Link>
               )}
@@ -50,7 +50,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     }}
                     className="px-3 py-1.5 rounded-md border border-line text-sm text-dim hover:text-ink hover:border-signal/50 transition-colors"
                   >
-                    Esci
+                    Log out
                   </button>
                 </>
               ) : (
@@ -58,7 +58,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   to="/login"
                   className="px-3.5 py-1.5 rounded-md bg-signal text-white text-sm font-medium hover:bg-signal-600 transition-colors"
                 >
-                  Accedi
+                  Log in
                 </Link>
               )}
             </div>
@@ -67,7 +67,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <button
               onClick={() => setOpen((o) => !o)}
               className="sm:hidden inline-flex items-center justify-center w-9 h-9 rounded-md border border-line text-dim hover:text-ink"
-              aria-label="Apri menu"
+              aria-label="Open menu"
               aria-expanded={open}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" fill="none">
@@ -83,7 +83,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="px-4 py-3 flex flex-col gap-3 text-sm">
               <Link className="text-dim hover:text-ink" to="/" onClick={() => setOpen(false)}>Home</Link>
               <Link className="text-dim hover:text-ink" to="/about" onClick={() => setOpen(false)}>About</Link>
-              <Link className="text-dim hover:text-ink" to="/Posts" onClick={() => setOpen(false)}>Articoli</Link>
+              <Link className="text-dim hover:text-ink" to="/Posts" onClick={() => setOpen(false)}>Posts</Link>
               {isAdmin && (
                 <Link className="text-dim hover:text-ink" to="/dashboard" onClick={() => setOpen(false)}>Dashboard</Link>
               )}
@@ -100,7 +100,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       }}
                       className="px-3 py-1.5 rounded-md border border-line text-dim hover:text-ink transition-colors"
                     >
-                      Esci
+                      Log out
                     </button>
                   </>
                 ) : (
@@ -109,7 +109,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     onClick={() => setOpen(false)}
                     className="px-3.5 py-1.5 rounded-md bg-signal text-white font-medium hover:bg-signal-600 transition-colors"
                   >
-                    Accedi
+                    Log in
                   </Link>
                 )}
               </div>

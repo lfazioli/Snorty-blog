@@ -14,18 +14,18 @@ function getSiteUrl(req: VercelRequest): string {
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    if (req.method !== "POST") return res.status(405).json({ error: "Metodo non permesso" });
+    if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
     const { email } = req.body ?? {};
     if (!email || typeof email !== "string") {
-      return res.status(400).json({ error: "email richiesta" });
+      return res.status(400).json({ error: "Email is required" });
     }
     const normalizedEmail = email.trim().toLowerCase();
 
     await ensureSchema();
 
-    // Risposta identica sia che l'utente esista o meno: non riveliamo quali email sono registrate.
-    const genericResponse = { message: "Se l'email esiste, riceverai un link di reset." };
+    // Same response whether the user exists or not: we never reveal which emails are registered.
+    const genericResponse = { message: "If that email exists, you'll receive a reset link." };
 
     const users = await pool.query("SELECT id FROM users WHERE email = $1 LIMIT 1", [normalizedEmail]);
     const user = users.rows[0];
@@ -41,20 +41,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       [user.id, token, expiresAt]
     );
 
-    // IMPORTANTE: il token NON viene mai restituito in questa risposta HTTP.
-    // Prima veniva incluso nel JSON (resetToken/resetLink): chiunque conoscesse
-    // l'email di un utente poteva così resettargli la password senza accedere
-    // alla sua casella email. Ora l'unico modo per ottenere il link è riceverlo
-    // via email (o leggerlo nei log della function, se non hai ancora configurato
-    // RESEND_API_KEY — vedi server/email.ts).
-    // Usa l'hash (#) perché il sito usa HashRouter: un link "reale" cliccato da
-    // un client email deve contenere #/... per essere riconosciuto da React Router.
+    // IMPORTANT: the token is NEVER returned in this HTTP response.
+    // It used to be included in the JSON (resetToken/resetLink): anyone who knew
+    // a user's email could reset their password without ever accessing their
+    // inbox. Now the only way to get the link is to receive it by email (or read
+    // it from the function logs, if you haven't configured RESEND_API_KEY yet —
+    // see server/email.ts).
+    // Uses the hash (#) because the site uses HashRouter: a "real" link clicked
+    // from an email client needs #/... in it to be recognized by React Router.
     const resetLink = `${getSiteUrl(req)}/#/reset-password/${token}`;
     await sendPasswordResetEmail(normalizedEmail, resetLink);
 
     return res.status(200).json(genericResponse);
   } catch (e: any) {
     console.error("FORGOT_ERROR:", e?.message || e, e?.stack);
-    return res.status(500).json({ error: "Errore interno" });
+    return res.status(500).json({ error: "Internal error" });
   }
 }

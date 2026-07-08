@@ -22,9 +22,9 @@ export default function ForgotPassword() {
         method: "POST",
         body: JSON.stringify({ email }),
       });
-      setMsg(data.message || "Se l'email esiste, riceverai un link di reset.");
+      setMsg(data.message || "If that email exists, you'll receive a reset link.");
     } catch (err) {
-      setMsg(err instanceof ApiError ? err.message : "Errore di rete durante la richiesta di reset.");
+      setMsg(err instanceof ApiError ? err.message : "Network error while requesting the reset.");
     } finally {
       setLoading(false);
     }
@@ -33,12 +33,12 @@ export default function ForgotPassword() {
   return (
     <Layout>
       <div className="max-w-sm mx-auto py-8">
-        <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// recupero password</p>
-        <h1 className="text-2xl font-semibold text-ink mb-8 text-center tracking-tight">Password dimenticata</h1>
+        <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// password recovery</p>
+        <h1 className="text-2xl font-semibold text-ink mb-8 text-center tracking-tight">Forgot password</h1>
 
         <form onSubmit={handleReset} className="rounded-lg border border-line bg-panel p-7 flex flex-col gap-4">
           <label className="flex flex-col text-sm text-dim">
-            Inserisci la tua email
+            Enter your email
             <input
               type="email"
               value={email}
@@ -53,14 +53,14 @@ export default function ForgotPassword() {
             disabled={loading || !email}
             className="mt-2 bg-signal text-white font-medium py-2.5 rounded-md hover:bg-signal-600 transition-colors disabled:opacity-60"
           >
-            {loading ? "Invio in corso..." : "Invia link di reset"}
+            {loading ? "Sending..." : "Send reset link"}
           </button>
 
           {msg && <p className="text-sm text-dim mt-1 whitespace-pre-line text-center">{msg}</p>}
 
           <div className="flex justify-between text-xs text-dim mt-2">
-            <Link to="/login" className="hover:text-ink transition-colors">Torna al login</Link>
-            <Link to="/register" className="hover:text-ink transition-colors">Registrati</Link>
+            <Link to="/login" className="hover:text-ink transition-colors">Back to login</Link>
+            <Link to="/register" className="hover:text-ink transition-colors">Register</Link>
           </div>
         </form>
       </div>

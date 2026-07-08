@@ -6,14 +6,14 @@ import { signSession } from "../../server/auth.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    if (req.method !== "POST") return res.status(405).json({ error: "Metodo non permesso" });
+    if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
     const { email, password } = req.body ?? {};
-    if (!email || !password) return res.status(400).json({ error: "email e password richiesti" });
+    if (!email || !password) return res.status(400).json({ error: "Email and password are required" });
     if (typeof email !== "string" || typeof password !== "string") {
-      return res.status(400).json({ error: "formato non valido" });
+      return res.status(400).json({ error: "Invalid format" });
     }
-    if (password.length < 8) return res.status(400).json({ error: "Password troppo corta (>=8 caratteri)" });
+    if (password.length < 8) return res.status(400).json({ error: "Password too short (min 8 characters)" });
 
     const normalizedEmail = email.trim().toLowerCase();
 
@@ -21,11 +21,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const existing = await pool.query("SELECT id FROM users WHERE email = $1 LIMIT 1", [normalizedEmail]);
     if (existing.rows.length > 0) {
-      return res.status(409).json({ error: "Utente già registrato" });
+      return res.status(409).json({ error: "This email is already registered" });
     }
 
-    // L'account con questa email diventa automaticamente "scrittore" del blog.
-    // Vedi server/db.ts e api/auth/login.ts per gli altri punti in cui viene applicato.
+    // The account with this email automatically becomes the blog's "writer".
+    // See server/db.ts and api/auth/login.ts for the other places this is applied.
     const adminEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
     const role: "admin" | "reader" = adminEmail && normalizedEmail === adminEmail ? "admin" : "reader";
 
@@ -36,12 +36,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     );
 
     const user = inserted.rows[0];
-    // Login automatico dopo la registrazione, cosi' non serve un passaggio in piu'.
+    // Auto-login right after registration, so there's no extra step.
     const token = signSession({ userId: user.id, email: user.email, role: user.role });
 
     return res.status(201).json({ token });
   } catch (e: any) {
     console.error("REGISTER_ERROR:", e?.message || e, e?.stack);
-    return res.status(500).json({ error: "Errore interno" });
+    return res.status(500).json({ error: "Internal error" });
   }
 }

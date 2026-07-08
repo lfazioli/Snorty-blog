@@ -16,16 +16,16 @@ export default function Post() {
 
   useEffect(() => {
     if (!slug) return;
-    // Reimposta loading/error quando cambia lo slug (navigazione da un post a un altro
-    // senza smontare il componente). Pattern standard di data-fetching con effetti;
-    // vedi https://react.dev/learn/synchronizing-with-effects#fetching-data
+    // Resets loading/error when the slug changes (navigating from one post to
+    // another without unmounting the component). Standard data-fetching-with-
+    // effects pattern; see https://react.dev/learn/synchronizing-with-effects#fetching-data
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError("");
     apiFetch<{ post: PostType }>(`/api/posts/${slug}`)
       .then((data) => setPost(data.post))
       .catch((e) => {
-        setError(e instanceof ApiError && e.status === 404 ? "Post non trovato." : "Errore nel caricamento del post.");
+        setError(e instanceof ApiError && e.status === 404 ? "Post not found." : "Failed to load the post.");
       })
       .finally(() => setLoading(false));
   }, [slug]);
@@ -33,7 +33,7 @@ export default function Post() {
   if (loading) {
     return (
       <Layout>
-        <p className="text-dim text-sm text-center py-16">Caricamento...</p>
+        <p className="text-dim text-sm text-center py-16">Loading...</p>
       </Layout>
     );
   }
@@ -42,8 +42,8 @@ export default function Post() {
     return (
       <Layout>
         <div className="text-center py-16">
-          <p className="text-danger text-sm mb-4">{error || "Post non trovato."}</p>
-          <Link to="/Posts" className="text-signal text-sm hover:underline">Torna a tutti gli articoli</Link>
+          <p className="text-danger text-sm mb-4">{error || "Post not found."}</p>
+          <Link to="/Posts" className="text-signal text-sm hover:underline">Back to all posts</Link>
         </div>
       </Layout>
     );
@@ -54,7 +54,7 @@ export default function Post() {
       <article>
         {!post.published && (
           <p className="font-mono text-[10px] px-2 py-1 inline-block rounded border border-warn/40 text-warn mb-4">
-            bozza — visibile solo a te
+            draft — only visible to you
           </p>
         )}
 

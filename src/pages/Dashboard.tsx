@@ -16,28 +16,28 @@ export default function Dashboard() {
       const data = await apiFetch<{ posts: Post[] }>("/api/posts");
       setPosts(data.posts);
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Errore nel caricamento dei post");
+      setError(e instanceof ApiError ? e.message : "Failed to load posts");
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    // load() aggiorna lo stato solo dopo l'await (nessun setState sincrono):
-    // è definita come funzione a parte perché riutilizzabile anche da un eventuale
-    // pulsante "riprova" in futuro.
+    // load() only updates state after the await (no synchronous setState):
+    // it's defined as a standalone function so it can be reused by a future
+    // "retry" button too.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, []);
 
   async function handleDelete(slug: string) {
-    if (!window.confirm("Eliminare questo post? L'azione non è reversibile.")) return;
+    if (!window.confirm("Delete this post? This action cannot be undone.")) return;
     setDeletingSlug(slug);
     try {
       await apiFetch(`/api/posts/${slug}`, { method: "DELETE" });
       setPosts((prev) => prev.filter((p) => p.slug !== slug));
     } catch (e) {
-      alert(e instanceof ApiError ? e.message : "Errore durante l'eliminazione");
+      alert(e instanceof ApiError ? e.message : "Failed to delete the post");
     } finally {
       setDeletingSlug(null);
     }
@@ -47,21 +47,21 @@ export default function Dashboard() {
     <Layout>
       <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
         <div>
-          <p className="font-mono text-xs text-signal mb-2 tracking-wide">// gestione contenuti</p>
-          <h1 className="text-2xl sm:text-3xl font-semibold text-ink tracking-tight">Articoli</h1>
+          <p className="font-mono text-xs text-signal mb-2 tracking-wide">// content management</p>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-ink tracking-tight">Posts</h1>
         </div>
         <Link
           to="/dashboard/new"
           className="px-4 py-2 rounded-md bg-signal text-white text-sm font-medium hover:bg-signal-600 transition-colors"
         >
-          + Nuovo articolo
+          + New post
         </Link>
       </div>
 
-      {loading && <p className="text-dim text-sm">Caricamento...</p>}
+      {loading && <p className="text-dim text-sm">Loading...</p>}
       {error && <p className="text-danger text-sm">{error}</p>}
       {!loading && !error && posts.length === 0 && (
-        <p className="text-dim text-sm">Nessun post ancora. Creane uno!</p>
+        <p className="text-dim text-sm">No posts yet. Create one!</p>
       )}
 
       <div className="flex flex-col gap-2">
@@ -75,7 +75,7 @@ export default function Dashboard() {
                 <h3 className="text-sm font-semibold text-ink truncate">{post.title}</h3>
                 {!post.published && (
                   <span className="text-[10px] px-1.5 py-0.5 rounded border border-warn/40 text-warn font-mono shrink-0">
-                    bozza
+                    draft
                   </span>
                 )}
               </div>
@@ -86,14 +86,14 @@ export default function Dashboard() {
                 to={`/dashboard/edit/${post.slug}`}
                 className="px-3 py-1.5 rounded-md border border-line text-dim hover:text-ink hover:border-signal/50 transition-colors text-sm"
               >
-                Modifica
+                Edit
               </Link>
               <button
                 onClick={() => handleDelete(post.slug)}
                 disabled={deletingSlug === post.slug}
                 className="px-3 py-1.5 rounded-md border border-danger/30 text-danger hover:bg-danger/10 transition-colors text-sm disabled:opacity-50"
               >
-                {deletingSlug === post.slug ? "..." : "Elimina"}
+                {deletingSlug === post.slug ? "..." : "Delete"}
               </button>
             </div>
           </div>

@@ -39,8 +39,8 @@ export default function Home() {
         </h1>
 
         <p className="text-dim text-base sm:text-lg leading-relaxed max-w-xl mb-8">
-          Scrivo di cybersecurity, ethical hacking e sviluppo: guide pratiche, esperimenti
-          e gli strumenti che costruisco lungo il percorso.
+          I write about cybersecurity, ethical hacking and development: practical
+          guides, experiments and the tools I build along the way.
         </p>
 
         <div className="flex flex-wrap gap-3">
@@ -48,7 +48,7 @@ export default function Home() {
             to="/about"
             className="px-4 py-2 rounded-md bg-signal text-white text-sm font-medium hover:bg-signal-600 transition-colors"
           >
-            Chi sono
+            About me
           </Link>
           <a
             href="https://github.com/lfazioli"
@@ -63,24 +63,24 @@ export default function Home() {
 
       {/* WHAT I DO */}
       <section className="mb-20">
-        <p className="font-mono text-xs text-signal mb-3 tracking-wide">// aree di lavoro</p>
+        <p className="font-mono text-xs text-signal mb-3 tracking-wide">// what I do</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-line rounded-lg overflow-hidden border border-line">
           <div className="bg-panel p-6">
             <h3 className="text-sm font-semibold text-ink mb-2">Cybersecurity</h3>
             <p className="text-sm text-dim leading-relaxed">
-              Analisi di sistemi, ricerca di vulnerabilità e hardening.
+              System analysis, vulnerability research and hardening.
             </p>
           </div>
           <div className="bg-panel p-6">
-            <h3 className="text-sm font-semibold text-ink mb-2">Sviluppo</h3>
+            <h3 className="text-sm font-semibold text-ink mb-2">Development</h3>
             <p className="text-sm text-dim leading-relaxed">
-              Strumenti e applicazioni con React, TypeScript, Python.
+              Tools and applications with React, TypeScript, Python.
             </p>
           </div>
           <div className="bg-panel p-6">
-            <h3 className="text-sm font-semibold text-ink mb-2">Tool & esperimenti</h3>
+            <h3 className="text-sm font-semibold text-ink mb-2">Tools & experiments</h3>
             <p className="text-sm text-dim leading-relaxed">
-              IPScan per Raycast e altri esperimenti in corso.
+              IPScan for Raycast and other ongoing experiments.
             </p>
           </div>
         </div>
@@ -89,14 +89,14 @@ export default function Home() {
       {/* LATEST POSTS */}
       <section>
         <div className="flex items-center justify-between mb-5">
-          <p className="font-mono text-xs text-signal tracking-wide">// ultimi articoli</p>
+          <p className="font-mono text-xs text-signal tracking-wide">// latest posts</p>
           <Link to="/Posts" className="text-xs text-dim hover:text-ink transition-colors">
-            Vedi tutti →
+            View all →
           </Link>
         </div>
 
-        {loading && <p className="text-dim text-sm">Caricamento...</p>}
-        {!loading && posts.length === 0 && <p className="text-dim text-sm">Nessun post ancora.</p>}
+        {loading && <p className="text-dim text-sm">Loading...</p>}
+        {!loading && posts.length === 0 && <p className="text-dim text-sm">No posts yet.</p>}
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           {posts.map((p) => (

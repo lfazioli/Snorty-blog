@@ -29,7 +29,7 @@ export default function PostCard({ title, date, image, slug, excerpt, draft }: P
           <h3 className="text-[15px] font-semibold text-ink leading-snug">{title}</h3>
           {draft && (
             <span className="text-[10px] px-1.5 py-0.5 rounded border border-warn/40 text-warn font-mono">
-              bozza
+              draft
             </span>
           )}
         </div>

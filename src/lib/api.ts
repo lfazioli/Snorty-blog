@@ -26,7 +26,7 @@ export async function apiFetch<T = unknown>(path: string, options: RequestInit =
   try {
     res = await fetch(path, { ...options, headers });
   } catch {
-    throw new ApiError("Errore di rete. Controlla la connessione e riprova.", 0);
+    throw new ApiError("Network error. Check your connection and try again.", 0);
   }
 
   const isJson = res.headers.get("content-type")?.includes("application/json");

@@ -48,7 +48,7 @@ export default function PostEditor() {
         setContent(data.post.content);
         setPublished(data.post.published);
       } catch (e) {
-        setError(e instanceof ApiError ? e.message : "Errore nel caricamento del post");
+        setError(e instanceof ApiError ? e.message : "Failed to load the post");
       } finally {
         setLoading(false);
       }
@@ -60,7 +60,7 @@ export default function PostEditor() {
     setError("");
 
     if (!title.trim() || !content.trim()) {
-      setError("Titolo e contenuto sono obbligatori.");
+      setError("Title and content are required.");
       return;
     }
 
@@ -79,7 +79,7 @@ export default function PostEditor() {
       }
       navigate("/dashboard");
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Errore durante il salvataggio");
+      setError(e instanceof ApiError ? e.message : "Failed to save the post");
     } finally {
       setSaving(false);
     }
@@ -88,7 +88,7 @@ export default function PostEditor() {
   if (loading) {
     return (
       <Layout>
-        <p className="text-dim text-sm text-center py-12">Caricamento...</p>
+        <p className="text-dim text-sm text-center py-12">Loading...</p>
       </Layout>
     );
   }
@@ -96,15 +96,15 @@ export default function PostEditor() {
   return (
     <Layout>
       <p className="font-mono text-xs text-signal mb-2 tracking-wide">
-        // {isEditing ? "modifica" : "nuovo"} articolo
+        // {isEditing ? "edit" : "new"} post
       </p>
       <h1 className="text-2xl sm:text-3xl font-semibold text-ink tracking-tight mb-8">
-        {isEditing ? "Modifica articolo" : "Nuovo articolo"}
+        {isEditing ? "Edit post" : "New post"}
       </h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <label className="flex flex-col text-sm gap-1.5 text-dim">
-          Titolo
+          Title
           <input
             value={title}
             onChange={(e) => {
@@ -126,12 +126,12 @@ export default function PostEditor() {
           />
           <span className="text-xs text-dim/70 font-mono">
             /post/{customSlug || "..."}
-            {isEditing && " — non modificabile"}
+            {isEditing && " — cannot be changed"}
           </span>
         </label>
 
         <label className="flex flex-col text-sm gap-1.5 text-dim">
-          Immagine di copertina (URL, opzionale)
+          Cover image (URL, optional)
           <input
             value={image}
             onChange={(e) => setImage(e.target.value)}
@@ -141,7 +141,7 @@ export default function PostEditor() {
         </label>
 
         <label className="flex flex-col text-sm gap-1.5 text-dim">
-          Estratto (opzionale, mostrato nelle card)
+          Excerpt (optional, shown on the cards)
           <input value={excerpt} onChange={(e) => setExcerpt(e.target.value)} className={inputClass} />
         </label>
 
@@ -154,7 +154,7 @@ export default function PostEditor() {
                 tab === "write" ? "bg-signal text-white" : "text-dim hover:text-ink"
               }`}
             >
-              Scrivi
+              Write
             </button>
             <button
               type="button"
@@ -163,7 +163,7 @@ export default function PostEditor() {
                 tab === "preview" ? "bg-signal text-white" : "text-dim hover:text-ink"
               }`}
             >
-              Anteprima
+              Preview
             </button>
           </div>
 
@@ -173,13 +173,13 @@ export default function PostEditor() {
               onChange={(e) => setContent(e.target.value)}
               rows={16}
               className={`${inputClass} w-full font-mono text-sm`}
-              placeholder="Scrivi in Markdown... (# Titolo, **grassetto**, - lista, ecc.)"
+              placeholder="Write in Markdown... (# Heading, **bold**, - list, etc.)"
               required
             />
           ) : (
             <div className="p-4 rounded-md bg-panel border border-line min-h-[300px] text-ink">
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-                {content || "*Niente da mostrare*"}
+                {content || "*Nothing to show*"}
               </ReactMarkdown>
             </div>
           )}
@@ -192,7 +192,7 @@ export default function PostEditor() {
             onChange={(e) => setPublished(e.target.checked)}
             className="accent-signal"
           />
-          Pubblicato (disattiva per salvare come bozza, visibile solo a te)
+          Published (turn off to save as a draft, only visible to you)
         </label>
 
         {error && <p className="text-danger text-sm">{error}</p>}
@@ -203,13 +203,13 @@ export default function PostEditor() {
             disabled={saving}
             className="px-5 py-2 rounded-md bg-signal text-white text-sm font-medium hover:bg-signal-600 transition-colors disabled:opacity-60"
           >
-            {saving ? "Salvataggio..." : "Salva"}
+            {saving ? "Saving..." : "Save"}
           </button>
           <Link
             to="/dashboard"
             className="px-5 py-2 rounded-md border border-line text-dim hover:text-ink transition-colors text-sm"
           >
-            Annulla
+            Cancel
           </Link>
         </div>
       </form>
