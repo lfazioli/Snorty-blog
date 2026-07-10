@@ -5,6 +5,7 @@ import { TypeAnimation } from "react-type-animation";
 import { apiFetch } from "../lib/api";
 import { Link } from "react-router-dom";
 import type { Post } from "../types/post";
+import Seo from "../components/Seo";
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -19,6 +20,7 @@ export default function Home() {
 
   return (
     <Layout>
+      <Seo title="Cybersecurity, ethical hacking e sviluppo" description="Guide pratiche, ricerca sulla sicurezza e strumenti di sviluppo di Lorenzo Fazioli." />
       {/* HERO */}
       <section className="mb-20">
         <p className="font-mono text-xs text-signal mb-4 tracking-wide">
@@ -90,7 +92,7 @@ export default function Home() {
       <section>
         <div className="flex items-center justify-between mb-5">
           <p className="font-mono text-xs text-signal tracking-wide">// latest posts</p>
-          <Link to="/Posts" className="text-xs text-dim hover:text-ink transition-colors">
+          <Link to="/posts" className="text-xs text-dim hover:text-ink transition-colors">
             View all →
           </Link>
         </div>

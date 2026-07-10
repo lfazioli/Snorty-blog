@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import PostCard from "../components/PostCard";
 import { apiFetch } from "../lib/api";
 import type { Post } from "../types/post";
+import Seo from "../components/Seo";
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -18,6 +19,7 @@ export default function PostsPage() {
 
   return (
     <Layout>
+      <Seo title="Articoli su cybersecurity e sviluppo" description="Tutti gli articoli, le guide e gli esperimenti di Snorty Blog su cybersecurity, ethical hacking e sviluppo." path="/posts" />
       <p className="font-mono text-xs text-signal mb-3 tracking-wide">// all posts</p>
       <h1 className="text-2xl sm:text-3xl font-semibold text-ink mb-8 tracking-tight">
         Posts

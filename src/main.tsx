@@ -2,7 +2,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Posts from "./pages/Posts";
 import Post from "./pages/Post";
@@ -19,12 +19,12 @@ import { AuthProvider } from "./context/AuthContext";
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthProvider>
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/post/:slug" element={<Post />} />
           <Route path="/about" element={<About />} />
-          <Route path="/Posts" element={<Posts />} />
+          <Route path="/posts" element={<Posts />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -54,7 +54,7 @@ createRoot(document.getElementById("root")!).render(
             }
           />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </AuthProvider>
   </React.StrictMode>
 );

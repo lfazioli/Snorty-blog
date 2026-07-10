@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <nav className="hidden sm:flex items-center gap-7 text-sm">
               <Link className="text-dim hover:text-ink transition-colors" to="/">Home</Link>
               <Link className="text-dim hover:text-ink transition-colors" to="/about">About</Link>
-              <Link className="text-dim hover:text-ink transition-colors" to="/Posts">Posts</Link>
+              <Link className="text-dim hover:text-ink transition-colors" to="/posts">Posts</Link>
               {isAdmin && (
                 <Link className="text-dim hover:text-ink transition-colors" to="/dashboard">Dashboard</Link>
               )}
@@ -83,7 +83,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="px-4 py-3 flex flex-col gap-3 text-sm">
               <Link className="text-dim hover:text-ink" to="/" onClick={() => setOpen(false)}>Home</Link>
               <Link className="text-dim hover:text-ink" to="/about" onClick={() => setOpen(false)}>About</Link>
-              <Link className="text-dim hover:text-ink" to="/Posts" onClick={() => setOpen(false)}>Posts</Link>
+              <Link className="text-dim hover:text-ink" to="/posts" onClick={() => setOpen(false)}>Posts</Link>
               {isAdmin && (
                 <Link className="text-dim hover:text-ink" to="/dashboard" onClick={() => setOpen(false)}>Dashboard</Link>
               )}

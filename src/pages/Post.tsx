@@ -7,6 +7,7 @@ import Layout from "../components/Layout";
 import { apiFetch, ApiError } from "../lib/api";
 import { markdownComponents } from "../components/MarkdownComponents";
 import type { Post as PostType } from "../types/post";
+import Seo from "../components/Seo";
 
 export default function Post() {
   const { slug } = useParams();
@@ -43,7 +44,7 @@ export default function Post() {
       <Layout>
         <div className="text-center py-16">
           <p className="text-danger text-sm mb-4">{error || "Post not found."}</p>
-          <Link to="/Posts" className="text-signal text-sm hover:underline">Back to all posts</Link>
+          <Link to="/posts" className="text-signal text-sm hover:underline">Back to all posts</Link>
         </div>
       </Layout>
     );
@@ -51,6 +52,15 @@ export default function Post() {
 
   return (
     <Layout>
+      <Seo
+        title={post.title}
+        description={post.excerpt || `Approfondimento su cybersecurity e sviluppo: ${post.title}`}
+        path={`/post/${post.slug}`}
+        image={post.image}
+        type="article"
+        article={{ publishedTime: post.created_at, modifiedTime: post.updated_at }}
+        noIndex={!post.published}
+      />
       <article>
         {!post.published && (
           <p className="font-mono text-[10px] px-2 py-1 inline-block rounded border border-warn/40 text-warn mb-4">

@@ -31,6 +31,23 @@ npm run build    # build di produzione, la stessa che gira su Vercel
 - `RESEND_FROM_EMAIL` (opzionale) → mittente delle email, default `onboarding@resend.dev`.
 - `SITE_URL` (opzionale) → es. `https://tuosito.vercel.app`, per il link nelle email di reset.
   Se non impostata viene dedotta automaticamente dall'host della richiesta.
+- `VITE_SITE_URL` (consigliata) → lo stesso URL pubblico, es. `https://tuodominio.it`.
+  Serve a generare i link canonici e i metadati SEO nel browser. Non inserire la barra finale.
+
+## SEO e indicizzazione
+
+Il sito espone automaticamente `https://tuodominio.it/robots.txt` e una sitemap dinamica
+in `https://tuodominio.it/sitemap.xml`, che include gli articoli pubblicati.
+
+Dopo il prossimo deploy su Vercel:
+1. imposta `SITE_URL` e `VITE_SITE_URL` sul dominio di produzione;
+2. verifica il dominio in [Google Search Console](https://search.google.com/search-console);
+3. invia `https://tuodominio.it/sitemap.xml` nella sezione **Sitemap** e usa
+   **Controllo URL → Richiedi indicizzazione** per home e articoli importanti.
+
+I metadati aiutano Google a capire le pagine, ma il posizionamento dipende anche da
+contenuti originali, autorevolezza e tempo di scansione: l'indicizzazione può richiedere giorni
+o settimane e non garantisce le prime posizioni.
 
 ## Novità principali
 - Gestione articoli dal sito (Dashboard → crea/modifica/elimina, Markdown con anteprima,
