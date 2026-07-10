@@ -8,7 +8,12 @@ function normalizeDatabaseUrl(url?: string): string {
   try {
     const u = new URL(url);
     const params = u.searchParams;
-    if (!params.get("sslmode")) params.set("sslmode", "require");
+    // `require` will change semantics in pg v9. `verify-full` preserves strict
+    // certificate and hostname validation and avoids the deprecation warning.
+    const sslmode = params.get("sslmode");
+    if (!sslmode || ["prefer", "require", "verify-ca"].includes(sslmode)) {
+      params.set("sslmode", "verify-full");
+    }
     // Some pg environments don't support channel binding: strip it if present.
     if (params.get("channel_binding")) params.delete("channel_binding");
     u.search = params.toString();
@@ -24,7 +29,6 @@ function normalizeDatabaseUrl(url?: string): string {
 // connections each can quickly saturate the database's connection limit.
 export const pool = new Pool({
   connectionString: normalizeDatabaseUrl(process.env.DATABASE_URL),
-  ssl: { rejectUnauthorized: false },
   max: 3,
 });
 
