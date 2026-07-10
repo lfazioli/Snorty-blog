@@ -23,7 +23,7 @@ export default function Post() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError("");
-    apiFetch<{ post: PostType }>(`/api/posts/${slug}`)
+    apiFetch<{ post: PostType }>(`/api/post?slug=${encodeURIComponent(slug)}`)
       .then((data) => setPost(data.post))
       .catch((e) => {
         setError(e instanceof ApiError && e.status === 404 ? "Post not found." : "Failed to load the post.");

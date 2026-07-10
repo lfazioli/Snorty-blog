@@ -1,10 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/sitemap\\.xml", "dest": "/api/sitemap" },
     { "src": "/robots\\.txt", "dest": "/api/robots" },
     { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/((?!api/).*)", "dest": "/index.html" }
   ]
 }
