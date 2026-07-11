@@ -2,7 +2,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import crypto from "crypto";
 import { pool, ensureSchema } from "../../server/db.js";
-import { sendPasswordResetEmail } from "../../server/email.js";
+import { isPasswordResetEmailConfigured, sendPasswordResetEmail } from "../../server/email.js";
 
 function getSiteUrl(req: VercelRequest): string {
   const envUrl = process.env.SITE_URL;
@@ -21,6 +21,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: "Email is required" });
     }
     const normalizedEmail = email.trim().toLowerCase();
+
+    // Do this before checking the account so an unavailable mail service cannot
+    // reveal whether a given email address is registered.
+    if (!isPasswordResetEmailConfigured()) {
+      console.error("FORGOT_EMAIL_NOT_CONFIGURED: missing RESEND_API_KEY or RESEND_FROM_EMAIL");
+      return res.status(503).json({ error: "Password reset emails are temporarily unavailable. Please try again later." });
+    }
 
     await ensureSchema();
 
@@ -41,15 +48,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       [user.id, token, expiresAt]
     );
 
-    // IMPORTANT: the token is NEVER returned in this HTTP response.
-    // It used to be included in the JSON (resetToken/resetLink): anyone who knew
-    // a user's email could reset their password without ever accessing their
-    // inbox. Now the only way to get the link is to receive it by email (or read
-    // it from the function logs, if you haven't configured RESEND_API_KEY yet —
-    // see server/email.ts).
-    // Uses the hash (#) because the site uses HashRouter: a "real" link clicked
-    // from an email client needs #/... in it to be recognized by React Router.
-    const resetLink = `${getSiteUrl(req)}/#/reset-password/${token}`;
+    // The token is never returned in the HTTP response. BrowserRouter expects a
+    // normal path (without #) when the recipient opens the email link.
+    const resetLink = `${getSiteUrl(req)}/reset-password/${token}`;
     await sendPasswordResetEmail(normalizedEmail, resetLink);
 
     return res.status(200).json(genericResponse);
