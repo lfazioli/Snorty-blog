@@ -5,6 +5,7 @@ import dataCover from "../assets/tools/data-cover.png";
 import osintCover from "../assets/tools/osint-cover.png";
 import crtCover from "../assets/tools/crt.png";
 import urlscanCover from "../assets/tools/urlscan.png";
+import passwordCrackerCover from "../assets/tools/pwd.png";
 
 
 type Tool = {
@@ -60,7 +61,7 @@ const tools: Tool[] = [
     description: "A project by lfazioli for exploring password strength and password-security concepts in a controlled environment.",
     howTo: "Use it only with passwords, hashes, or test data you own or are explicitly authorised to assess; start with a safe sample and review the result.",
     href: "https://password-cracker-pearl.vercel.app/",
-    image: dataCover,
+    image: passwordCrackerCover,
     badge: "Your project",
   },
   {
