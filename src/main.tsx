@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Posts from "./pages/Posts";
 import Post from "./pages/Post";
 import About from "./pages/about";
+import Tools from "./pages/Tools";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -24,6 +25,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<Home />} />
           <Route path="/post/:slug" element={<Post />} />
           <Route path="/about" element={<About />} />
+          <Route path="/tools" element={<Tools />} />
           <Route path="/posts" element={<Posts />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

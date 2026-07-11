@@ -33,6 +33,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link className="text-dim hover:text-ink transition-colors" to="/">Home</Link>
               <Link className="text-dim hover:text-ink transition-colors" to="/about">About</Link>
               <Link className="text-dim hover:text-ink transition-colors" to="/posts">Posts</Link>
+              <Link className="text-dim hover:text-ink transition-colors" to="/tools">Tools</Link>
               {isAdmin && (
                 <Link className="text-dim hover:text-ink transition-colors" to="/dashboard">Dashboard</Link>
               )}
@@ -84,6 +85,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link className="text-dim hover:text-ink" to="/" onClick={() => setOpen(false)}>Home</Link>
               <Link className="text-dim hover:text-ink" to="/about" onClick={() => setOpen(false)}>About</Link>
               <Link className="text-dim hover:text-ink" to="/posts" onClick={() => setOpen(false)}>Posts</Link>
+              <Link className="text-dim hover:text-ink" to="/tools" onClick={() => setOpen(false)}>Tools</Link>
               {isAdmin && (
                 <Link className="text-dim hover:text-ink" to="/dashboard" onClick={() => setOpen(false)}>Dashboard</Link>
               )}
