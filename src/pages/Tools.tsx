@@ -1,9 +1,11 @@
 import Layout from "../components/Layout";
 import Seo from "../components/Seo";
 import netfoxCover from "../assets/tools/netfox-cover.png";
-import dnsCover from "../assets/tools/dns-cover.png";
 import dataCover from "../assets/tools/data-cover.png";
 import osintCover from "../assets/tools/osint-cover.png";
+import crtCover from "../assets/tools/crt.png";
+import urlscanCover from "../assets/tools/urlscan.png";
+
 
 type Tool = {
   name: string;
@@ -31,7 +33,7 @@ const tools: Tool[] = [
     description: "Una sandbox web per osservare cosa carica davvero un link prima di aprirlo nel browser.",
     howTo: "Incolla l'URL e scegli con cura la visibilità della scansione; poi guarda screenshot, richieste, domini e IP rilevati.",
     href: "https://urlscan.io/",
-    image: osintCover,
+    image: urlscanCover,
     badge: "Web",
   },
   {
@@ -40,7 +42,7 @@ const tools: Tool[] = [
     description: "Ricerca nei Certificate Transparency logs: utile per trovare sottodomini associati a un dominio.",
     howTo: "Cerca %example.com, sostituendo example.com con il dominio autorizzato; esporta o filtra i risultati e verifica quelli rilevanti.",
     href: "https://crt.sh/",
-    image: dnsCover,
+    image: crtCover,
     badge: "Web",
   },
   {
@@ -67,7 +69,7 @@ const tools: Tool[] = [
     description: "Una vista rapida sulle relazioni DNS pubbliche di un dominio, utile per orientarsi durante una verifica.",
     howTo: "Inserisci un dominio di tua proprietà o con autorizzazione e usa la mappa come punto di partenza, non come fonte definitiva.",
     href: "https://dnsdumpster.com/",
-    image: dnsCover,
+    image: crtCover,
     badge: "Web",
   },
 ];
