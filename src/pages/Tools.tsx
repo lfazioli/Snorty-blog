@@ -55,6 +55,15 @@ const tools: Tool[] = [
     badge: "Web",
   },
   {
+    name: "Password Cracker",
+    category: "Password security",
+    description: "A project by lfazioli for exploring password strength and password-security concepts in a controlled environment.",
+    howTo: "Use it only with passwords, hashes, or test data you own or are explicitly authorised to assess; start with a safe sample and review the result.",
+    href: "https://password-cracker-pearl.vercel.app/",
+    image: dataCover,
+    badge: "Your project",
+  },
+  {
     name: "SpiderFoot",
     category: "OSINT",
     description: "Automates the collection and correlation of public information for an initial asset map.",
