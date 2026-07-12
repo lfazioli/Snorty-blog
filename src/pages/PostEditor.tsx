@@ -7,6 +7,7 @@ import Layout from "../components/Layout";
 import { apiFetch, ApiError } from "../lib/api";
 import { markdownComponents } from "../components/MarkdownComponents";
 import type { Post } from "../types/post";
+import Seo from "../components/Seo";
 
 function slugify(input: string): string {
   return input
@@ -95,6 +96,7 @@ export default function PostEditor() {
 
   return (
     <Layout>
+      <Seo title={isEditing ? "Modifica articolo" : "Nuovo articolo"} description="Area di gestione dei contenuti." noIndex />
       <p className="font-mono text-xs text-signal mb-2 tracking-wide">
         // {isEditing ? "edit" : "new"} post
       </p>

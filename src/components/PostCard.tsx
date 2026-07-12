@@ -20,6 +20,8 @@ export default function PostCard({ title, date, image, slug, excerpt, draft }: P
           <img
             src={image}
             alt={title}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
           />
         </div>

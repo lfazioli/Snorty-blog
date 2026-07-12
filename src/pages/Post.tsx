@@ -34,6 +34,7 @@ export default function Post() {
   if (loading) {
     return (
       <Layout>
+        <Seo title="Caricamento articolo" description="Caricamento dell'articolo." noIndex />
         <p className="text-dim text-sm text-center py-16">Loading...</p>
       </Layout>
     );
@@ -42,6 +43,7 @@ export default function Post() {
   if (error || !post) {
     return (
       <Layout>
+        <Seo title="Articolo non trovato" description="L'articolo richiesto non è disponibile." path={`/post/${slug || ""}`} noIndex />
         <div className="text-center py-16">
           <p className="text-danger text-sm mb-4">{error || "Post not found."}</p>
           <Link to="/posts" className="text-signal text-sm hover:underline">Back to all posts</Link>
@@ -77,6 +79,8 @@ export default function Post() {
           <img
             src={post.image}
             alt={post.title}
+            loading="eager"
+            fetchPriority="high"
             className="w-full rounded-lg border border-line mb-8"
           />
         )}

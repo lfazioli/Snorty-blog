@@ -22,6 +22,22 @@ function setMeta(selector: string, attribute: "name" | "property", key: string, 
   element.content = content;
 }
 
+function removeMeta(selector: string) {
+  document.head.querySelector(selector)?.remove();
+}
+
+function setStructuredData(id: string, value: Record<string, unknown>) {
+  let element = document.head.querySelector<HTMLScriptElement>(`script[data-seo="${id}"]`);
+  if (!element) {
+    element = document.createElement("script");
+    element.type = "application/ld+json";
+    element.dataset.seo = id;
+    document.head.appendChild(element);
+  }
+  // textContent avoids interpreting values coming from article titles as HTML.
+  element.textContent = JSON.stringify(value).replace(/</g, "\\u003c");
+}
+
 export default function Seo({ title, description, path = "/", image, type = "website", noIndex = false, article }: SeoProps) {
   useEffect(() => {
     const canonicalUrl = absoluteUrl(path);
@@ -36,13 +52,22 @@ export default function Seo({ title, description, path = "/", image, type = "web
     setMeta('meta[property="og:type"]', "property", "og:type", type);
     setMeta('meta[property="og:url"]', "property", "og:url", canonicalUrl);
     setMeta('meta[property="og:image"]', "property", "og:image", socialImage);
+    setMeta('meta[property="og:image:alt"]', "property", "og:image:alt", type === "article" ? title : "Snorty Blog");
     setMeta('meta[name="twitter:card"]', "name", "twitter:card", "summary_large_image");
     setMeta('meta[name="twitter:title"]', "name", "twitter:title", fullTitle);
     setMeta('meta[name="twitter:description"]', "name", "twitter:description", description);
     setMeta('meta[name="twitter:image"]', "name", "twitter:image", socialImage);
 
-    if (article?.publishedTime) setMeta('meta[property="article:published_time"]', "property", "article:published_time", article.publishedTime);
-    if (article?.modifiedTime) setMeta('meta[property="article:modified_time"]', "property", "article:modified_time", article.modifiedTime);
+    if (type === "article" && article?.publishedTime) {
+      setMeta('meta[property="article:published_time"]', "property", "article:published_time", article.publishedTime);
+    } else {
+      removeMeta('meta[property="article:published_time"]');
+    }
+    if (type === "article" && article?.modifiedTime) {
+      setMeta('meta[property="article:modified_time"]', "property", "article:modified_time", article.modifiedTime);
+    } else {
+      removeMeta('meta[property="article:modified_time"]');
+    }
 
     let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!canonical) {
@@ -52,20 +77,40 @@ export default function Seo({ title, description, path = "/", image, type = "web
     }
     canonical.href = canonicalUrl;
 
-    let structuredData = document.head.querySelector<HTMLScriptElement>('script[data-seo="website"]');
-    if (!structuredData) {
-      structuredData = document.createElement("script");
-      structuredData.type = "application/ld+json";
-      structuredData.dataset.seo = "website";
-      document.head.appendChild(structuredData);
+    let alternate = document.head.querySelector<HTMLLinkElement>('link[rel="alternate"][hreflang="it"]');
+    if (!alternate) {
+      alternate = document.createElement("link");
+      alternate.rel = "alternate";
+      alternate.hreflang = "it";
+      document.head.appendChild(alternate);
     }
-    structuredData.text = JSON.stringify({
+    alternate.href = canonicalUrl;
+
+    setStructuredData("page", {
       "@context": "https://schema.org",
-      "@type": type === "article" ? "BlogPosting" : "WebSite",
-      name: title,
-      description,
-      url: canonicalUrl,
-      ...(type === "article" ? { datePublished: article?.publishedTime, dateModified: article?.modifiedTime || article?.publishedTime, image: socialImage, author: { "@type": "Person", name: "Lorenzo Fazioli", url: getSiteUrl() } } : { publisher: { "@type": "Person", name: "Lorenzo Fazioli" } }),
+      "@type": type === "article" ? "BlogPosting" : "WebPage",
+      ...(type === "article"
+        ? {
+            headline: title,
+            description,
+            mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+            datePublished: article?.publishedTime,
+            dateModified: article?.modifiedTime || article?.publishedTime,
+            image: socialImage,
+            inLanguage: "it-IT",
+            author: { "@type": "Person", name: "Lorenzo Fazioli", url: `${getSiteUrl()}/about` },
+            publisher: { "@type": "Person", name: "Lorenzo Fazioli", url: `${getSiteUrl()}/about` },
+          }
+        : { name: title, description, url: canonicalUrl, inLanguage: "it-IT" }),
+    });
+
+    setStructuredData("website", {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "Snorty Blog",
+      url: getSiteUrl(),
+      inLanguage: "it-IT",
+      publisher: { "@type": "Person", name: "Lorenzo Fazioli", url: `${getSiteUrl()}/about` },
     });
   }, [article?.modifiedTime, article?.publishedTime, description, image, noIndex, path, title, type]);
 

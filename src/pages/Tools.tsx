@@ -108,7 +108,7 @@ export default function Tools() {
       <div className="grid gap-6 sm:grid-cols-2">
         {tools.map((tool) => (
           <article key={tool.name} className="group overflow-hidden rounded-xl border border-line bg-panel transition-colors hover:border-signal/50">
-            <img src={tool.image} alt="" className="h-40 w-full object-cover opacity-90 transition duration-300 group-hover:opacity-100" />
+            <img src={tool.image} alt={`Screenshot di ${tool.name}`} loading="lazy" decoding="async" className="h-40 w-full object-cover opacity-90 transition duration-300 group-hover:opacity-100" />
             <div className="p-5">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <p className="font-mono text-xs text-signal">{tool.category}</p>

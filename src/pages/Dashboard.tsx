@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import { apiFetch, ApiError } from "../lib/api";
 import type { Post } from "../types/post";
+import Seo from "../components/Seo";
 
 export default function Dashboard() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -45,6 +46,7 @@ export default function Dashboard() {
 
   return (
     <Layout>
+      <Seo title="Dashboard" description="Area di gestione dei contenuti." path="/dashboard" noIndex />
       <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
         <div>
           <p className="font-mono text-xs text-signal mb-2 tracking-wide">// content management</p>

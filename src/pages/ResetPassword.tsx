@@ -3,6 +3,7 @@ import React, { useState, useMemo } from "react";
 import Layout from "../components/Layout";
 import { useParams, useNavigate } from "react-router-dom";
 import { apiFetch, ApiError } from "../lib/api";
+import Seo from "../components/Seo";
 
 const inputClass =
   "mt-1.5 p-2.5 rounded-md bg-panel border border-line text-ink focus:outline-none focus:border-signal transition-colors";
@@ -54,6 +55,7 @@ export default function ResetPassword() {
 
   return (
     <Layout>
+      <Seo title="Reimposta password" description="Reimpostazione della password di Snorty Blog." noIndex />
       <div className="max-w-sm mx-auto py-8">
         <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// new password</p>
         <h1 className="text-2xl font-semibold text-ink mb-8 text-center tracking-tight">Reset password</h1>
