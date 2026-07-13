@@ -6,6 +6,7 @@ import osintCover from "../assets/tools/osint-cover.png";
 import crtCover from "../assets/tools/crt.png";
 import urlscanCover from "../assets/tools/urlscan.png";
 import passwordCrackerCover from "../assets/tools/pwd.png";
+import dnscover from "../assets/tools/dns-cover.png";
 
 
 type Tool = {
@@ -79,7 +80,7 @@ const tools: Tool[] = [
     description: "A quick view of a domain's public DNS relationships, useful for getting oriented during an assessment.",
     howTo: "Enter a domain you own or are authorised to assess, and use the map as a starting point—not as a definitive source.",
     href: "https://dnsdumpster.com/",
-    image: crtCover,
+    image: dnscover,
     badge: "Web",
   },
 ];
