@@ -47,7 +47,7 @@ export default function ResetPassword() {
       setMsg(data.message || "Password updated. Redirecting to login...");
       setTimeout(() => navigate("/login"), 800);
     } catch (err) {
-      setMsg(err instanceof ApiError ? err.message : "Network error while resetting the password.");
+      setMsg(err instanceof ApiError ? err.message : "Network error while resetting the password( not avaiable now).");
     } finally {
       setLoading(false);
     }
