@@ -77,7 +77,7 @@ export default function Login() {
           {error && <p className="text-danger text-sm text-center">{error}</p>}
 
           <div className="flex justify-between text-xs text-dim mt-2">
-            <Link to="/register" className="hover:text-ink transition-colors">Registration closed</Link>
+            <Link to="/register" className="hover:text-ink transition-colors">Register</Link>
             <Link to="/forgot-password" className="hover:text-ink transition-colors">Forgot password</Link>
           </div>
         </form>

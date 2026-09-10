@@ -1,6 +1,19 @@
 // server/email.ts
+export function getPasswordResetSiteUrl(): string {
+  const configured = process.env.SITE_URL?.trim();
+  if (!configured) throw new Error("SITE_URL is not configured");
+  const url = new URL(configured);
+  if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash) {
+    throw new Error("SITE_URL must be an HTTPS origin, such as https://snorty.space");
+  }
+  return url.origin;
+}
+
 export function isPasswordResetEmailConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL);
+  try {
+    getPasswordResetSiteUrl();
+    return Boolean(process.env.RESEND_API_KEY?.trim() && process.env.RESEND_FROM_EMAIL?.trim());
+  } catch { return false; }
 }
 
 // Sends the password reset email through Resend. Both environment variables are
@@ -15,6 +28,7 @@ export async function sendPasswordResetEmail(to: string, resetLink: string): Pro
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
+    signal: AbortSignal.timeout(10000),
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
@@ -22,7 +36,8 @@ export async function sendPasswordResetEmail(to: string, resetLink: string): Pro
     body: JSON.stringify({
       from,
       to,
-      subject: "Reset your password",
+      subject: "Reset your Snorty Blog password",
+      text: `Reset your Snorty Blog password: ${resetLink}\nThis link expires in one hour. If you did not request this, ignore this email.`,
       html: `<p>You requested a password reset.</p><p><a href="${resetLink}">Click here to set a new one</a></p><p>This link expires in one hour. If this wasn't you, you can ignore this email.</p>`,
     }),
   });

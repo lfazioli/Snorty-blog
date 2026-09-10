@@ -2,15 +2,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import crypto from "crypto";
 import { pool, ensureSchema } from "../../server/db.js";
-import { isPasswordResetEmailConfigured, sendPasswordResetEmail } from "../../server/email.js";
+import { isPasswordResetEmailConfigured, sendPasswordResetEmail, getPasswordResetSiteUrl } from "../../server/email.js";
 
-function getSiteUrl(req: VercelRequest): string {
-  const envUrl = process.env.SITE_URL;
-  if (envUrl) return envUrl.replace(/\/$/, "");
-  const host = req.headers["x-forwarded-host"] || req.headers.host;
-  const proto = (req.headers["x-forwarded-proto"] as string) || "https";
-  return `${proto}://${host}`;
-}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -25,7 +18,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Do this before checking the account so an unavailable mail service cannot
     // reveal whether a given email address is registered.
     if (!isPasswordResetEmailConfigured()) {
-      console.error("FORGOT_EMAIL_NOT_CONFIGURED: missing RESEND_API_KEY or RESEND_FROM_EMAIL");
+      console.error("FORGOT_EMAIL_NOT_CONFIGURED: missing or invalid SITE_URL, RESEND_API_KEY or RESEND_FROM_EMAIL");
       return res.status(503).json({ error: "Password reset emails are temporarily unavailable. Please try again later." });
     }
 
@@ -50,7 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // The token is never returned in the HTTP response. BrowserRouter expects a
     // normal path (without #) when the recipient opens the email link.
-    const resetLink = `${getSiteUrl(req)}/reset-password/${token}`;
+    const resetLink = `${getPasswordResetSiteUrl()}/reset-password/${token}`;
     await sendPasswordResetEmail(normalizedEmail, resetLink);
 
     return res.status(200).json(genericResponse);
