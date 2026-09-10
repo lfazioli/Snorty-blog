@@ -14,6 +14,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import PostEditor from "./pages/PostEditor";
+import ToolsDashboard from "./pages/ToolsDashboard";
+import ToolEditor from "./pages/ToolEditor";
 import RequireAdmin from "./components/RequireAdmin";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -25,6 +27,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<Home />} />
           <Route path="/post/:slug" element={<Post />} />
           <Route path="/about" element={<About />} />
+          <Route path="/dashboard/tools" element={<RequireAdmin><ToolsDashboard /></RequireAdmin>} />
+          <Route path="/dashboard/tools/new" element={<RequireAdmin><ToolEditor key="new" /></RequireAdmin>} />
+          <Route path="/dashboard/tools/edit/:id" element={<RequireAdmin><ToolEditor /></RequireAdmin>} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/posts" element={<Posts />} />
           <Route path="/login" element={<Login />} />

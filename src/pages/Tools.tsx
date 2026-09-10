@@ -1,91 +1,27 @@
 import Layout from "../components/Layout";
 import Seo from "../components/Seo";
-import netfoxCover from "../assets/tools/netfox-cover.png";
-import dataCover from "../assets/tools/data-cover.png";
-import osintCover from "../assets/tools/osint-cover.png";
-import crtCover from "../assets/tools/crt.png";
-import urlscanCover from "../assets/tools/urlscan.png";
-import passwordCrackerCover from "../assets/tools/pwd.png";
-import dnscover from "../assets/tools/dns-cover.png";
-
-
-type Tool = {
-  name: string;
-  category: string;
-  description: string;
-  howTo: string;
-  href: string;
-  image: string;
-  badge: string;
-};
-
-const tools: Tool[] = [
-  {
-    name: "Netfox",
-    category: "Local network",
-    description: "A native macOS monitor that shows connected devices, their history, and network alerts.",
-    howTo: "Install the app, grant the required permissions, then open Devices: name the devices you recognise and review any new ones.",
-    href: "https://netfox.app/",
-    image: netfoxCover,
-    badge: "macOS",
-  },
-  {
-    name: "urlscan.io",
-    category: "URL analysis",
-    description: "A web sandbox for seeing what a link actually loads before opening it in your browser.",
-    howTo: "Paste the URL and choose the scan visibility carefully; then review the screenshot, requests, domains, and detected IPs.",
-    href: "https://urlscan.io/",
-    image: urlscanCover,
-    badge: "Web",
-  },
-  {
-    name: "crt.sh",
-    category: "DNS & certificates",
-    description: "Searches Certificate Transparency logs, making it useful for discovering subdomains associated with a domain.",
-    howTo: "Search for %example.com, replacing example.com with an authorised domain; filter the results and verify the relevant entries.",
-    href: "https://crt.sh/",
-    image: crtCover,
-    badge: "Web",
-  },
-  {
-    name: "CyberChef",
-    category: "Data analysis",
-    description: "A browser-based lab for decoding, converting, and inspecting data without writing a script.",
-    howTo: "Paste your input, find an operation such as From Base64, and drag it into the Recipe: the output updates instantly.",
-    href: "https://gchq.github.io/CyberChef/",
-    image: dataCover,
-    badge: "Web",
-  },
-  {
-    name: "Password Cracker",
-    category: "Password security",
-    description: "A project by lfazioli for exploring password strength and password-security concepts in a controlled environment.",
-    howTo: "Use it only with passwords, hashes, or test data you own or are explicitly authorised to assess; start with a safe sample and review the result.",
-    href: "https://password-cracker-pearl.vercel.app/",
-    image: passwordCrackerCover,
-    badge: "Your project",
-  },
-  {
-    name: "SpiderFoot",
-    category: "OSINT",
-    description: "Automates the collection and correlation of public information for an initial asset map.",
-    howTo: "Run it locally, create a scan for a target you own, and start with the core modules; always validate results manually.",
-    href: "https://github.com/smicallef/spiderfoot",
-    image: osintCover,
-    badge: "Open source",
-  },
-  {
-    name: "DNSDumpster",
-    category: "Reconnaissance",
-    description: "A quick view of a domain's public DNS relationships, useful for getting oriented during an assessment.",
-    howTo: "Enter a domain you own or are authorised to assess, and use the map as a starting point—not as a definitive source.",
-    href: "https://dnsdumpster.com/",
-    image: dnscover,
-    badge: "Web",
-  },
-];
+import { useEffect, useState } from "react";
+import { apiFetch } from "../lib/api";
+import type { Tool } from "../types/tool";
 
 export default function Tools() {
+  const [tools, setTools] = useState<Tool[]>([]);
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    let active = true;
+    apiFetch<{ tools: Tool[] }>("/api/tools")
+      .then((data) => { if (active) setTools(data.tools.filter((tool) => tool.published)); })
+      .catch(() => { if (active) setError("Unable to load tools. Please try again."); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [attempt]);
+  const categories = [...new Set(tools.map((tool) => tool.category))].sort();
+  const filtered = tools.filter((tool) => (!category || tool.category === category) &&
+    `${tool.name} ${tool.description} ${tool.category} ${tool.badge}`.toLowerCase().includes(query.trim().toLowerCase()));
   return (
     <Layout>
       <Seo
@@ -106,10 +42,25 @@ export default function Tools() {
         <span className="font-mono text-signal">Ethical note:</span> only use these tools on networks, domains, and data you own or have explicit permission to assess.
       </aside>
 
+      <div className="mb-6 flex flex-col sm:flex-row gap-4">
+        <label className="flex-1 text-sm text-dim">Search tools
+          <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by name or keyword..." className="mt-2 w-full rounded-md border border-line bg-panel p-3 text-ink focus:outline-none focus:border-signal" />
+        </label>
+        <label className="text-sm text-dim">Category
+          <select value={category} onChange={(e) => setCategory(e.target.value)} className="mt-2 block w-full rounded-md border border-line bg-panel p-3 text-ink">
+            <option value="">All categories</option>
+            {categories.map((item) => <option key={item}>{item}</option>)}
+          </select>
+        </label>
+      </div>
+      {loading && <p className="text-dim" role="status">Loading tools...</p>}
+      {error && <div role="alert" className="text-danger mb-6">{error} <button className="underline" onClick={() => { setError(""); setLoading(true); setAttempt((n) => n + 1); }}>Retry</button></div>}
+      {!loading && !error && <p className="text-sm text-dim mb-6" role="status">{filtered.length} tools found</p>}
+      {!loading && !error && filtered.length === 0 && <div className="text-dim mb-6">No tools match your search. <button className="text-signal underline" onClick={() => { setQuery(""); setCategory(""); }}>Clear filters</button></div>}
       <div className="grid gap-6 sm:grid-cols-2">
-        {tools.map((tool) => (
-          <article key={tool.name} className="group overflow-hidden rounded-xl border border-line bg-panel transition-colors hover:border-signal/50">
-            <img src={tool.image} alt={`Screenshot di ${tool.name}`} loading="lazy" decoding="async" className="h-40 w-full object-cover opacity-90 transition duration-300 group-hover:opacity-100" />
+        {filtered.map((tool) => (
+          <article key={tool.id} className="group overflow-hidden rounded-xl border border-line bg-panel transition-colors hover:border-signal/50">
+            {tool.image ? <img src={tool.image} alt={`Screenshot di ${tool.name}`} loading="lazy" decoding="async" className="h-40 w-full object-cover opacity-90 transition duration-300 group-hover:opacity-100" /> : <div className="h-40 bg-signal/5 flex items-center justify-center font-mono text-signal text-xl" aria-hidden="true">{tool.name}</div>}
             <div className="p-5">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <p className="font-mono text-xs text-signal">{tool.category}</p>
