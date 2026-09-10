@@ -22,7 +22,7 @@ const AuthContext = createContext<AuthContextType>({
 function userFromToken(t: string | null): User {
   if (!t) return null;
   const payload = parseJwt<{ userId: number; email: string; role?: string }>(t);
-  if (!payload?.userId || !payload?.email) return null;
+  if (!payload?.userId || !payload?.email || payload.role !== "admin") return null;
   return {
     userId: payload.userId,
     email: payload.email,

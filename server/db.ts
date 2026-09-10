@@ -97,17 +97,6 @@ async function runMigrations() {
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS role TEXT NOT NULL DEFAULT 'reader';`);
 
   await pool.query(`
-    CREATE TABLE IF NOT EXISTS password_resets (
-      id SERIAL PRIMARY KEY,
-      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      token TEXT UNIQUE NOT NULL,
-      expires_at TIMESTAMP NOT NULL,
-      used BOOLEAN NOT NULL DEFAULT FALSE,
-      created_at TIMESTAMP NOT NULL DEFAULT NOW()
-    );
-  `);
-
-  await pool.query(`
     CREATE TABLE IF NOT EXISTS posts (
       id SERIAL PRIMARY KEY,
       slug TEXT UNIQUE NOT NULL,
@@ -129,7 +118,7 @@ async function runMigrations() {
 }
 
 // If ADMIN_EMAIL is configured, makes sure that account (if it already exists) is admin.
-// The "new registration"/"new login" case is handled directly in register.ts/login.ts;
+// Administrator login is handled directly in login.ts;
 // this is just an extra safety check that runs on every cold start, useful for
 // example if you set ADMIN_EMAIL after the account already exists.
 async function promoteConfiguredAdmin() {

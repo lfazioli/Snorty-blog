@@ -17,12 +17,11 @@ export function verifySession(token: string): SessionPayload | null {
   if (!JWT_SECRET) return null;
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    if (typeof decoded === "object" && decoded && "userId" in decoded && "email" in decoded) {
-      return {
-        userId: (decoded as any).userId,
-        email: (decoded as any).email,
-        role: (decoded as any).role === "admin" ? "admin" : "reader",
-      };
+    const adminEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+    if (typeof decoded === "object" && decoded &&
+        typeof decoded.userId === "number" && typeof decoded.email === "string" &&
+        decoded.role === "admin" && adminEmail && decoded.email.toLowerCase() === adminEmail) {
+      return { userId: decoded.userId, email: decoded.email, role: "admin" };
     }
     return null;
   } catch {

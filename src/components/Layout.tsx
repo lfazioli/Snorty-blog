@@ -40,8 +40,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </nav>
 
             {/* Auth actions */}
-            <div className="hidden sm:flex items-center gap-3">
-              {user ? (
+            <div className={isAdmin ? "hidden sm:flex items-center gap-3" : "hidden"}>
+              {isAdmin && user ? (
                 <>
                   <span className="text-xs text-dim font-mono truncate max-w-[12rem]">{user.email}</span>
                   <button
@@ -54,14 +54,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     Log out
                   </button>
                 </>
-              ) : (
-                <Link
-                  to="/login"
-                  className="px-3.5 py-1.5 rounded-md bg-signal text-white text-sm font-medium hover:bg-signal-600 transition-colors"
-                >
-                  Log in
-                </Link>
-              )}
+              ) : null}
             </div>
 
             {/* Mobile: hamburger */}
@@ -90,8 +83,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <Link className="text-dim hover:text-ink" to="/dashboard" onClick={() => setOpen(false)}>Dashboard</Link>
               )}
 
-              <div className="pt-3 border-t border-line flex items-center justify-between">
-                {user ? (
+              <div className={isAdmin ? "pt-3 border-t border-line flex items-center justify-between" : "hidden"}>
+                {isAdmin && user ? (
                   <>
                     <span className="text-xs text-dim font-mono truncate">{user.email}</span>
                     <button
@@ -105,15 +98,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       Log out
                     </button>
                   </>
-                ) : (
-                  <Link
-                    to="/login"
-                    onClick={() => setOpen(false)}
-                    className="px-3.5 py-1.5 rounded-md bg-signal text-white font-medium hover:bg-signal-600 transition-colors"
-                  >
-                    Log in
-                  </Link>
-                )}
+                ) : null}
               </div>
             </div>
           </div>

@@ -8,10 +8,8 @@ import Posts from "./pages/Posts";
 import Post from "./pages/Post";
 import About from "./pages/about";
 import Tools from "./pages/Tools";
+import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import PostEditor from "./pages/PostEditor";
 import ToolsDashboard from "./pages/ToolsDashboard";
@@ -33,9 +31,6 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/tools" element={<Tools />} />
           <Route path="/posts" element={<Posts />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route
             path="/dashboard"
             element={
@@ -60,6 +55,7 @@ createRoot(document.getElementById("root")!).render(
               </RequireAdmin>
             }
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

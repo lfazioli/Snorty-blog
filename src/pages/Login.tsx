@@ -1,6 +1,6 @@
 // src/pages/Login.tsx
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch, ApiError } from "../lib/api";
@@ -28,7 +28,7 @@ export default function Login() {
         body: JSON.stringify({ email, password }),
       });
       login(data.token);
-      navigate("/");
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Login failed.");
     } finally {
@@ -38,16 +38,17 @@ export default function Login() {
 
   return (
     <Layout>
-      <Seo title="Accesso" description="Pagina di accesso a Snorty Blog." path="/login" noIndex />
+      <Seo title="Accesso amministratore" description="Accesso riservato all’amministratore." path="/login" noIndex />
       <div className="max-w-sm mx-auto py-8">
-        <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// log in</p>
-        <h1 className="text-2xl font-semibold text-ink mb-8 text-center tracking-tight">Login</h1>
+        <p className="font-mono text-xs text-signal mb-2 tracking-wide text-center">// admin access</p>
+        <h1 className="text-2xl font-semibold text-ink mb-8 text-center tracking-tight">Admin login</h1>
 
         <form onSubmit={handleLogin} className="rounded-lg border border-line bg-panel p-7 flex flex-col gap-4">
           <label className="flex flex-col text-sm text-dim">
             Email
             <input
               type="email"
+              autoComplete="username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={inputClass}
@@ -59,6 +60,7 @@ export default function Login() {
             Password
             <input
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={inputClass}
@@ -76,10 +78,7 @@ export default function Login() {
 
           {error && <p className="text-danger text-sm text-center">{error}</p>}
 
-          <div className="flex justify-between text-xs text-dim mt-2">
-            <Link to="/register" className="hover:text-ink transition-colors">Register</Link>
-            <Link to="/forgot-password" className="hover:text-ink transition-colors">Forgot password</Link>
-          </div>
+
         </form>
       </div>
     </Layout>

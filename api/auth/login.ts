@@ -5,6 +5,7 @@ import { pool, ensureSchema } from "../../server/db.js";
 import { signSession } from "../../server/auth.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader("Cache-Control", "no-store");
   try {
     if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -14,6 +15,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     const normalizedEmail = email.trim().toLowerCase();
 
+    const adminEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+    if (!adminEmail) {
+      console.error("LOGIN_NOT_CONFIGURED: ADMIN_EMAIL is missing");
+      return res.status(503).json({ error: "Administrator login is unavailable" });
+    }
+    if (normalizedEmail !== adminEmail) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
     await ensureSchema();
 
     const result = await pool.query(
@@ -30,20 +39,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    let role: "admin" | "reader" = user.role === "admin" ? "admin" : "reader";
-
-    // If you set ADMIN_EMAIL after this account was already created, it gets
-    // promoted automatically on the next login, no manual SQL needed.
-    const adminEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
-    if (adminEmail && normalizedEmail === adminEmail && role !== "admin") {
+    if (user.role !== "admin") {
       await pool.query("UPDATE users SET role = 'admin' WHERE id = $1", [user.id]);
-      role = "admin";
     }
-
-    const token = signSession({ userId: user.id, email: user.email, role });
+    const token = signSession({ userId: user.id, email: user.email, role: "admin" });
     return res.status(200).json({ token });
-  } catch (e: any) {
-    console.error("LOGIN_ERROR:", e?.message || e, e?.stack);
+  } catch (error) {
+    console.error("LOGIN_ERROR:", error);
     return res.status(500).json({ error: "Internal error" });
   }
 }
