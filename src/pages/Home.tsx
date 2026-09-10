@@ -61,7 +61,7 @@ export default function Home() {
             GitHub
           </a>
           <a
-            href="https://www.fiverr.com/sellers/lorenzo_fazioli/edit"
+            href="https://www.fiverr.com/lorenzo_fazioli"
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2 rounded-md border border-line text-sm text-dim hover:text-ink hover:border-signal/50 transition-colors"

@@ -86,6 +86,15 @@ export default function About() {
           </a>
 
           <a
+            href="https://www.fiverr.com/lorenzo_fazioli"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 rounded-md border border-line text-dim hover:text-ink hover:border-signal/50 transition-colors text-sm"
+          >
+            Fiverr
+          </a>
+
+          <a
             href="https://x.com/lorenzofazioli"
             target="_blank"
             rel="noopener noreferrer"
