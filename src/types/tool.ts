@@ -8,4 +8,5 @@ export type Tool = {
   image: string;
   badge: string;
   published: boolean;
+  publish_at: string | null;
 };

@@ -6,7 +6,10 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { pool, ensureSchema } from "../../server/db.js";
 import { getSessionFromRequest, requireAdmin } from "../../server/auth.js";
 
+import { parsePublishAt } from "../../server/publication.js";
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader("Cache-Control", "no-store");
   try {
     await ensureSchema();
 
@@ -19,9 +22,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const isAdmin = session?.role === "admin";
 
       const result = await pool.query(
-        `SELECT id, slug, title, excerpt, content, image, published, created_at, updated_at
-         FROM posts WHERE slug = $1`,
-        [slugStr]
+        `SELECT id, slug, title, excerpt, content, image, published, publish_at, created_at, updated_at
+         FROM posts WHERE slug = $1 AND ($2::boolean OR (published = true AND (publish_at IS NULL OR publish_at <= NOW())))`,
+        [slugStr, isAdmin]
       );
       const post = result.rows[0];
       if (!post || (!post.published && !isAdmin)) {
@@ -45,6 +48,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(400).json({ error: "Content is required" });
       }
 
+      let publishAt: string | null;
+      try { publishAt = parsePublishAt(req.body?.publish_at); }
+      catch (error) { return res.status(400).json({ error: error instanceof Error ? error.message : "Invalid publication date" }); }
       const updated = await pool.query(
         `UPDATE posts SET
            title = $1,
@@ -52,9 +58,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
            excerpt = $3,
            image = $4,
            published = $5,
+           publish_at = $7,
            updated_at = NOW()
          WHERE slug = $6
-         RETURNING id, slug, title, excerpt, image, published, created_at, updated_at`,
+         RETURNING id, slug, title, excerpt, image, published, publish_at, created_at, updated_at`,
         [
           title.trim(),
           content,
@@ -62,6 +69,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           typeof image === "string" && image.trim() ? image.trim() : null,
           published !== false,
           slugStr,
+          publishAt,
         ]
       );
 

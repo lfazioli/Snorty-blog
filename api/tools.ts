@@ -23,17 +23,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     await ensureTools();
     if (req.method === "GET") {
-      const admin = getSessionFromRequest(req)?.role === "admin";
-      const { rows } = await pool.query(`SELECT * FROM tools WHERE ($1::boolean OR published = true) AND ($2::integer IS NULL OR id = $2) ORDER BY id`, [admin, id || null]);
+      const admin = getSessionFromRequest(req)?.role === "admin" && req.query.scope !== "public";
+      const { rows } = await pool.query(`SELECT * FROM tools WHERE ($1::boolean OR (published = true AND (publish_at IS NULL OR publish_at <= NOW()))) AND ($2::integer IS NULL OR id = $2) ORDER BY id`, [admin, id || null]);
       if (id) return rows[0] ? res.status(200).json({ tool: rows[0] }) : res.status(404).json({ error: "Tool not found" });
       return res.status(200).json({ tools: rows });
     }
     if (req.method === "POST") {
-      const { rows } = await pool.query(`INSERT INTO tools (name,category,description,"howTo",href,image,badge,published) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`, values);
+      const { rows } = await pool.query(`INSERT INTO tools (name,category,description,"howTo",href,image,badge,published,publish_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`, values);
       return res.status(201).json({ tool: rows[0] });
     }
     if (req.method === "PUT") {
-      const { rows } = await pool.query(`UPDATE tools SET name=$1,category=$2,description=$3,"howTo"=$4,href=$5,image=$6,badge=$7,published=$8 WHERE id=$9 RETURNING *`, [...values, id]);
+      const { rows } = await pool.query(`UPDATE tools SET name=$1,category=$2,description=$3,"howTo"=$4,href=$5,image=$6,badge=$7,published=$8,publish_at=$9 WHERE id=$10 RETURNING *`, [...values, id]);
       return rows[0] ? res.status(200).json({ tool: rows[0] }) : res.status(404).json({ error: "Tool not found" });
     }
     const result = await pool.query("DELETE FROM tools WHERE id=$1 RETURNING id", [id]);

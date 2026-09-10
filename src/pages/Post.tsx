@@ -60,7 +60,7 @@ export default function Post() {
         path={`/post/${post.slug}`}
         image={post.image}
         type="article"
-        article={{ publishedTime: post.created_at, modifiedTime: post.updated_at }}
+        article={{ publishedTime: post.publish_at || post.created_at, modifiedTime: post.updated_at }}
         noIndex={!post.published}
       />
       <article>
@@ -70,7 +70,7 @@ export default function Post() {
           </p>
         )}
 
-        <p className="font-mono text-xs text-dim mb-2">{post.created_at?.slice(0, 10)}</p>
+        <p className="font-mono text-xs text-dim mb-2">{(post.publish_at || post.created_at)?.slice(0, 10)}</p>
         <h1 className="text-2xl sm:text-3xl font-semibold text-ink leading-snug tracking-tight mb-6">
           {post.title}
         </h1>

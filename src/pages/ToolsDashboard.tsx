@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import { apiFetch, ApiError } from "../lib/api";
 import type { Tool } from "../types/tool";
+import { publicationLabel } from "../lib/publication";
 import Seo from "../components/Seo";
 
 export default function ToolsDashboard() {
@@ -77,11 +78,9 @@ export default function ToolsDashboard() {
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-sm font-semibold text-ink truncate">{tool.name}</h3>
-                {!tool.published && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded border border-warn/40 text-warn font-mono shrink-0">
-                    draft
-                  </span>
-                )}
+                <span className="text-[10px] px-1.5 py-0.5 rounded border border-line text-signal font-mono">
+                  {publicationLabel(tool.published, tool.publish_at)}
+                </span>
               </div>
               <p className="text-xs text-dim font-mono truncate mt-0.5">{tool.category}</p>
             </div>

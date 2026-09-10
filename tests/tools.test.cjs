@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
 const { transpileModule, ModuleKind } = require('typescript');
 function load(file, dependencies) {
+  dependencies = { './publication.js': loadPublication(), ...dependencies };
   const code = transpileModule(readFileSync(file, 'utf8'), { compilerOptions: { module: ModuleKind.CommonJS } }).outputText;
   const result = { exports: {} };
   new Function('require', 'module', 'exports', code)((name) => {
@@ -10,6 +11,11 @@ function load(file, dependencies) {
     return dependencies[name];
   }, result, result.exports);
   return result.exports;
+}
+function loadPublication() {
+  const exports = {};
+  new Function('exports', transpileModule(readFileSync('server/publication.ts', 'utf8'), { compilerOptions: { module: ModuleKind.CommonJS } }).outputText)(exports);
+  return exports;
 }
 const valid = { name: ' Example ', category: 'OSINT', description: 'Description', howTo: 'Instructions', href: 'https://example.com', image: '', badge: '', published: false };
 const helpers = load('server/tools.ts', { './db.js': {}, './tool-seed.js': {} });

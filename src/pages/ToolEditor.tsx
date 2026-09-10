@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Layout from "../components/Layout";
+import PublicationFields from "../components/PublicationFields";
 import Seo from "../components/Seo";
 import { apiFetch } from "../lib/api";
 import type { Tool } from "../types/tool";
 
-const empty = { name: "", category: "", description: "", howTo: "", href: "", image: "", badge: "", published: true };
+const empty = { name: "", category: "", description: "", howTo: "", href: "", image: "", badge: "", published: true, publish_at: null as string | null };
 const fields = [
   { key: "name", label: "Name", max: 120 },
   { key: "category", label: "Category", max: 80 },
@@ -60,7 +61,7 @@ export default function ToolEditor() {
         </label>)}
         <datalist id="tool-categories">{categories.map((category) => <option key={category} value={category} />)}</datalist>
         <p className="text-xs text-dim">Choose an existing category or type a new one. You can add a cover image later using its URL.</p>
-        <label className="flex items-center gap-2 text-sm text-dim"><input type="checkbox" checked={tool.published} onChange={(e) => setTool({ ...tool, published: e.target.checked })} className="accent-signal" />Published (turn off to save as a draft)</label>
+        <PublicationFields published={tool.published} publishAt={tool.publish_at} onChange={(published, publish_at) => setTool({ ...tool, published, publish_at })} />
       </fieldset>
       <button disabled={saving} className="self-start px-5 py-2 rounded-md bg-signal text-white text-sm disabled:opacity-60">{saving ? "Saving..." : "Save tool"}</button>
     </form>}

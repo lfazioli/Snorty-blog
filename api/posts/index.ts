@@ -5,6 +5,8 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { pool, ensureSchema } from "../../server/db.js";
 import { getSessionFromRequest, requireAdmin } from "../../server/auth.js";
 
+import { parsePublishAt } from "../../server/publication.js";
+
 function slugify(input: string): string {
   return input
     .toLowerCase()
@@ -21,16 +23,17 @@ async function insertWithUniqueSlug(baseSlug: string, values: {
   content: string;
   image: string | null;
   published: boolean;
+  publishAt: string | null;
   authorEmail: string;
 }) {
   let slug = baseSlug || `post-${Date.now()}`;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const inserted = await pool.query(
-        `INSERT INTO posts (slug, title, excerpt, content, image, published, author_email)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)
-         RETURNING slug, title, excerpt, image, published, created_at, updated_at`,
-        [slug, values.title, values.excerpt, values.content, values.image, values.published, values.authorEmail]
+        `INSERT INTO posts (slug, title, excerpt, content, image, published, author_email, publish_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING slug, title, excerpt, image, published, publish_at, created_at, updated_at`,
+        [slug, values.title, values.excerpt, values.content, values.image, values.published, values.authorEmail, values.publishAt]
       );
       return inserted.rows[0];
     } catch (err: any) {
@@ -46,19 +49,20 @@ async function insertWithUniqueSlug(baseSlug: string, values: {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader("Cache-Control", "no-store");
   try {
     await ensureSchema();
 
     if (req.method === "GET") {
       const session = getSessionFromRequest(req);
-      const isAdmin = session?.role === "admin";
+      const isAdmin = session?.role === "admin" && req.query.scope !== "public";
 
       const { rows } = await pool.query(
         isAdmin
-          ? `SELECT slug, title, excerpt, image, published, created_at, updated_at
+          ? `SELECT slug, title, excerpt, image, published, publish_at, created_at, updated_at
              FROM posts ORDER BY created_at DESC`
-          : `SELECT slug, title, excerpt, image, published, created_at, updated_at
-             FROM posts WHERE published = true ORDER BY created_at DESC`
+          : `SELECT slug, title, excerpt, image, published, publish_at, created_at, updated_at
+             FROM posts WHERE published = true AND (publish_at IS NULL OR publish_at <= NOW()) ORDER BY COALESCE(publish_at, created_at AT TIME ZONE 'UTC') DESC`
       );
       return res.status(200).json({ posts: rows });
     }
@@ -75,6 +79,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(400).json({ error: "Content is required" });
       }
 
+      let publishAt: string | null;
+      try { publishAt = parsePublishAt(req.body?.publish_at); }
+      catch (error) { return res.status(400).json({ error: error instanceof Error ? error.message : "Invalid publication date" }); }
       const baseSlug = typeof slugInput === "string" && slugInput.trim() ? slugify(slugInput) : slugify(title);
 
       const post = await insertWithUniqueSlug(baseSlug, {
@@ -84,6 +91,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         image: typeof image === "string" && image.trim() ? image.trim() : null,
         published: published !== false,
         authorEmail: session.email,
+        publishAt,
       });
 
       return res.status(201).json({ post });

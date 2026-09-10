@@ -4,6 +4,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { ensureSchema, pool } from "../server/db.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader("Cache-Control", "no-store");
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
     return res.status(405).json({ error: "Method not allowed" });
@@ -15,8 +16,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!slug || typeof slug !== "string") return res.status(400).json({ error: "Missing slug" });
 
     const { rows } = await pool.query(
-      `SELECT id, slug, title, excerpt, content, image, published, created_at, updated_at
-       FROM posts WHERE slug = $1 AND published = true`,
+      `SELECT id, slug, title, excerpt, content, image, published, publish_at, created_at, updated_at
+       FROM posts WHERE slug = $1 AND published = true AND (publish_at IS NULL OR publish_at <= NOW())`,
       [slug]
     );
     if (!rows[0]) return res.status(404).json({ error: "Post not found" });

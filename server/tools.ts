@@ -1,3 +1,4 @@
+import { parsePublishAt } from "./publication.js";
 import { pool } from "./db.js";
 import { initialTools } from "./tool-seed.js";
 
@@ -17,6 +18,7 @@ async function migrate() {
       image TEXT NOT NULL DEFAULT '', badge TEXT NOT NULL DEFAULT '',
       published BOOLEAN NOT NULL DEFAULT TRUE
     )`);
+    await client.query("ALTER TABLE tools ADD COLUMN IF NOT EXISTS publish_at TIMESTAMPTZ");
     await client.query("CREATE TABLE IF NOT EXISTS tool_migrations (name TEXT PRIMARY KEY)");
     const applied = await client.query("SELECT name FROM tool_migrations WHERE name = 'initial-tools-v1'");
     if (!applied.rowCount) {
@@ -49,5 +51,5 @@ export function validateTool(body: unknown) {
   if (!httpUrl(href)) throw new Error("Tool URL must start with https:// or http://");
   if (image && !httpUrl(image) && !/^\/(?!\/)[a-zA-Z0-9/_.-]+$/.test(image)) throw new Error("Invalid image URL");
   if (typeof data.published !== "boolean") throw new Error("Invalid publication status");
-  return [name, category, description, howTo, href, image, badge, data.published];
+  return [name, category, description, howTo, href, image, badge, data.published, parsePublishAt(data.publish_at)];
 }

@@ -13,8 +13,8 @@ export default function Tools() {
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let active = true;
-    apiFetch<{ tools: Tool[] }>("/api/tools")
-      .then((data) => { if (active) setTools(data.tools.filter((tool) => tool.published)); })
+    apiFetch<{ tools: Tool[] }>("/api/tools?scope=public")
+      .then((data) => { if (active) setTools(data.tools); })
       .catch(() => { if (active) setError("Unable to load tools. Please try again."); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };

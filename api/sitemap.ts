@@ -25,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await ensureSchema();
     const origin = siteUrl(req);
     if (!origin) return res.status(500).send("SITE_URL is not configured");
-    const { rows } = await pool.query<{ slug: string; updated_at: Date }>("SELECT slug, updated_at FROM posts WHERE published = true ORDER BY created_at DESC");
+    const { rows } = await pool.query<{ slug: string; updated_at: Date }>("SELECT slug, updated_at FROM posts WHERE published = true AND (publish_at IS NULL OR publish_at <= NOW()) ORDER BY created_at DESC");
     const pages: SitemapPage[] = [
       { path: "/", priority: "1.0", changefreq: "weekly" },
       { path: "/posts", priority: "0.8", changefreq: "daily" },
@@ -34,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ];
     const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map((page) => `  <url><loc>${xml(`${origin}${page.path}`)}</loc>${page.lastmod ? `<lastmod>${page.lastmod}</lastmod>` : ""}<changefreq>${page.changefreq}</changefreq><priority>${page.priority}</priority></url>`).join("\n")}\n</urlset>`;
     res.setHeader("Content-Type", "application/xml; charset=utf-8");
-    res.setHeader("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");
+    res.setHeader("Cache-Control", "no-store");
     return res.status(200).send(body);
   } catch (error) {
     console.error("SITEMAP_ERROR:", error);

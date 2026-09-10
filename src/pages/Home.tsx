@@ -13,7 +13,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    apiFetch<{ posts: Post[] }>("/api/posts")
+    apiFetch<{ posts: Post[] }>("/api/posts?scope=public")
       .then((data) => setPosts(data.posts.slice(0, 3)))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -116,7 +116,7 @@ export default function Home() {
             <PostCard
               key={p.slug}
               title={p.title}
-              date={p.created_at}
+              date={p.publish_at || p.created_at}
               image={p.image}
               slug={p.slug}
               excerpt={p.excerpt}

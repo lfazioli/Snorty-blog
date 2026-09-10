@@ -7,6 +7,7 @@ import Layout from "../components/Layout";
 import { apiFetch, ApiError } from "../lib/api";
 import { markdownComponents } from "../components/MarkdownComponents";
 import type { Post } from "../types/post";
+import PublicationFields from "../components/PublicationFields";
 import Seo from "../components/Seo";
 
 function slugify(input: string): string {
@@ -32,6 +33,7 @@ export default function PostEditor() {
   const [image, setImage] = useState("");
   const [content, setContent] = useState("");
   const [published, setPublished] = useState(true);
+  const [publishAt, setPublishAt] = useState<string | null>(null);
   const [tab, setTab] = useState<"write" | "preview">("write");
   const [loading, setLoading] = useState(isEditing);
   const [saving, setSaving] = useState(false);
@@ -48,6 +50,7 @@ export default function PostEditor() {
         setImage(data.post.image || "");
         setContent(data.post.content);
         setPublished(data.post.published);
+        setPublishAt(data.post.publish_at || null);
       } catch (e) {
         setError(e instanceof ApiError ? e.message : "Failed to load the post");
       } finally {
@@ -70,12 +73,12 @@ export default function PostEditor() {
       if (isEditing) {
         await apiFetch(`/api/posts/${slug}`, {
           method: "PUT",
-          body: JSON.stringify({ title, excerpt, image, content, published }),
+          body: JSON.stringify({ title, excerpt, image, content, published, publish_at: publishAt }),
         });
       } else {
         await apiFetch(`/api/posts`, {
           method: "POST",
-          body: JSON.stringify({ title, slug: customSlug, excerpt, image, content, published }),
+          body: JSON.stringify({ title, slug: customSlug, excerpt, image, content, published, publish_at: publishAt }),
         });
       }
       navigate("/dashboard");
@@ -187,15 +190,7 @@ export default function PostEditor() {
           )}
         </div>
 
-        <label className="flex items-center gap-2 text-sm text-dim">
-          <input
-            type="checkbox"
-            checked={published}
-            onChange={(e) => setPublished(e.target.checked)}
-            className="accent-signal"
-          />
-          Published (turn off to save as a draft, only visible to you)
-        </label>
+        <PublicationFields published={published} publishAt={publishAt} disabled={saving} onChange={(nextPublished, nextDate) => { setPublished(nextPublished); setPublishAt(nextDate); }} />
 
         {error && <p className="text-danger text-sm">{error}</p>}
 

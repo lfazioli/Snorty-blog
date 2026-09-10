@@ -122,6 +122,8 @@ async function runMigrations() {
     );
   `);
 
+  await pool.query("ALTER TABLE posts ADD COLUMN IF NOT EXISTS publish_at TIMESTAMPTZ");
+
   await promoteConfiguredAdmin();
   await seedInitialPostIfEmpty();
 }

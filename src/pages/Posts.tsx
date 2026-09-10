@@ -12,7 +12,7 @@ export default function PostsPage() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    apiFetch<{ posts: Post[] }>("/api/posts")
+    apiFetch<{ posts: Post[] }>("/api/posts?scope=public")
       .then((data) => setPosts(data.posts))
       .catch(() => setError("Failed to load posts."))
       .finally(() => setLoading(false));
@@ -89,7 +89,7 @@ export default function PostsPage() {
           <PostCard
             key={post.slug}
             title={post.title}
-            date={post.created_at}
+            date={post.publish_at || post.created_at}
             image={post.image}
             slug={post.slug}
             excerpt={post.excerpt}
