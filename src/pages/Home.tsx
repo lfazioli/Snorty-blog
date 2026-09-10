@@ -6,6 +6,7 @@ import { apiFetch } from "../lib/api";
 import { Link } from "react-router-dom";
 import type { Post } from "../types/post";
 import Seo from "../components/Seo";
+import GitHubProjects from "../components/GitHubProjects";
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -95,6 +96,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <GitHubProjects />
 
       {/* LATEST POSTS */}
       <section>
