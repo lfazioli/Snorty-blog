@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /dashboard
-
-Sitemap: https://www.snorty.space/sitemap.xml
