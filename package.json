@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test": "node --test tests/*.test.cjs",
     "preview": "vite preview",
-    "typecheck:api": "tsc -p api/tsconfig.json --noEmit"
+    "typecheck:api": "tsc -p tsconfig.api.json --noEmit"
   },
   "dependencies": {
     "@vercel/node": "^5.5.14",
