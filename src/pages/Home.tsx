@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <Seo title="Cybersecurity, ethical hacking e sviluppo" description="Guide pratiche, ricerca sulla sicurezza e strumenti di sviluppo di Lorenzo Fazioli." />
+      <Seo title="Cybersecurity, ethical hacking and development" description="Practical guides, security research and the development tools I build, by Lorenzo Fazioli." />
       {/* HERO */}
       <section className="mb-20">
         <p className="font-mono text-xs text-signal mb-4 tracking-wide">
