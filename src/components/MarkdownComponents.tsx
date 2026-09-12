@@ -1,9 +1,17 @@
 // src/components/MarkdownComponents.tsx
 import type { ComponentPropsWithoutRef } from "react";
+import { Link } from "react-router-dom";
+import { isClientRoute } from "../lib/links";
+
+const linkClassName = "text-signal underline underline-offset-2 hover:text-signal-600";
+
 
 export const markdownComponents = {
-  h1: (props: ComponentPropsWithoutRef<"h1">) => (
-    <h1 className="text-2xl font-semibold text-ink mt-10 mb-4 tracking-tight" {...props} />
+  // Post.tsx already renders the title as the page's only <h1>. A leading
+  // "# Title" in the markdown produced a second, identical one, so a markdown
+  // h1 is demoted to a section heading while keeping its visual weight.
+  h1: (props: ComponentPropsWithoutRef<"h2">) => (
+    <h2 className="text-2xl font-semibold text-ink mt-10 mb-4 tracking-tight" {...props} />
   ),
   h2: (props: ComponentPropsWithoutRef<"h2">) => (
     <h2 className="text-xl font-semibold text-ink mt-9 mb-3 tracking-tight" {...props} />
@@ -12,9 +20,20 @@ export const markdownComponents = {
     <h3 className="text-base font-semibold text-ink mt-7 mb-2" {...props} />
   ),
   p: (props: ComponentPropsWithoutRef<"p">) => <p className="my-4 leading-relaxed text-ink/90" {...props} />,
-  a: (props: ComponentPropsWithoutRef<"a">) => (
-    <a className="text-signal underline underline-offset-2 hover:text-signal-600" target="_blank" rel="noopener noreferrer" {...props} />
-  ),
+  // Only outbound links open in a new tab: forcing target="_blank" on every
+  // link meant an internal link would leave the SPA and reload the whole app,
+  // which made cross-linking between posts impractical.
+  a: ({ href = "", ...props }: ComponentPropsWithoutRef<"a">) =>
+    isClientRoute(href) ? (
+      <Link to={href} className={linkClassName} {...props} />
+    ) : (
+      <a
+        href={href}
+        className={linkClassName}
+        {...(href.startsWith("#") ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+        {...props}
+      />
+    ),
   ul: (props: ComponentPropsWithoutRef<"ul">) => <ul className="list-disc list-outside pl-5 space-y-1.5 my-4" {...props} />,
   ol: (props: ComponentPropsWithoutRef<"ol">) => <ol className="list-decimal list-outside pl-5 space-y-1.5 my-4" {...props} />,
   li: (props: ComponentPropsWithoutRef<"li">) => <li className="text-ink/90 leading-relaxed" {...props} />,

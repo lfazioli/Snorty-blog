@@ -60,7 +60,7 @@ export default function Tools() {
       <div className="grid gap-6 sm:grid-cols-2">
         {filtered.map((tool) => (
           <article key={tool.id} className="group overflow-hidden rounded-xl border border-line bg-panel transition-colors hover:border-signal/50">
-            {tool.image ? <img src={tool.image} alt={`Screenshot di ${tool.name}`} loading="lazy" decoding="async" className="h-40 w-full object-cover opacity-90 transition duration-300 group-hover:opacity-100" /> : <div className="h-40 bg-signal/5 flex items-center justify-center font-mono text-signal text-xl" aria-hidden="true">{tool.name}</div>}
+            {tool.image ? <img src={tool.image} alt={`Screenshot of ${tool.name}`} loading="lazy" decoding="async" className="h-40 w-full object-cover opacity-90 transition duration-300 group-hover:opacity-100" /> : <div className="h-40 bg-signal/5 flex items-center justify-center font-mono text-signal text-xl" aria-hidden="true">{tool.name}</div>}
             <div className="p-5">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <p className="font-mono text-xs text-signal">{tool.category}</p>

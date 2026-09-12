@@ -1,13 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { ensureSchema, pool } from "../server/db.js";
-
-function siteUrl(req: VercelRequest) {
-  const configured = process.env.SITE_URL?.trim().replace(/\/$/, "");
-  if (configured) return configured;
-  const host = String(req.headers["x-forwarded-host"] || req.headers.host || "").split(",")[0];
-  const protocol = String(req.headers["x-forwarded-proto"] || "https").split(",")[0];
-  return host ? `${protocol}://${host}` : "";
-}
+import { resolveSiteUrl } from "../server/site-url.js";
 
 function xml(value: string) {
   return value.replace(/[<>&'"]/g, (character) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" })[character]!);
@@ -23,12 +16,15 @@ type SitemapPage = {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     await ensureSchema();
-    const origin = siteUrl(req);
+    const origin = resolveSiteUrl(req.headers);
     if (!origin) return res.status(500).send("SITE_URL is not configured");
     const { rows } = await pool.query<{ slug: string; updated_at: Date }>("SELECT slug, updated_at FROM posts WHERE published = true AND (publish_at IS NULL OR publish_at <= NOW()) ORDER BY created_at DESC");
     const pages: SitemapPage[] = [
       { path: "/", priority: "1.0", changefreq: "weekly" },
       { path: "/posts", priority: "0.8", changefreq: "daily" },
+      // The toolbox is public, indexable and the only page with substantial
+      // original copy outside the posts; it was missing from the sitemap.
+      { path: "/tools", priority: "0.8", changefreq: "weekly" },
       { path: "/about", priority: "0.5", changefreq: "monthly" },
       ...rows.map((post) => ({ path: `/post/${encodeURIComponent(post.slug)}`, priority: "0.7", changefreq: "monthly", lastmod: new Date(post.updated_at).toISOString().slice(0, 10) })),
     ];

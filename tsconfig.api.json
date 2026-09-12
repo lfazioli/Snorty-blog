@@ -1,0 +1,16 @@
+{
+  "//": "Type-checking only, for `npm run typecheck:api`. Deliberately NOT named api/tsconfig.json: Vercel's Node builder auto-detects a tsconfig next to the functions, and the noEmit here would be the wrong instruction to hand it.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["api/**/*.ts", "server/**/*.ts", "src/lib/seo-meta.ts"]
+}

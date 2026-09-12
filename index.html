@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,14 +10,21 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <meta name="description" content="Guide pratiche su cybersecurity, ethical hacking e sviluppo software." />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="alternate" type="application/rss+xml" title="Snorty Blog" href="/feed.xml" />
     <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta property="og:site_name" content="Snorty Blog" />
-    <meta property="og:locale" content="it_IT" />
-    <meta name="twitter:card" content="summary_large_image" />
     <meta name="google-site-verification" content="wIWyugLwC3wkbvgzqaBZN5GFMhVWiouk4ooSCBCctRE" />
-    <title>Snorty Blog | Cybersecurity e sviluppo</title>
+    <!-- Everything between the markers is replaced per-page by api/post-page.ts
+         before the shell is served, and kept in sync afterwards by <Seo />.
+         Do not remove the markers: without them the prerender silently falls
+         back to serving these defaults. -->
+    <!-- seo:start -->
+<title>Snorty Blog | Cybersecurity and development</title>
+    <meta name="description" content="Practical guides on cybersecurity, ethical hacking and software development." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta property="og:site_name" content="Snorty Blog" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- seo:end -->
   </head>
   <body>
     <div id="root"></div>

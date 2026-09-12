@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { absoluteUrl, getSiteUrl } from "../lib/site";
+import { getSiteUrl } from "../lib/site";
+import { OPTIONAL_TAG_KEYS, buildSeoMeta, type MetaTag } from "../lib/seo-meta";
 import logo from "../assets/logo.png";
 
 type SeoProps = {
@@ -12,21 +13,33 @@ type SeoProps = {
   article?: { publishedTime?: string; modifiedTime?: string };
 };
 
-function setMeta(selector: string, attribute: "name" | "property", key: string, content: string) {
-  let element = document.head.querySelector<HTMLMetaElement>(selector);
+function selectorFor(tag: Pick<MetaTag, "attribute" | "key">) {
+  return `meta[${tag.attribute}="${tag.key}"]`;
+}
+
+function applyMeta(tag: MetaTag) {
+  let element = document.head.querySelector<HTMLMetaElement>(selectorFor(tag));
   if (!element) {
     element = document.createElement("meta");
-    element.setAttribute(attribute, key);
+    element.setAttribute(tag.attribute, tag.key);
     document.head.appendChild(element);
   }
-  element.content = content;
+  element.content = tag.content;
 }
 
-function removeMeta(selector: string) {
-  document.head.querySelector(selector)?.remove();
+function applyLink(rel: string, href: string, extra?: { hreflang: string }) {
+  const selector = extra ? `link[rel="${rel}"][hreflang="${extra.hreflang}"]` : `link[rel="${rel}"]`;
+  let element = document.head.querySelector<HTMLLinkElement>(selector);
+  if (!element) {
+    element = document.createElement("link");
+    element.rel = rel;
+    if (extra) element.hreflang = extra.hreflang;
+    document.head.appendChild(element);
+  }
+  element.href = href;
 }
 
-function setStructuredData(id: string, value: Record<string, unknown>) {
+function applyStructuredData(id: string, value: Record<string, unknown>) {
   let element = document.head.querySelector<HTMLScriptElement>(`script[data-seo="${id}"]`);
   if (!element) {
     element = document.createElement("script");
@@ -38,81 +51,45 @@ function setStructuredData(id: string, value: Record<string, unknown>) {
   element.textContent = JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
+/**
+ * Keeps the document head in sync during client-side navigation. For /post/:slug
+ * the same metadata is already present in the served HTML (api/post-page.ts) —
+ * this updates it in place rather than duplicating it, because every tag is
+ * matched by the selector the server used to emit it.
+ */
 export default function Seo({ title, description, path = "/", image, type = "website", noIndex = false, article }: SeoProps) {
+  // Read through to primitives: an inline `article` object would be a new value
+  // on every render and would re-run the effect each time.
+  const publishedTime = article?.publishedTime;
+  const modifiedTime = article?.modifiedTime;
+
   useEffect(() => {
-    const canonicalUrl = absoluteUrl(path);
-    const socialImage = image || absoluteUrl(logo);
-    const fullTitle = `${title} | Snorty Blog`;
-
-    document.title = fullTitle;
-    setMeta('meta[name="description"]', "name", "description", description);
-    setMeta('meta[name="robots"]', "name", "robots", noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large");
-    setMeta('meta[property="og:title"]', "property", "og:title", fullTitle);
-    setMeta('meta[property="og:description"]', "property", "og:description", description);
-    setMeta('meta[property="og:type"]', "property", "og:type", type);
-    setMeta('meta[property="og:url"]', "property", "og:url", canonicalUrl);
-    setMeta('meta[property="og:image"]', "property", "og:image", socialImage);
-    setMeta('meta[property="og:image:alt"]', "property", "og:image:alt", type === "article" ? title : "Snorty Blog");
-    setMeta('meta[name="twitter:card"]', "name", "twitter:card", "summary_large_image");
-    setMeta('meta[name="twitter:title"]', "name", "twitter:title", fullTitle);
-    setMeta('meta[name="twitter:description"]', "name", "twitter:description", description);
-    setMeta('meta[name="twitter:image"]', "name", "twitter:image", socialImage);
-
-    if (type === "article" && article?.publishedTime) {
-      setMeta('meta[property="article:published_time"]', "property", "article:published_time", article.publishedTime);
-    } else {
-      removeMeta('meta[property="article:published_time"]');
-    }
-    if (type === "article" && article?.modifiedTime) {
-      setMeta('meta[property="article:modified_time"]', "property", "article:modified_time", article.modifiedTime);
-    } else {
-      removeMeta('meta[property="article:modified_time"]');
-    }
-
-    let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement("link");
-      canonical.rel = "canonical";
-      document.head.appendChild(canonical);
-    }
-    canonical.href = canonicalUrl;
-
-    let alternate = document.head.querySelector<HTMLLinkElement>('link[rel="alternate"][hreflang="it"]');
-    if (!alternate) {
-      alternate = document.createElement("link");
-      alternate.rel = "alternate";
-      alternate.hreflang = "it";
-      document.head.appendChild(alternate);
-    }
-    alternate.href = canonicalUrl;
-
-    setStructuredData("page", {
-      "@context": "https://schema.org",
-      "@type": type === "article" ? "BlogPosting" : "WebPage",
-      ...(type === "article"
-        ? {
-            headline: title,
-            description,
-            mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
-            datePublished: article?.publishedTime,
-            dateModified: article?.modifiedTime || article?.publishedTime,
-            image: socialImage,
-            inLanguage: "it-IT",
-            author: { "@type": "Person", name: "Lorenzo Fazioli", url: `${getSiteUrl()}/about` },
-            publisher: { "@type": "Person", name: "Lorenzo Fazioli", url: `${getSiteUrl()}/about` },
-          }
-        : { name: title, description, url: canonicalUrl, inLanguage: "it-IT" }),
+    const meta = buildSeoMeta({
+      siteUrl: getSiteUrl(),
+      title,
+      description,
+      path,
+      image,
+      fallbackImage: logo,
+      type,
+      noIndex,
+      article: { publishedTime, modifiedTime },
     });
 
-    setStructuredData("website", {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "Snorty Blog",
-      url: getSiteUrl(),
-      inLanguage: "it-IT",
-      publisher: { "@type": "Person", name: "Lorenzo Fazioli", url: `${getSiteUrl()}/about` },
-    });
-  }, [article?.modifiedTime, article?.publishedTime, description, image, noIndex, path, title, type]);
+    document.title = meta.title;
+    meta.tags.forEach(applyMeta);
+
+    const present = new Set(meta.tags.map((tag) => tag.key));
+    for (const key of OPTIONAL_TAG_KEYS) {
+      if (present.has(key)) continue;
+      document.head.querySelector(`meta[name="${key}"]`)?.remove();
+      document.head.querySelector(`meta[property="${key}"]`)?.remove();
+    }
+
+    applyLink("canonical", meta.canonical);
+    applyLink("alternate", meta.canonical, { hreflang: meta.hreflang });
+    meta.structuredData.forEach((entry) => applyStructuredData(entry.id, entry.value));
+  }, [description, image, modifiedTime, noIndex, path, publishedTime, title, type]);
 
   return null;
 }

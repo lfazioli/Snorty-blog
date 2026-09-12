@@ -42,7 +42,7 @@ export default function PostsPage() {
 
   return (
     <Layout>
-      <Seo title="Articoli su cybersecurity e sviluppo" description="Tutti gli articoli, le guide e gli esperimenti di Snorty Blog su cybersecurity, ethical hacking e sviluppo." path="/posts" />
+      <Seo title="Articles on cybersecurity and development" description="Every article, guide and experiment on Snorty Blog: cybersecurity, ethical hacking and software development." path="/posts" />
       <p className="font-mono text-xs text-signal mb-3 tracking-wide">// all posts</p>
       <h1 className="text-2xl sm:text-3xl font-semibold text-ink mb-8 tracking-tight">
         Posts
@@ -50,7 +50,7 @@ export default function PostsPage() {
 
       <div className="relative mb-8">
         <label htmlFor="post-search" className="sr-only">
-          Cerca tra i post
+          Search the posts
         </label>
         <svg
           aria-hidden="true"
@@ -69,7 +69,7 @@ export default function PostsPage() {
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Cerca un post..."
+          placeholder="Search for a post..."
           className="w-full rounded-lg border border-line bg-panel py-3 pl-10 pr-4 text-sm text-ink placeholder:text-dim transition-colors hover:border-signal/50 focus:border-signal focus:outline-none"
         />
       </div>
@@ -81,7 +81,7 @@ export default function PostsPage() {
       )}
 
       {!loading && !error && posts.length > 0 && filteredPosts.length === 0 && (
-        <p className="text-dim text-sm">Nessun post trovato per “{query.trim()}”.</p>
+        <p className="text-dim text-sm">No posts found for “{query.trim()}”.</p>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">

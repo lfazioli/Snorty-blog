@@ -5,8 +5,3 @@ export function getSiteUrl() {
   if (configuredSiteUrl) return configuredSiteUrl;
   return typeof window === "undefined" ? "" : window.location.origin;
 }
-
-export function absoluteUrl(path = "/") {
-  const siteUrl = getSiteUrl();
-  return siteUrl ? `${siteUrl}${path.startsWith("/") ? path : `/${path}`}` : path;
-}

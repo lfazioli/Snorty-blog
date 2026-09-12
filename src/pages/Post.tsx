@@ -34,7 +34,7 @@ export default function Post() {
   if (loading) {
     return (
       <Layout>
-        <Seo title="Caricamento articolo" description="Caricamento dell'articolo." noIndex />
+        <Seo title="Loading post" description="Loading the post." noIndex />
         <p className="text-dim text-sm text-center py-16">Loading...</p>
       </Layout>
     );
@@ -43,7 +43,7 @@ export default function Post() {
   if (error || !post) {
     return (
       <Layout>
-        <Seo title="Articolo non trovato" description="L'articolo richiesto non è disponibile." path={`/post/${slug || ""}`} noIndex />
+        <Seo title="Post not found" description="The post you are looking for is not available." path={`/post/${slug || ""}`} noIndex />
         <div className="text-center py-16">
           <p className="text-danger text-sm mb-4">{error || "Post not found."}</p>
           <Link to="/posts" className="text-signal text-sm hover:underline">Back to all posts</Link>
@@ -56,7 +56,7 @@ export default function Post() {
     <Layout>
       <Seo
         title={post.title}
-        description={post.excerpt || `Approfondimento su cybersecurity e sviluppo: ${post.title}`}
+        description={post.excerpt || `A practical walkthrough on cybersecurity and development: ${post.title}`}
         path={`/post/${post.slug}`}
         image={post.image}
         type="article"
@@ -75,14 +75,18 @@ export default function Post() {
           {post.title}
         </h1>
 
+        {/* The ratio is fixed by the container so the text below does not jump
+            when the cover arrives — same approach as PostCard. */}
         {post.image && (
-          <img
-            src={post.image}
-            alt={post.title}
-            loading="eager"
-            fetchPriority="high"
-            className="w-full rounded-lg border border-line mb-8"
-          />
+          <div className="aspect-video overflow-hidden rounded-lg border border-line bg-panel2 mb-8">
+            <img
+              src={post.image}
+              alt={post.title}
+              loading="eager"
+              fetchPriority="high"
+              className="w-full h-full object-cover"
+            />
+          </div>
         )}
 
         <div className="text-ink">

@@ -12,6 +12,7 @@ function load(file, dependencies = {}) {
 }
 const publication = load('server/publication.ts');
 const local = load('src/lib/publication.ts');
+const seoMeta = load('src/lib/seo-meta.ts');
 test('validates dates and converts explicit offsets to UTC', () => {
   assert.equal(publication.parsePublishAt('2027-07-15T10:30:00+02:00'), '2027-07-15T08:30:00.000Z');
   for (const value of [undefined, null, '']) assert.equal(publication.parsePublishAt(value), null);
@@ -28,12 +29,13 @@ function setup(file, admin, result = []) {
   const calls = [];
   const db = { ensureSchema: async () => {}, pool: { query: async (...args) => { calls.push(args); return { rows: result, rowCount: result.length }; } } };
   const auth = { getSessionFromRequest: () => admin ? { role: 'admin' } : null, requireAdmin: (_req, res) => admin ? { email: 'admin@example.com' } : (res.status(401).json({ error: 'Unauthorized' }), null) };
+  const siteUrl = load('server/site-url.ts');
   const tools = load('server/tools.ts', { './db.js': db, './tool-seed.js': {}, './publication.js': publication });
-  const handler = load(file, { '../server/db.js': db, '../../server/db.js': db, '../server/auth.js': auth, '../../server/auth.js': auth, '../../server/publication.js': publication, '../server/tools.js': { ...tools, ensureTools: async () => {} } }).default;
+  const handler = load(file, { '../server/db.js': db, '../../server/db.js': db, '../server/auth.js': auth, '../../server/auth.js': auth, '../../server/publication.js': publication, '../server/tools.js': { ...tools, ensureTools: async () => {} }, '../server/site-url.js': siteUrl, '../src/lib/seo-meta.js': seoMeta }).default;
   return { handler, calls, res: response() };
 }
 test('every public read enforces the server publication deadline, with uncached responses', async () => {
-  for (const file of ['api/posts/index.ts', 'api/posts/[slug].ts', 'api/post.ts', 'api/tools.ts', 'api/sitemap.ts']) {
+  for (const file of ['api/posts/index.ts', 'api/posts/[slug].ts', 'api/post.ts', 'api/tools.ts', 'api/sitemap.ts', 'api/feed.ts']) {
     const { handler, calls, res } = setup(file, false);
     await handler({ method: 'GET', query: { slug: 'test' }, headers: { host: 'snorty.space' } }, res);
     assert.match(calls[0][0], /published = true/);
