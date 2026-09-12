@@ -142,3 +142,15 @@ test('social images are always absolute, whoever supplied them', () => {
   assert.equal(seo.absoluteImageUrl(SITE, 'data:image/png;base64,AAAA'), 'data:image/png;base64,AAAA');
   assert.equal(seo.absoluteImageUrl(SITE, null), null);
 });
+
+test('only real client routes are handed to the router', () => {
+  // Guards against the router swallowing a link to a backend endpoint: a reader
+  // following /feed.xml would land on the not-found screen instead of the feed.
+  const { isClientRoute } = load('src/lib/links.ts');
+  for (const href of ['/posts', '/about', '/post/what-is-ethical-hacking', '/tools']) {
+    assert.equal(isClientRoute(href), true, `${href} should route through the SPA`);
+  }
+  for (const href of ['/feed.xml', '/sitemap.xml', '/robots.txt', '/api/posts', 'https://example.com', '#section', '//cdn.example.com/x']) {
+    assert.equal(isClientRoute(href), false, `${href} must stay a plain anchor`);
+  }
+});

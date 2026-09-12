@@ -1,8 +1,10 @@
 // src/components/MarkdownComponents.tsx
 import type { ComponentPropsWithoutRef } from "react";
 import { Link } from "react-router-dom";
+import { isClientRoute } from "../lib/links";
 
 const linkClassName = "text-signal underline underline-offset-2 hover:text-signal-600";
+
 
 export const markdownComponents = {
   // Post.tsx already renders the title as the page's only <h1>. A leading
@@ -22,7 +24,7 @@ export const markdownComponents = {
   // link meant an internal link would leave the SPA and reload the whole app,
   // which made cross-linking between posts impractical.
   a: ({ href = "", ...props }: ComponentPropsWithoutRef<"a">) =>
-    href.startsWith("/") ? (
+    isClientRoute(href) ? (
       <Link to={href} className={linkClassName} {...props} />
     ) : (
       <a
