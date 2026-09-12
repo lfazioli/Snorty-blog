@@ -51,6 +51,18 @@ export function absoluteUrl(siteUrl: string, path = "/") {
   return base ? `${base}${suffix}` : suffix;
 }
 
+/**
+ * Open Graph and Twitter require an absolute image URL; a crawler will not
+ * resolve a root-relative one against the page it found it on. The default
+ * social image is the hashed logo Vite emits, which is root-relative, so it has
+ * to be resolved here — images that already carry a scheme are left alone.
+ */
+export function absoluteImageUrl(siteUrl: string, value: string | null | undefined) {
+  if (!value) return null;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(value) || value.startsWith("//")) return value;
+  return value.startsWith("/") ? absoluteUrl(siteUrl, value) : value;
+}
+
 /** Appends the brand suffix only while the result still fits a search result. */
 export function pageTitle(title: string) {
   return title.length + TITLE_SUFFIX.length <= TITLE_LIMIT ? `${title}${TITLE_SUFFIX}` : title;
@@ -60,7 +72,7 @@ export function buildSeoMeta(input: SeoInput): SeoMeta {
   const { siteUrl, title, description, path = "/", image, fallbackImage, type = "website", noIndex = false, article } = input;
   const canonical = absoluteUrl(siteUrl, path);
   const fullTitle = pageTitle(title);
-  const socialImage = image || fallbackImage || null;
+  const socialImage = absoluteImageUrl(siteUrl, image || fallbackImage);
   const robots = noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large";
 
   const tags: MetaTag[] = [

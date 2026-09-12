@@ -120,3 +120,25 @@ test('the icon emitted by the build is picked up as the default social image', (
   assert.equal(seo.shellIconHref(shell), '/src/assets/logo.png');
   assert.equal(seo.shellIconHref('<html><head></head></html>'), null);
 });
+
+test('social images are always absolute, whoever supplied them', () => {
+  // A crawler does not resolve a root-relative og:image against the page it
+  // found it on, and the default social image is the root-relative hashed logo.
+  const withFallback = seo.buildSeoMeta({
+    siteUrl: SITE,
+    title: 'Tools',
+    description: 'A toolbox.',
+    path: '/tools',
+    fallbackImage: '/assets/logo-Bl5Qam24.png',
+  });
+  assert.equal(tag(withFallback, 'og:image').content, `${SITE}/assets/logo-Bl5Qam24.png`);
+  assert.equal(tag(withFallback, 'twitter:image').content, `${SITE}/assets/logo-Bl5Qam24.png`);
+
+  // An already absolute cover must be passed through untouched.
+  assert.equal(tag(article(), 'og:image').content, 'https://example.com/cover.png');
+  assert.equal(article().structuredData[0].value.image, 'https://example.com/cover.png');
+
+  assert.equal(seo.absoluteImageUrl(SITE, '//cdn.example.com/a.png'), '//cdn.example.com/a.png');
+  assert.equal(seo.absoluteImageUrl(SITE, 'data:image/png;base64,AAAA'), 'data:image/png;base64,AAAA');
+  assert.equal(seo.absoluteImageUrl(SITE, null), null);
+});
