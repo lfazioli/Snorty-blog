@@ -1,284 +1,249 @@
 # 📝 Snorty Blog
 
-Un blog moderno e elegante costruito con TypeScript, progettato per condividere articoli e contenuti in modo professionale.
+Blog tecnico su cybersecurity, ethical hacking e sviluppo.
 
-🌐 **Live**: [snorty.vercel.app](https://snorty.vercel.app/)
-
----
-
-## ✨ Caratteristiche
-
-- 🎨 **Design Moderno**: Interfaccia intuitiva e responsive
-- ⚡ **Performance Ottimizzate**: Velocità di caricamento superiore
-- 📱 **Mobile First**: Perfettamente ottimizzato per dispositivi mobile
-- 🔍 **SEO Friendly**: Optimizzato per i motori di ricerca
-- 💻 **TypeScript**: Codice type-safe e mantenibile
-- 🎯 **Facile da Usare**: Interfaccia semplice per la creazione e gestione di articoli
-- 🌙 **Dark Mode**: Supporto per tema scuro (se implementato)
+🌐 **Live**: [www.snorty.space](https://www.snorty.space/)
 
 ---
 
-## 🚀 Stack Tecnologico
+## 🚀 Stack
 
-- **Linguaggio**: TypeScript
-- **Runtime**: Node.js
-- **Hosting**: Vercel
-- **Package Manager**: npm
-- **Gestione Dipendenze**: Babel per transpilazione
+| | |
+|---|---|
+| **UI** | React 19 + TypeScript, `react-router-dom` 7 (SPA, nessun framework) |
+| **Build** | Vite — `rolldown-vite`, non il bundler Vite di default |
+| **Stili** | Tailwind CSS 3 + PostCSS |
+| **Backend** | Vercel Functions (runtime Node) sotto `api/`, codice condiviso in `server/` |
+| **Database** | Postgres (`pg`), schema creato a runtime da `server/db.ts` |
+| **Hosting** | Vercel |
 
----
-
-## 📋 Prerequisiti-
-
-Prima di iniziare, assicurati di avere installato:
-
-- **Node.js** (v16 o superiore)
-- **npm** (v7 o superiore)
+> Non è un progetto Next.js: le rotte le gestisce `react-router` nel browser e
+> `vercel.json` sul server.
 
 ---
 
-## 🔧 Installazione
-
-1. **Clona il repository**
-   ```bash
-   git clone https://github.com/lfazioli/Snorty-blog.git
-   cd Snorty-blog
-   ```
-
-2. **Installa le dipendenze**
-   ```bash
-   npm install
-   ```
-
-3. **Configura le variabili d'ambiente** (se necessario)
-   ```bash
-   cp .env.example .env.local
-   ```
-
-4. **Avvia il server di sviluppo**
-   ```bash
-   npm run dev
-   ```
-
-5. **Apri il browser**
-   Accedi a `http://localhost:3000` (o alla porta indicata dal tuo server)
-
----
-
-## 📁 Struttura del Progetto
+## 📁 Struttura
 
 ```
-Snorty-blog/
-├── src/                    # Codice sorgente
-│   ├── components/        # Componenti React/Vue
-│   ├── pages/            # Pagine del blog
-│   ├── styles/           # Stili CSS/SCSS
-│   └── utils/            # Funzioni di utilità
-├── public/               # File statici
-├── node_modules/         # Dipendenze
-├── package.json          # Configurazione npm
-├── tsconfig.json         # Configurazione TypeScript
-├── .env.example          # Variabili d'ambiente di esempio
-└── README.md             # Questo file
+api/                    una Vercel Function per file (vedi il limite qui sotto)
+├── page.ts             HTML server-side di ogni rotta del sito
+├── seo.ts              /robots.txt, /sitemap.xml, /feed.xml
+├── post.ts             lettura pubblica di un singolo post
+├── posts/              lista e CRUD dei post (admin)
+├── tools.ts            CRUD dei tool
+├── github-projects.ts  progetti mostrati in home
+└── auth/               login, health, endpoint ritirati
+server/                 codice condiviso fra le function (non è un server)
+├── db.ts               pool Postgres e creazione schema
+├── auth.ts             firma e verifica della sessione JWT
+├── markdown.ts         Markdown -> HTML per il corpo prerenderizzato
+├── site-url.ts         l'host canonico del sito, un posto solo
+├── publication.ts      validazione delle date di pubblicazione
+├── tools.ts            lettura e scrittura dei tool
+└── tool-seed.ts        popolamento iniziale della tabella tools
+src/
+├── components/         Seo, Layout, MarkdownComponents, PostCard...
+├── pages/              una per rotta di react-router
+└── lib/
+    ├── seo-meta.ts     modello dei meta tag, condiviso client/server
+    └── page-meta.ts    titolo e descrizione delle pagine statiche
+tests/                  node:test, nessun runner esterno
+vercel.json             routing: è qui che si decide chi risponde a cosa
 ```
 
 ---
 
-## 📚 Comandi Disponibili
+## 🔧 Setup
 
-| Comando | Descrizione |
-|---------|-------------|
-| `npm run dev` | Avvia il server di sviluppo |
-| `npm run build` | Crea una build di produzione |
-| `npm start` | Avvia il server di produzione |
-| `npm run lint` | Esegui linting del codice |
-| `npm run test` | Esegui i test |
-| `npm run format` | Formatta il codice |
-
-> **Nota**: I comandi disponibili possono variare in base alla configurazione del tuo `package.json`
-
----
-
-## 🎬 Come Usare
-
-### Creare un nuovo articolo
-
-1. Accedi al dashboard del blog
-2. Fai clic su "Nuovo Articolo"
-3. Compila il titolo, il contenuto e altri dettagli
-4. Pubblica l'articolo
-
-### Modificare un articolo
-
-1. Accedi al dashboard
-2. Seleziona l'articolo da modificare
-3. Apporta le modifiche desiderate
-4. Salva le modifiche
-
-### Eliminare un articolo
-
-1. Vai al dashboard
-2. Seleziona l'articolo da eliminare
-3. Conferma l'eliminazione
-
----
-
-## 🔐 Variabili d'Ambiente
-
-Copia il file `.env.example` in `.env.local` e configura le seguenti variabili (se necessario):
-
-```env
-# Database
-DATABASE_URL=your_database_url
-
-# API Keys
-API_KEY=your_api_key
-
-# Other configurations
-APP_ENV=development
+```bash
+git clone https://github.com/lfazioli/Snorty-blog.git
+cd Snorty-blog
+npm install          # obbligatorio, vedi la nota sotto
+cp .env.example .env.local
+npm run dev          # http://localhost:5173
 ```
+
+> ⚠️ **`npm install` non è opzionale.** `node_modules/` è committato nel
+> repository, ma `.gitignore` contiene `dist/`, quindi ai pacchetti committati
+> manca la cartella che effettivamente spediscono. Senza `npm install` la build
+> fallisce con `Cannot find module '@vercel/analytics'`. Su Vercel non si nota
+> perché la piattaforma lancia `npm install` prima di ogni build.
+
+> ⚠️ **`npm run dev` avvia solo Vite: le function sotto `api/` non girano.**
+> L'app si carica ma non trova i post, e non vedi nulla del prerender descritto
+> più avanti — quello esiste solo dietro `vercel.json`. Per esercitare anche le
+> API in locale serve `vercel dev` (con la CLI installata e `DATABASE_URL`
+> configurato) oppure un preview deployment.
+
+### Variabili d'ambiente
+
+| Variabile | A cosa serve |
+|---|---|
+| `SITE_URL` | Host pubblico usato da canonical, `og:url`, sitemap e feed (lato server) |
+| `VITE_SITE_URL` | Lo stesso valore lato client, inlined a build time: cambiarlo richiede un redeploy |
+| `DATABASE_URL` | Connessione Postgres |
+| `ADMIN_EMAIL` | L'unico account che può fare login |
+| `JWT_SECRET` | Firma della sessione di amministrazione |
+
+> 🔴 **`SITE_URL` deve essere l'host su cui il sito risponde davvero.**
+> `snorty.space` fa un 308 verso `www.snorty.space`: puntarlo all'apex fa sì che
+> ogni canonical, ogni `og:url` e ogni URL della sitemap indichino un indirizzo
+> che redirige, che per Google è un segnale contraddittorio. Il valore corretto
+> è `https://www.snorty.space`.
+
+---
+
+## 📚 Comandi
+
+| Comando | Cosa fa |
+|---|---|
+| `npm run dev` | Vite in sviluppo (solo SPA, niente `api/`) |
+| `npm run build` | `tsc -b && vite build` → `dist/` |
+| `npm run preview` | Serve la build di produzione in locale |
+| `npm test` | `node --test tests/*.test.cjs` |
+| `npm run lint` | ESLint |
+| `npm run typecheck:api` | Type-check di `api/` e `server/`, che `tsc -b` non copre |
+
+---
+
+## 🖥️ Come vengono servite le pagine
+
+L'app è client-rendered, ma **l'HTML che arriva al browser non è più lo shell
+vuoto**. In `vercel.json` il catch-all non punta a `/index.html` bensì a
+`api/page.ts`, che riscrive lo shell prima di servirlo:
+
+- **`<head>` per ogni rotta** — titolo, description, canonical, `hreflang`,
+  Open Graph, Twitter Card e JSON-LD, calcolati per quella pagina.
+- **Il corpo dell'articolo su `/post/:slug`** — il Markdown del post viene
+  renderizzato in HTML da `server/markdown.ts` dentro `<div id="root">`, con le
+  stesse classi Tailwind di `MarkdownComponents.tsx`. `createRoot().render()`
+  svuota il contenitore al mount, quindi React non deve riconciliare nulla: è
+  quello che legge un crawler e quello che vede il visitatore mentre il bundle
+  carica.
+- **404 veri** — una URL inesistente risponde `404` con `noindex`, non più `200`
+  con lo shell.
+- **Le schermate admin** (`/login`, `/dashboard/...`) rispondono `200` con
+  `noindex`.
+
+I meta della singola pagina sono descritti una volta sola e usati da entrambi i
+lati: `api/page.ts` li serve nell'HTML, il componente `<Seo />` li tiene
+aggiornati durante la navigazione client.
+
+### Aggiungere una pagina statica
+
+1. Aggiungi il descrittore in `src/lib/page-meta.ts`:
+   ```ts
+   export const CHANGELOG_PAGE: PageDescriptor = {
+     path: "/changelog",
+     title: "Changelog",
+     description: "Cosa è cambiato, e quando.",
+   };
+   ```
+   e inseriscilo in `PUBLIC_PAGES`.
+2. Registra la rotta in `src/main.tsx` e usa il descrittore nella pagina:
+   ```tsx
+   <Seo {...CHANGELOG_PAGE} />
+   ```
+
+Se dimentichi il passo 1, **il test fallisce**: `tests/page.test.cjs` verifica
+che ogni `<Route path>` di `main.tsx` sia una rotta a cui il server sa
+rispondere. Senza quel controllo la pagina risponderebbe 404 in produzione pur
+funzionando in sviluppo.
+
+Una pagina admin (da non indicizzare) si aggiunge invece in `ADMIN_PAGES`, nello
+stesso file.
+
+### Modificare il rendering del Markdown
+
+`server/markdown.ts` copre i costrutti che i post usano davvero — liste,
+`h1`-`h3`, blocchi di codice, righe orizzontali, tabelle GFM, grassetto, codice
+inline, link e immagini — e **fa l'escape di ogni carattere della sorgente prima
+di interpretarla**, come `react-markdown`, che non renderizza HTML grezzo. Se
+cambi le classi di `MarkdownComponents.tsx`, aggiorna anche quelle qui: un test
+confronta le due liste, perché se divergono il passaggio da HTML server a React
+diventa visibile.
+
+---
+
+## ⚠️ Il limite delle 12 Serverless Function
+
+**Un deployment sul piano Hobby può contenere al massimo 12 Serverless
+Function, e ogni file sotto `api/` è una function.** Superarlo non degrada
+niente: la build fallisce del tutto e la produzione smette di aggiornarsi.
+
+È già successo. `tests/vercel-functions.test.cjs` conta le function e fallisce
+oltre il limite, e verifica che ogni rewrite `/api` di `vercel.json` punti a un
+file che esiste. Oggi il progetto ne usa **10**.
+
+Se serve un nuovo endpoint, prima di aggiungere un file valuta se può stare in
+uno esistente: `api/seo.ts` serve tre URL distinti tramite un parametro `kind`,
+`api/page.ts` serve tutte le pagine tramite `path`.
+
+---
+
+## 📈 Analytics
+
+Entrambi i beacon sono attivati in `src/main.tsx`:
+
+- **Vercel Web Analytics** (`inject()`) — visite e pagine viste.
+- **Vercel Speed Insights** (`injectSpeedInsights()`) — LCP, CLS, INP e TTFB da
+  dispositivi reali, che è la metà del quadro che un Lighthouse sintetico non dà.
+
+> Speed Insights va **abilitato una volta** dal dashboard del progetto
+> (Settings → Speed Insights), altrimenti i dati vengono raccolti e scartati.
 
 ---
 
 ## 🧪 Test
 
-Esegui la suite di test:
-
 ```bash
-npm run test
+npm test
 ```
 
-Per il coverage:
+`node:test`, nessun runner esterno. I test caricano i sorgenti TypeScript
+transpilandoli al volo e sostituiscono solo le dipendenze esterne (database,
+rete), così esercitano il codice vero e non una sua riscrittura.
 
-```bash
-npm run test:coverage
-```
+Prima di aprire una PR: `npm test`, `npm run typecheck:api`, `npm run build`.
 
 ---
 
 ## 🚀 Deployment
 
-### Deploy su Vercel (Consigliato)
-
-Il progetto è già configurato per Vercel. Semplicemente:
-
-1. Connetti il tuo repository GitHub a Vercel
-2. Seleziona il branch da deployare
-3. Vercel costruirà e deployerà automaticamente il tuo progetto
-
-```bash
-# Deploy manuale
-npm run build
-vercel --prod
-```
-
-### Deploy su altri host
-
-Consulta la documentazione del tuo provider di hosting per istruzioni specifiche.
-
----
-
-## 📖 Documentazione
-
-Per una documentazione più dettagliata:
-
-- 📘 [TypeScript Docs](https://www.typescriptlang.org/)
-- 📗 [Node.js Docs](https://nodejs.org/docs/)
-- 📙 [Vercel Docs](https://vercel.com/docs)
+Vercel builda e pubblica automaticamente a ogni push su `main`. Le PR che
+arrivano da un fork mostrano il check Vercel in rosso con *"Authorization
+required to deploy"*: è il gate sui preview deployment dei fork, non una build
+fallita.
 
 ---
 
 ## 🤝 Contribuire
 
-Le contribuzioni sono benvenute! Per contribuire:
+1. Fai il fork e crea un branch: `git checkout -b fix/qualcosa`
+2. Scrivi il codice e i test
+3. `npm test && npm run typecheck:api && npm run build`
+4. Apri una Pull Request verso `main`
 
-1. **Fork il repository**
-   ```bash
-   git clone https://github.com/lfazioli/Snorty-blog.git
-   ```
+### Linee guida
 
-2. **Crea un branch per la tua feature**
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
-
-3. **Commit le tue modifiche**
-   ```bash
-   git commit -m 'Add some AmazingFeature'
-   ```
-
-4. **Push al branch**
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
-
-5. **Apri una Pull Request**
+- TypeScript ovunque, niente `any` nuovi
+- Un test per ogni comportamento che non vuoi perdere, in `tests/`
+- I commenti spiegano **perché**, non cosa: il cosa si legge dal codice
+- Occhio al limite delle 12 function
 
 ---
 
-## 📝 Linee Guida di Coding
+## 🐛 Segnalare un bug
 
-- Usa TypeScript per la type safety
-- Segui le convenzioni di naming camelCase
-- Commenta il codice complesso
-- Esegui i test prima di fare commit
-- Utilizza Prettier per la formattazione del codice
-
----
-
-## 🐛 Bug Report
-
-Se trovi un bug, per favore:
-
-1. Controlla che il bug non sia già stato segnalato
-2. Apri un nuovo issue su GitHub
-3. Includi:
-   - Una descrizione chiara del problema
-   - Passi per riprodurre il bug
-   - Il comportamento atteso e quello effettivo
-   - Screenshot (se applicabile)
-   - Informazioni sul tuo ambiente (OS, browser, versione Node.js)
-
----
-
-## 💡 Suggerimenti e Richieste di Feature
-
-Hai un'idea per migliorare il blog? Apri un issue con il label `enhancement` e descrivi la tua idea!
-
----
-
-## 📄 Licenza
-
-Questo progetto è fornito senza una licenza specifica. Per ulteriori dettagli, consulta il file LICENSE (se presente).
+Apri una issue con: descrizione, passi per riprodurlo, comportamento atteso e
+osservato, e — se riguarda SEO o rendering — l'output di
+`curl -sS https://www.snorty.space/<percorso>`, che è quello che vede un crawler.
 
 ---
 
 ## 👤 Autore
 
-**Leonardo Fazioli**
-
-- GitHub: [@lfazioli](https://github.com/lfazioli)
-- Website: [snorty.vercel.app](https://snorty.vercel.app/)
-
----
-
-## 🙏 Ringraziamenti
-
-Grazie a tutti coloro che hanno contribuito a questo progetto e a chi lo supporta!
-
----
-
-## 📞 Supporto
-
-Se hai domande o hai bisogno di aiuto:
-
-1. Controlla la sezione FAQ
-2. Apri un issue su GitHub
-3. Contatta l'autore via GitHub
-
----
-
-**Ultimo aggiornamento**: Settembre 2026
+**Lorenzo Fazioli** — [@lfazioli](https://github.com/lfazioli) · [www.snorty.space](https://www.snorty.space/)
 
 ---
 
