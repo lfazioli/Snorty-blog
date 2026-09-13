@@ -11,7 +11,7 @@ import Tools from "./pages/Tools";
 import NotFound from "./pages/NotFound";
 import RequireAdmin from "./components/RequireAdmin";
 import { AuthProvider } from "./context/AuthContext";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react";
 
 // Admin-only screens are split out of the public bundle: no visitor of the blog
 // ever needs the editor, and the bundle is what stands between the page loading
@@ -66,6 +66,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
+        <Analytics />
       </BrowserRouter>
     </AuthProvider>
   </React.StrictMode>
