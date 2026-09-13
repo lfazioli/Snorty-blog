@@ -47,11 +47,20 @@ test('old reader and other administrator sessions cannot access protected APIs',
   }
 });
 test('retired registration and reset endpoints reject every request without dependencies', () => {
-  for (const file of ['register', 'forgot', 'reset']) {
-    const handler = load(`api/auth/${file}.ts`).default;
-    for (const method of ['GET', 'POST', 'PUT']) {
-      const res = response(); handler({ method, body: { email: 'admin@example.com', password: 'test', token: 'old-token' } }, res);
-      assert.equal(res.code, 404);
-    }
+  const handler = load('api/auth/retired.ts').default;
+  for (const method of ['GET', 'POST', 'PUT']) {
+    const res = response(); handler({ method, body: { email: 'admin@example.com', password: 'test', token: 'old-token' } }, res);
+    assert.equal(res.code, 404);
+  }
+  // The three legacy paths are no longer files of their own: only this rewrite
+  // keeps /api/auth/register, /forgot and /reset answering.
+  const { routes } = JSON.parse(readFileSync('vercel.json', 'utf8'));
+  const rewrite = routes.find((route) => route.dest === '/api/auth/retired');
+  assert.ok(rewrite, 'vercel.json must route the retired auth paths to /api/auth/retired');
+  for (const path of ['/api/auth/register', '/api/auth/forgot', '/api/auth/reset', '/api/auth/register/']) {
+    assert.match(path, new RegExp(`^${rewrite.src}$`));
+  }
+  for (const path of ['/api/auth/login', '/api/auth/health']) {
+    assert.doesNotMatch(path, new RegExp(`^${rewrite.src}$`));
   }
 });

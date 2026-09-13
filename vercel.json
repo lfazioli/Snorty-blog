@@ -6,10 +6,11 @@
       "headers": { "Cache-Control": "public, max-age=31536000, immutable" },
       "continue": true
     },
-    { "src": "/sitemap\\.xml", "dest": "/api/sitemap" },
-    { "src": "/robots\\.txt", "dest": "/api/robots" },
-    { "src": "/feed\\.xml", "dest": "/api/feed" },
+    { "src": "/sitemap\\.xml", "dest": "/api/seo?kind=sitemap" },
+    { "src": "/robots\\.txt", "dest": "/api/seo?kind=robots" },
+    { "src": "/feed\\.xml", "dest": "/api/seo?kind=feed" },
     { "src": "/rss\\.xml", "status": 301, "headers": { "Location": "/feed.xml" } },
+    { "src": "/api/auth/(?:register|forgot|reset)/?", "dest": "/api/auth/retired" },
     { "src": "/post/([^/]+)/?", "dest": "/api/post-page?slug=$1" },
     { "handle": "filesystem" },
     { "src": "/((?!api/).*)", "dest": "/index.html" }

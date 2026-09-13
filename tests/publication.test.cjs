@@ -35,9 +35,11 @@ function setup(file, admin, result = []) {
   return { handler, calls, res: response() };
 }
 test('every public read enforces the server publication deadline, with uncached responses', async () => {
-  for (const file of ['api/posts/index.ts', 'api/posts/[slug].ts', 'api/post.ts', 'api/tools.ts', 'api/sitemap.ts', 'api/feed.ts']) {
+  // api/seo.ts is one function serving three URLs, so it is exercised once per kind.
+  const reads = [['api/posts/index.ts', {}], ['api/posts/[slug].ts', {}], ['api/post.ts', {}], ['api/tools.ts', {}], ['api/seo.ts', { kind: 'sitemap' }], ['api/seo.ts', { kind: 'feed' }]];
+  for (const [file, query] of reads) {
     const { handler, calls, res } = setup(file, false);
-    await handler({ method: 'GET', query: { slug: 'test' }, headers: { host: 'snorty.space' } }, res);
+    await handler({ method: 'GET', query: { slug: 'test', ...query }, headers: { host: 'snorty.space' } }, res);
     assert.match(calls[0][0], /published = true/);
     assert.match(calls[0][0], /publish_at IS NULL OR publish_at <= NOW\(\)/);
     assert.equal(res.headers['Cache-Control'], 'no-store');
