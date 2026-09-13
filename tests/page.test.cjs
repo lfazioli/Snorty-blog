@@ -65,11 +65,21 @@ function setup(rows, { failQuery = false } = {}) {
 
 const request = (path) => ({ method: 'GET', query: { path }, headers: { host: 'www.snorty.space' } });
 
+// node-postgres hands the handler Date objects for timestamp columns; the JSON
+// API hands the client ISO strings. Fixing only the string shape is how the
+// article path shipped a crash the whole suite was green for.
+const SHAPES = {
+  'ISO strings': POST,
+  'the Date objects node-postgres actually returns': { ...POST, created_at: new Date(POST.created_at), updated_at: new Date(POST.updated_at) },
+};
+
 test('a published post is served with its own metadata AND its own words in the HTML', async () => {
-  const { handler, calls, res } = setup([POST]);
+ for (const [shape, row] of Object.entries(SHAPES)) {
+  const { handler, calls, res } = setup([row]);
   await withShell(SHELL, () => handler(request(`/post/${POST.slug}`), res));
 
-  assert.equal(res.code, 200);
+  assert.equal(res.code, 200, shape);
+  assert.ok(res.body.includes('<p class="font-mono text-xs text-dim mb-2">2026-08-23</p>'), `${shape}: the publication date has to render, not crash`);
   // The whole point: the crawler must find all of this without running JavaScript.
   assert.ok(res.body.includes('<title>What Is Ethical Hacking? | Snorty Blog</title>'));
   assert.ok(res.body.includes('<link rel="canonical" href="https://www.snorty.space/post/what-is-ethical-hacking" />'));
@@ -86,6 +96,7 @@ test('a published post is served with its own metadata AND its own words in the 
   assert.match(calls[0][0], /published = true/);
   assert.match(calls[0][0], /publish_at IS NULL OR publish_at <= NOW\(\)/);
   assert.deepEqual(calls[0][1], [POST.slug]);
+ }
 });
 
 test('the static pages carry their own head instead of the shared default', async () => {

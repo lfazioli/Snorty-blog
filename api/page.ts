@@ -23,9 +23,12 @@ type PostRow = {
   excerpt: string | null;
   content: string;
   image: string | null;
-  publish_at: string | null;
-  created_at: string;
-  updated_at: string | null;
+  // node-postgres returns timestamp columns as Date objects, not as the ISO
+  // strings the JSON API hands the client. Declaring them as strings is what
+  // let articleBody() call .slice() on a Date and crash the function.
+  publish_at: string | Date | null;
+  created_at: string | Date;
+  updated_at: string | Date | null;
 };
 
 async function fetchShell(origin: string) {
@@ -44,7 +47,7 @@ function isoDate(value: string | Date | null) {
 
 /** Mirrors the markup src/pages/Post.tsx renders, so the swap on mount is invisible. */
 function articleBody(post: PostRow) {
-  const date = (post.publish_at || post.created_at || "").slice(0, 10);
+  const date = (isoDate(post.publish_at) || isoDate(post.created_at) || "").slice(0, 10);
   const cover = post.image
     ? `<div class="aspect-video overflow-hidden rounded-lg border border-line bg-panel2 mb-8"><img src="${escapeAttribute(post.image)}" alt="${escapeAttribute(post.title)}" class="w-full h-full object-cover" /></div>`
     : "";
