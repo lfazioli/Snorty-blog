@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import RequireAdmin from "./components/RequireAdmin";
 import { AuthProvider } from "./context/AuthContext";
 import { inject } from "@vercel/analytics";
+import { injectSpeedInsights } from "@vercel/speed-insights";
 
 // Admin-only screens are split out of the public bundle: no visitor of the blog
 // ever needs the editor, and the bundle is what stands between the page loading
@@ -25,6 +26,12 @@ const ToolEditor = lazy(() => import("./pages/ToolEditor"));
 const loading = <p className="text-dim text-sm text-center py-16">Loading...</p>;
 
 inject();
+// Web Analytics counts the visits; Speed Insights measures what those visitors
+// actually waited for — LCP, CLS, INP and TTFB from real devices, which is the
+// half of the picture a synthetic Lighthouse run cannot give. It has to be
+// enabled once per project under Settings -> Speed Insights, or the beacon is
+// collected and discarded.
+injectSpeedInsights();
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
