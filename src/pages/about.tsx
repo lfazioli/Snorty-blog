@@ -1,6 +1,7 @@
 import logo from "../assets/logo.png";
 import Layout from "../components/Layout";
 import Seo from "../components/Seo";
+import { ABOUT_PAGE } from "../lib/page-meta";
 
 const skills = [
   "React", "TypeScript", "Vite", "Tailwind CSS", "Python", "C++", "C",
@@ -10,7 +11,7 @@ const skills = [
 export default function About() {
   return (
     <Layout>
-      <Seo title="About Lorenzo Fazioli" description="Developer from Rome writing about cybersecurity, ethical hacking and programming, and building tools like IPScan for Raycast." path="/about" />
+      <Seo {...ABOUT_PAGE} />
       <p className="font-mono text-xs text-signal mb-3 tracking-wide">// about</p>
       <h1 className="text-2xl sm:text-3xl font-semibold text-ink mb-10 tracking-tight">About Me</h1>
 

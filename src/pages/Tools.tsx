@@ -1,5 +1,6 @@
 import Layout from "../components/Layout";
 import Seo from "../components/Seo";
+import { TOOLS_PAGE } from "../lib/page-meta";
 import { useEffect, useState } from "react";
 import { apiFetch } from "../lib/api";
 import type { Tool } from "../types/tool";
@@ -24,11 +25,7 @@ export default function Tools() {
     `${tool.name} ${tool.description} ${tool.category} ${tool.badge}`.toLowerCase().includes(query.trim().toLowerCase()));
   return (
     <Layout>
-      <Seo
-        title="Tools"
-        description="A curated collection of tools for networks, OSINT, and web analysis, with quick guides to get started."
-        path="/tools"
-      />
+      <Seo {...TOOLS_PAGE} />
 
       <section className="mb-10 sm:mb-14">
         <p className="font-mono text-xs text-signal mb-3 tracking-wide">// toolbox</p>

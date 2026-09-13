@@ -139,7 +139,7 @@ export function buildSeoMeta(input: SeoInput): SeoMeta {
   return { title: fullTitle, canonical, hreflang: SITE_LANGUAGE, robots, tags, structuredData };
 }
 
-function escapeAttribute(value: string) {
+export function escapeAttribute(value: string) {
   return value
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -173,6 +173,22 @@ export function injectSeoMeta(shell: string, meta: SeoMeta) {
   const end = shell.indexOf(SEO_BLOCK_END);
   if (start === -1 || end === -1 || end < start) return shell;
   return shell.slice(0, start) + renderSeoMeta(meta) + shell.slice(end + SEO_BLOCK_END.length);
+}
+
+const ROOT_ELEMENT = `<div id="root"></div>`;
+
+/**
+ * Puts server-rendered markup inside the SPA container. createRoot().render()
+ * clears the container on mount, so this is what a crawler reads and what a
+ * visitor sees while the bundle loads — never something React has to reconcile.
+ * Exact string rather than a pattern: an unrecognised shell is returned
+ * untouched instead of half-rewritten, same rule as injectSeoMeta.
+ */
+export function injectShellBody(shell: string, html: string) {
+  if (!html) return shell;
+  const at = shell.indexOf(ROOT_ELEMENT);
+  if (at === -1) return shell;
+  return `${shell.slice(0, at)}<div id="root">${html}</div>${shell.slice(at + ROOT_ELEMENT.length)}`;
 }
 
 /** The hashed logo emitted by Vite, reused as the default social image. */
