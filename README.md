@@ -28,7 +28,7 @@ Un blog moderno e elegante costruito con TypeScript, progettato per condividere 
 
 ---
 
-## 📋 Prerequisiti
+## 📋 Prerequisiti-
 
 Prima di iniziare, assicurati di avere installato:
 
