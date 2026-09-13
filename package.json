@@ -12,6 +12,7 @@
     "typecheck:api": "tsc -p tsconfig.api.json --noEmit"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "@vercel/node": "^5.5.14",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",

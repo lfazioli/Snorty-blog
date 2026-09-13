@@ -11,6 +11,7 @@ import Tools from "./pages/Tools";
 import NotFound from "./pages/NotFound";
 import RequireAdmin from "./components/RequireAdmin";
 import { AuthProvider } from "./context/AuthContext";
+import { Analytics } from "@vercel/analytics/next"
 
 // Admin-only screens are split out of the public bundle: no visitor of the blog
 // ever needs the editor, and the bundle is what stands between the page loading
