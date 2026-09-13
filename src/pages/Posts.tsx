@@ -4,6 +4,7 @@ import PostCard from "../components/PostCard";
 import { apiFetch } from "../lib/api";
 import type { Post } from "../types/post";
 import Seo from "../components/Seo";
+import { POSTS_PAGE } from "../lib/page-meta";
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -42,7 +43,7 @@ export default function PostsPage() {
 
   return (
     <Layout>
-      <Seo title="Articles on cybersecurity and development" description="Every article, guide and experiment on Snorty Blog: cybersecurity, ethical hacking and software development." path="/posts" />
+      <Seo {...POSTS_PAGE} />
       <p className="font-mono text-xs text-signal mb-3 tracking-wide">// all posts</p>
       <h1 className="text-2xl sm:text-3xl font-semibold text-ink mb-8 tracking-tight">
         Posts

@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm ci",
   "routes": [
     {
       "src": "/assets/(.*)",
@@ -12,8 +11,8 @@
     { "src": "/feed\\.xml", "dest": "/api/seo?kind=feed" },
     { "src": "/rss\\.xml", "status": 301, "headers": { "Location": "/feed.xml" } },
     { "src": "/api/auth/(?:register|forgot|reset)/?", "dest": "/api/auth/retired" },
-    { "src": "/post/([^/]+)/?", "dest": "/api/post-page?slug=$1" },
+    { "src": "/", "dest": "/api/page?path=/" },
     { "handle": "filesystem" },
-    { "src": "/((?!api/).*)", "dest": "/index.html" }
+    { "src": "/((?!api/).*)", "dest": "/api/page?path=/$1" }
   ]
 }

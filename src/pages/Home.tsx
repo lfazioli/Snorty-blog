@@ -6,6 +6,7 @@ import { apiFetch } from "../lib/api";
 import { Link } from "react-router-dom";
 import type { Post } from "../types/post";
 import Seo from "../components/Seo";
+import { HOME_PAGE } from "../lib/page-meta";
 import GitHubProjects from "../components/GitHubProjects";
 
 export default function Home() {
@@ -21,7 +22,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <Seo title="Cybersecurity, ethical hacking and development" description="Practical guides, security research and the development tools I build, by Lorenzo Fazioli." />
+      <Seo {...HOME_PAGE} />
       {/* HERO */}
       <section className="mb-20">
         <p className="font-mono text-xs text-signal mb-4 tracking-wide">
