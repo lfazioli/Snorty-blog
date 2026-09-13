@@ -11,7 +11,7 @@ import Tools from "./pages/Tools";
 import NotFound from "./pages/NotFound";
 import RequireAdmin from "./components/RequireAdmin";
 import { AuthProvider } from "./context/AuthContext";
-import { Analytics } from "@vercel/analytics/react";
+import { inject } from "@vercel/analytics";
 
 // Admin-only screens are split out of the public bundle: no visitor of the blog
 // ever needs the editor, and the bundle is what stands between the page loading
@@ -23,6 +23,8 @@ const ToolsDashboard = lazy(() => import("./pages/ToolsDashboard"));
 const ToolEditor = lazy(() => import("./pages/ToolEditor"));
 
 const loading = <p className="text-dim text-sm text-center py-16">Loading...</p>;
+
+inject();
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -66,7 +68,6 @@ createRoot(document.getElementById("root")!).render(
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
-        <Analytics />
       </BrowserRouter>
     </AuthProvider>
   </React.StrictMode>
