@@ -5,16 +5,16 @@ interface PostCardProps {
   date: string;
   image?: string | null;
   slug: string;
+  url?: string;
   excerpt?: string;
   draft?: boolean;
 }
 
-export default function PostCard({ title, date, image, slug, excerpt, draft }: PostCardProps) {
-  return (
-    <Link
-      to={`/post/${slug}`}
-      className="group block rounded-lg border border-line bg-panel overflow-hidden hover:border-signal/50 transition-colors"
-    >
+export default function PostCard({ title, date, image, slug, url, excerpt, draft }: PostCardProps) {
+  const cardClassName =
+    "group block rounded-lg border border-line bg-panel overflow-hidden hover:border-signal/50 transition-colors";
+  const content = (
+    <>
       {image && (
         <div className="aspect-video overflow-hidden bg-panel2">
           <img
@@ -38,6 +38,24 @@ export default function PostCard({ title, date, image, slug, excerpt, draft }: P
         {excerpt && <p className="text-sm text-dim leading-relaxed line-clamp-2 mb-2">{excerpt}</p>}
         <p className="text-xs text-dim font-mono">{date?.slice(0, 10)}</p>
       </div>
+    </>
+  );
+
+  return url ? (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cardClassName}
+    >
+      {content}
+    </a>
+  ) : (
+    <Link
+      to={`/post/${slug}`}
+      className={cardClassName}
+    >
+      {content}
     </Link>
   );
 }

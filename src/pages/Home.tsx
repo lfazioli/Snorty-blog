@@ -4,17 +4,17 @@ import PostCard from "../components/PostCard";
 import { TypeAnimation } from "react-type-animation";
 import { apiFetch } from "../lib/api";
 import { Link } from "react-router-dom";
-import type { Post } from "../types/post";
+import type { DevToPost } from "../types/devto";
 import Seo from "../components/Seo";
 import { HOME_PAGE } from "../lib/page-meta";
 import GitHubProjects from "../components/GitHubProjects";
 
 export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<DevToPost[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    apiFetch<{ posts: Post[] }>("/api/posts?scope=public")
+    apiFetch<{ posts: DevToPost[] }>("/api/devto/posts")
       .then((data) => setPosts(data.posts.slice(0, 3)))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -117,11 +117,11 @@ export default function Home() {
             <PostCard
               key={p.slug}
               title={p.title}
-              date={p.publish_at || p.created_at}
+              date={p.published_at}
               image={p.image}
               slug={p.slug}
               excerpt={p.excerpt}
-              draft={!p.published}
+              url={p.url}
             />
           ))}
         </div>
