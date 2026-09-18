@@ -2,7 +2,7 @@
 
 Un blog moderno e elegante costruito con TypeScript, progettato per condividere articoli e contenuti in modo professionale.
 
-🌐 **Live**: [snorty.vercel.app](https://snorty.vercel.app/)
+🌐 **Live**: [snorty.vercel.app](https://snorty.space/)
 
 ---
 
