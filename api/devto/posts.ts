@@ -16,10 +16,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const username = process.env.DEVTO_USERNAME?.trim();
-  if (!username) {
-    return res.status(500).json({ error: "DEVTO_USERNAME is not configured" });
-  }
+  // Keep the public feed working even if Vercel has not propagated the
+  // optional override yet. The default is the site's owner account.
+  const username = process.env.DEVTO_USERNAME?.trim() || "lfazioli";
 
   try {
     const response = await fetch(
