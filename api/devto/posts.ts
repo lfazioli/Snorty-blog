@@ -22,7 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const response = await fetch(
-      `https://dev.to/api/articles?username=${encodeURIComponent(username)}&per_page=30`,
+      `https://dev.to/api/articles?username=${encodeURIComponent(username)}&state=published&per_page=30`,
       { headers: { Accept: "application/json" } }
     );
 
