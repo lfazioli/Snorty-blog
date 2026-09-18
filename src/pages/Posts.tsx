@@ -2,18 +2,18 @@ import { useEffect, useMemo, useState } from "react";
 import Layout from "../components/Layout";
 import PostCard from "../components/PostCard";
 import { apiFetch } from "../lib/api";
-import type { Post } from "../types/post";
+import type { DevToPost } from "../types/devto";
 import Seo from "../components/Seo";
 import { POSTS_PAGE } from "../lib/page-meta";
 
 export default function PostsPage() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<DevToPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    apiFetch<{ posts: Post[] }>("/api/posts?scope=public")
+    apiFetch<{ posts: DevToPost[] }>("/api/devto/posts")
       .then((data) => setPosts(data.posts))
       .catch(() => setError("Failed to load posts."))
       .finally(() => setLoading(false));
@@ -44,9 +44,9 @@ export default function PostsPage() {
   return (
     <Layout>
       <Seo {...POSTS_PAGE} />
-      <p className="font-mono text-xs text-signal mb-3 tracking-wide">// all posts</p>
+      <p className="font-mono text-xs text-signal mb-3 tracking-wide">// dev.to posts</p>
       <h1 className="text-2xl sm:text-3xl font-semibold text-ink mb-8 tracking-tight">
-        Posts
+        Posts on dev.to
       </h1>
 
       <div className="relative mb-8">
@@ -90,11 +90,11 @@ export default function PostsPage() {
           <PostCard
             key={post.slug}
             title={post.title}
-            date={post.publish_at || post.created_at}
+            date={post.published_at}
             image={post.image}
             slug={post.slug}
             excerpt={post.excerpt}
-            draft={!post.published}
+            url={post.url}
           />
         ))}
       </div>

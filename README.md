@@ -136,7 +136,16 @@ API_KEY=your_api_key
 
 # Other configurations
 APP_ENV=development
+
+# Username dev.to usato per mostrare gli articoli pubblicati sul sito
+DEVTO_USERNAME=your-devto-username
 ```
+
+La pagina pubblica `/posts` e la sezione degli ultimi articoli nella home leggono gli
+articoli pubblicati da dev.to tramite la sua API. Le card aprono l'URL originale su
+dev.to, quindi il contenuto e le visualizzazioni restano sulla piattaforma. Dopo aver
+impostato `DEVTO_USERNAME` anche nelle variabili d'ambiente di Vercel, è sufficiente
+pubblicare gli articoli da dev.to; il sito aggiorna il feed automaticamente.
 
 ---
 

@@ -21,8 +21,8 @@ export const HOME_PAGE: PageDescriptor = {
 
 export const POSTS_PAGE: PageDescriptor = {
   path: "/posts",
-  title: "Articles on cybersecurity and development",
-  description: "Every article, guide and experiment on Snorty Blog: cybersecurity, ethical hacking and software development.",
+  title: "Articles on dev.to",
+  description: "Cybersecurity, ethical hacking and development articles published on dev.to by Lorenzo Fazioli.",
 };
 
 export const TOOLS_PAGE: PageDescriptor = {
