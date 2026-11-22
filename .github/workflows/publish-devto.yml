@@ -1,7 +1,9 @@
-name: Publish approved DEV articles
+name: Publish scheduled DEV articles
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * *"
 
 permissions:
   contents: read
@@ -18,7 +20,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Publish approved articles
+      - name: Publish today's approved articles
         env:
           DEV_API_KEY: ${{ secrets.DEV_API_KEY }}
         run: node scripts/publish-devto.mjs
