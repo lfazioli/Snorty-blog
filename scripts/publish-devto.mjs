@@ -1,34 +1,10 @@
-import { readdir, readFile } from "node:fs/promises";
-import path from "node:path";
+import { readFile } from "node:fs/promises";
 
 const apiKey = process.env.DEV_API_KEY;
 if (!apiKey) throw new Error("DEV_API_KEY is not configured");
 
-const articlesDir = path.resolve("devto/articles");
-
-function parseFrontmatter(markdown) {
-  const match = markdown.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!match) throw new Error("Missing article frontmatter");
-
-  const metadata = {};
-  for (const line of match[1].split("\n")) {
-    const separator = line.indexOf(":");
-    if (separator === -1) continue;
-    const key = line.slice(0, separator).trim();
-    let value = line.slice(separator + 1).trim();
-    if (value.startsWith('"') && value.endsWith('"')) {
-      value = value.slice(1, -1);
-    }
-    if (value.startsWith("[" ) && value.endsWith("]")) {
-      metadata[key] = value.slice(1, -1).split(",").map((item) => item.trim());
-    } else if (value === "true" || value === "false") {
-      metadata[key] = value === "true";
-    } else {
-      metadata[key] = value;
-    }
-  }
-  return { metadata, body: match[2] };
-}
+const publishDate = process.env.DEV_PUBLISH_DATE
+  || new Date().toISOString().slice(0, 10);
 
 async function devRequest(endpoint, options = {}) {
   for (let attempt = 0; attempt < 4; attempt++) {
@@ -56,52 +32,49 @@ async function devRequest(endpoint, options = {}) {
   throw new Error("DEV API 429: retries exhausted");
 }
 
+const calendar = JSON.parse(await readFile("devto/calendar.json", "utf8"));
+const due = calendar.filter((entry) => entry.date === publishDate);
+if (!due.length) {
+  console.log(`NO_PUBLICATIONS: ${publishDate}`);
+  process.exit(0);
+}
+
 const existing = await devRequest("/articles/me/published?per_page=100")
   .catch(() => devRequest("/articles/me?per_page=100"));
 const existingTitles = new Set(existing.map((article) => article.title));
-const existingByTitle = new Map(existing.map((article) => [article.title, article]));
 
-const files = (await readdir(articlesDir)).filter((file) => file.endsWith(".md")).sort();
 let published = 0;
-
-for (const file of files) {
-  const markdown = await readFile(path.join(articlesDir, file), "utf8");
-  const { metadata, body } = parseFrontmatter(markdown);
-  if (!metadata.title) throw new Error(`${file}: missing title`);
-  const tags = typeof metadata.tags === "string"
-    ? metadata.tags.split(",").map((tag) => tag.trim()).filter(Boolean).slice(0, 4)
-    : [];
-
-  const bodyMarkdown = `---\ntitle: ${JSON.stringify(metadata.title)}\npublished: true\ndescription: ${JSON.stringify(metadata.description ?? "")}\ntags: ${tags.join(", ")}\n---\n${body}`;
-
-  const legacyArticle = metadata.legacy_title
-    ? existingByTitle.get(metadata.legacy_title)
-    : undefined;
-
-  if (legacyArticle) {
-    await devRequest(`/articles/${legacyArticle.id}`, {
-      method: "PUT",
-      body: JSON.stringify({ article: { title: metadata.title, published: true, body_markdown: bodyMarkdown } }),
-    });
-    existingTitles.add(metadata.title);
-    existingByTitle.set(metadata.title, legacyArticle);
-    published += 1;
-    console.log(`UPDATED: ${legacyArticle.title} -> ${metadata.title}`);
+for (const entry of due) {
+  if (existingTitles.has(entry.title)) {
+    console.log(`SKIP: ${entry.title}`);
     continue;
   }
 
-  if (existingTitles.has(metadata.title)) {
-    console.log(`SKIP: ${metadata.title}`);
-    continue;
-  }
+  const footer = `\n\n---\n\n_Originally published by Lorenzo Fazioli at [Snorty](${entry.canonical_url})._\n`;
+  const bodyMarkdown = `---\ntitle: ${JSON.stringify(entry.title)}\npublished: true\ndescription: ${JSON.stringify(entry.excerpt)}\ntags: ${entry.tags.join(", ")}\ncover_image: ${JSON.stringify(entry.cover_image ?? "")}\ncanonical_url: ${JSON.stringify(entry.canonical_url)}\n---\n${entry.body_markdown}${footer}`;
 
   await devRequest("/articles", {
     method: "POST",
-    body: JSON.stringify({ article: { title: metadata.title, published: true, body_markdown: bodyMarkdown } }),
+    body: JSON.stringify({
+      article: {
+        title: entry.title,
+        published: true,
+        description: entry.excerpt,
+        tags: entry.tags,
+        cover_image: entry.cover_image || undefined,
+        canonical_url: entry.canonical_url,
+        body_markdown: bodyMarkdown,
+      },
+    }),
   });
-  existingTitles.add(metadata.title);
+
+  existingTitles.add(entry.title);
   published += 1;
-  console.log(`PUBLISHED: ${metadata.title}`);
+  console.log(`PUBLISHED: ${entry.title}`);
+
+  if (due.length > 1) {
+    await new Promise((resolve) => setTimeout(resolve, 35_000));
+  }
 }
 
-console.log(`DEV publish complete: ${published} new article(s).`);
+console.log(`DEV publish complete for ${publishDate}: ${published} new article(s).`);
