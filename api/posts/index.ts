@@ -36,13 +36,16 @@ async function insertWithUniqueSlug(baseSlug: string, values: {
         [slug, values.title, values.excerpt, values.content, values.image, values.published, values.authorEmail, values.publishAt]
       );
       return inserted.rows[0];
-    } catch (err: any) {
+    } catch (error: unknown) {
       // 23505 = unique_violation: another post already has this slug, retry with a suffix.
-      if (err?.code === "23505" && attempt < 2) {
+      const code = typeof error === "object" && error !== null && "code" in error
+        ? (error as { code?: unknown }).code
+        : undefined;
+      if (code === "23505" && attempt < 2) {
         slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
         continue;
       }
-      throw err;
+      throw error;
     }
   }
   throw new Error("Could not generate a unique slug");
@@ -99,8 +102,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     res.setHeader("Allow", "GET, POST");
     return res.status(405).json({ error: "Method not allowed" });
-  } catch (e: any) {
-    console.error("POSTS_INDEX_ERROR:", e?.message || e);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("POSTS_INDEX_ERROR:", message);
     return res.status(500).json({ error: "Internal error" });
   }
 }

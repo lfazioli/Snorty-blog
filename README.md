@@ -1,298 +1,118 @@
-# 📝 Snorty Blog
+# Snorty Blog
 
-Un blog moderno e elegante costruito con TypeScript, progettato per condividere articoli e contenuti in modo professionale.
+A modern, full-stack blog built with React, TypeScript, and Vercel Functions. It provides article publishing, scheduled posts, a protected administration area, and integration with dev.to.
 
-🌐 **Live**: [snorty.vercel.app](https://snorty.space/)
+**Live site:** [snorty.space](https://snorty.space/)  
+**Production host:** Vercel
 
----
+## Features
 
-## ✨ Caratteristiche
+- Responsive, accessible React interface
+- Server-rendered metadata and article pages
+- PostgreSQL-backed posts and administration
+- JWT-based administrator authentication
+- Draft, published, and scheduled article states
+- Markdown rendering with safe HTML handling
+- dev.to project feed integration
+- SEO metadata, canonical URLs, Open Graph, and JSON-LD
+- Automated tests for public and administrative behavior
 
-- 🎨 **Design Moderno**: Interfaccia intuitiva e responsive
-- ⚡ **Performance Ottimizzate**: Velocità di caricamento superiore
-- 📱 **Mobile First**: Perfettamente ottimizzato per dispositivi mobile
-- 🔍 **SEO Friendly**: Optimizzato per i motori di ricerca
-- 💻 **TypeScript**: Codice type-safe e mantenibile
-- 🎯 **Facile da Usare**: Interfaccia semplice per la creazione e gestione di articoli
-- 🌙 **Dark Mode**: Supporto per tema scuro (se implementato)
+## Technology
 
----
+- React 19 and React Router
+- TypeScript
+- Vite
+- Tailwind CSS
+- Express-compatible Vercel Functions
+- PostgreSQL with Drizzle ORM helpers
+- Node.js test runner
+- ESLint
 
-## 🚀 Stack Tecnologico
+## Requirements
 
-- **Linguaggio**: TypeScript
-- **Runtime**: Node.js
-- **Hosting**: Vercel
-- **Package Manager**: npm
-- **Gestione Dipendenze**: Babel per transpilazione
+- Node.js 20 or newer
+- npm 10 or newer
+- PostgreSQL database
 
----
+## Local setup
 
-## 📋 Prerequisiti-
-
-Prima di iniziare, assicurati di avere installato:
-
-- **Node.js** (v16 o superiore)
-- **npm** (v7 o superiore)
-
----
-
-## 🔧 Installazione
-
-1. **Clona il repository**
-   ```bash
-   git clone https://github.com/lfazioli/Snorty-blog.git
-   cd Snorty-blog
-   ```
-
-2. **Installa le dipendenze**
-   ```bash
-   npm install
-   ```
-
-3. **Configura le variabili d'ambiente** (se necessario)
-   ```bash
-   cp .env.example .env.local
-   ```
-
-4. **Avvia il server di sviluppo**
-   ```bash
-   npm run dev
-   ```
-
-5. **Apri il browser**
-   Accedi a `http://localhost:3000` (o alla porta indicata dal tuo server)
-
----
-
-## 📁 Struttura del Progetto
-
-```
-Snorty-blog/
-├── src/                    # Codice sorgente
-│   ├── components/        # Componenti React/Vue
-│   ├── pages/            # Pagine del blog
-│   ├── styles/           # Stili CSS/SCSS
-│   └── utils/            # Funzioni di utilità
-├── public/               # File statici
-├── node_modules/         # Dipendenze
-├── package.json          # Configurazione npm
-├── tsconfig.json         # Configurazione TypeScript
-├── .env.example          # Variabili d'ambiente di esempio
-└── README.md             # Questo file
+```bash
+npm install
+cp .env.example .env.local
+npm run dev
 ```
 
----
+Open `http://localhost:5173` unless Vite reports another port.
 
-## 📚 Comandi Disponibili
+See `.env.example` for the available configuration values. Do not commit real credentials or database URLs.
 
-| Comando | Descrizione |
-|---------|-------------|
-| `npm run dev` | Avvia il server di sviluppo |
-| `npm run build` | Crea una build di produzione |
-| `npm start` | Avvia il server di produzione |
-| `npm run lint` | Esegui linting del codice |
-| `npm run test` | Esegui i test |
-| `npm run format` | Formatta il codice |
+## Scripts
 
-> **Nota**: I comandi disponibili possono variare in base alla configurazione del tuo `package.json`
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the Vite development server |
+| `npm run build` | Type-check and build for production |
+| `npm run lint` | Run ESLint |
+| `npm run test` | Run the Node.js test suite |
+| `npm run typecheck:api` | Type-check Vercel API handlers |
+| `npm run preview` | Preview the production build locally |
 
----
-
-## 🎬 Come Usare
-
-### Creare un nuovo articolo
-
-1. Accedi al dashboard del blog
-2. Fai clic su "Nuovo Articolo"
-3. Compila il titolo, il contenuto e altri dettagli
-4. Pubblica l'articolo
-
-### Modificare un articolo
-
-1. Accedi al dashboard
-2. Seleziona l'articolo da modificare
-3. Apporta le modifiche desiderate
-4. Salva le modifiche
-
-### Eliminare un articolo
-
-1. Vai al dashboard
-2. Seleziona l'articolo da eliminare
-3. Conferma l'eliminazione
-
----
-
-## 🔐 Variabili d'Ambiente
-
-Copia il file `.env.example` in `.env.local` e configura le seguenti variabili (se necessario):
-
-```env
-# Database
-DATABASE_URL=your_database_url
-
-# API Keys
-API_KEY=your_api_key
-
-# Other configurations
-APP_ENV=development
-
-# Username dev.to usato per mostrare gli articoli pubblicati sul sito
-DEVTO_USERNAME=your-devto-username
-```
-
-La pagina pubblica `/posts` e la sezione degli ultimi articoli nella home leggono gli
-articoli pubblicati da dev.to tramite la sua API. Le card aprono l'URL originale su
-dev.to, quindi il contenuto e le visualizzazioni restano sulla piattaforma. Dopo aver
-impostato `DEVTO_USERNAME` anche nelle variabili d'ambiente di Vercel, è sufficiente
-pubblicare gli articoli da dev.to; il sito aggiorna il feed automaticamente.
-
----
-
-## 🧪 Test
-
-Esegui la suite di test:
+## Testing
 
 ```bash
 npm run test
-```
-
-Per il coverage:
-
-```bash
-npm run test:coverage
-```
-
----
-
-## 🚀 Deployment
-
-### Deploy su Vercel (Consigliato)
-
-Il progetto è già configurato per Vercel. Semplicemente:
-
-1. Connetti il tuo repository GitHub a Vercel
-2. Seleziona il branch da deployare
-3. Vercel costruirà e deployerà automaticamente il tuo progetto
-
-```bash
-# Deploy manuale
+npm run lint
+npm run typecheck:api
 npm run build
-vercel --prod
 ```
 
-### Deploy su altri host
+The test suite covers authentication, API publication rules, metadata, Markdown safety, canonical URLs, routing, and database error handling.
 
-Consulta la documentazione del tuo provider di hosting per istruzioni specifiche.
+## Project structure
 
----
+```text
+api/          Vercel serverless API handlers
+server/       Shared database, authentication, and publication logic
+src/          React application
+public/       Static assets
+tests/        Automated test suite
+```
 
-## 📖 Documentazione
+## Environment variables
 
-Per una documentazione più dettagliata:
+| Variable | Purpose |
+| --- | --- |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `ADMIN_EMAIL` | Administrator account email |
+| `ADMIN_PASSWORD` | Administrator account password |
+| `JWT_SECRET` | Secret used to sign administrator sessions |
+| `SITE_URL` | Canonical production host |
+| `VITE_SITE_URL` | Public host embedded in the client build |
+| `DEVTO_USERNAME` | dev.to username used for the public project feed |
 
-- 📘 [TypeScript Docs](https://www.typescriptlang.org/)
-- 📗 [Node.js Docs](https://nodejs.org/docs/)
-- 📙 [Vercel Docs](https://vercel.com/docs)
+Configure these variables locally in `.env.local` and in the Vercel project settings for production deployments.
 
----
+## Deployment
 
-## 🤝 Contribuire
+1. Create or connect the repository in Vercel.
+2. Configure the environment variables in the Vercel project.
+3. Set the production domain to `www.snorty.space` or the intended canonical host.
+4. Deploy the `main` branch.
 
-Le contribuzioni sono benvenute! Per contribuire:
+Run the complete validation sequence before deploying.
 
-1. **Fork il repository**
-   ```bash
-   git clone https://github.com/lfazioli/Snorty-blog.git
-   ```
+## Contributing
 
-2. **Crea un branch per la tua feature**
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
+1. Create a focused feature branch.
+2. Keep changes scoped and document behavior changes.
+3. Run tests, lint, type-checking, and the production build.
+4. Open a pull request with a clear summary and verification steps.
 
-3. **Commit le tue modifiche**
-   ```bash
-   git commit -m 'Add some AmazingFeature'
-   ```
+## License
 
-4. **Push al branch**
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
+No license has been declared for this repository. All rights remain with the project owner unless an open-source license is added.
 
-5. **Apri una Pull Request**
+## Author
 
----
-
-## 📝 Linee Guida di Coding
-
-- Usa TypeScript per la type safety
-- Segui le convenzioni di naming camelCase
-- Commenta il codice complesso
-- Esegui i test prima di fare commit
-- Utilizza Prettier per la formattazione del codice
-
----
-
-## 🐛 Bug Report
-
-Se trovi un bug, per favore:
-
-1. Controlla che il bug non sia già stato segnalato
-2. Apri un nuovo issue su GitHub
-3. Includi:
-   - Una descrizione chiara del problema
-   - Passi per riprodurre il bug
-   - Il comportamento atteso e quello effettivo
-   - Screenshot (se applicabile)
-   - Informazioni sul tuo ambiente (OS, browser, versione Node.js)
-
----
-
-## 💡 Suggerimenti e Richieste di Feature
-
-Hai un'idea per migliorare il blog? Apri un issue con il label `enhancement` e descrivi la tua idea!
-
----
-
-## 📄 Licenza
-
-Questo progetto è fornito senza una licenza specifica. Per ulteriori dettagli, consulta il file LICENSE (se presente).
-
----
-
-## 👤 Autore
-
-**Leonardo Fazioli**
-
-- GitHub: [@lfazioli](https://github.com/lfazioli)
-- Website: [snorty.vercel.app](https://snorty.vercel.app/)
-
----
-
-## 🙏 Ringraziamenti
-
-Grazie a tutti coloro che hanno contribuito a questo progetto e a chi lo supporta!
-
----
-
-## 📞 Supporto
-
-Se hai domande o hai bisogno di aiuto:
-
-1. Controlla la sezione FAQ
-2. Apri un issue su GitHub
-3. Contatta l'autore via GitHub
-
----
-
-**Ultimo aggiornamento**: Settembre 2026
-
----
-
-<div align="center">
-
-⭐ Se ti piace questo progetto, lascia una stella! ⭐
-
-</div>
+**Leonardo Fazioli**  
+GitHub: [@lfazioli](https://github.com/lfazioli)

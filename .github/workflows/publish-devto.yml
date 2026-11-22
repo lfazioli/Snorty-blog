@@ -1,0 +1,24 @@
+name: Publish approved DEV articles
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Publish approved articles
+        env:
+          DEV_API_KEY: ${{ secrets.DEV_API_KEY }}
+        run: node scripts/publish-devto.mjs

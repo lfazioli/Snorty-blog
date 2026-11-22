@@ -10,13 +10,17 @@ export function getToken(): string | null {
 export function setToken(token: string) {
   try {
     localStorage.setItem("token", token);
-  } catch {}
+  } catch {
+    // Storage may be unavailable in restricted browser contexts.
+  }
 }
 
 export function clearToken() {
   try {
     localStorage.removeItem("token");
-  } catch {}
+  } catch {
+    // Storage may be unavailable in restricted browser contexts.
+  }
 }
 
 export function parseJwt<T = unknown>(token: string): T | null {
