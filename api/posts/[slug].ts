@@ -86,8 +86,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     res.setHeader("Allow", "GET, PUT, PATCH, DELETE");
     return res.status(405).json({ error: "Method not allowed" });
-  } catch (e: any) {
-    console.error("POSTS_SLUG_ERROR:", e?.message || e);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("POSTS_SLUG_ERROR:", message);
     return res.status(500).json({ error: "Internal error" });
   }
 }
