@@ -31,20 +31,29 @@ function parseFrontmatter(markdown) {
 }
 
 async function devRequest(endpoint, options = {}) {
-  const response = await fetch(`https://dev.to/api${endpoint}`, {
-    ...options,
-    headers: {
-      "api-key": apiKey,
-      "content-type": "application/json",
-      ...(options.headers ?? {}),
-    },
-  });
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const response = await fetch(`https://dev.to/api${endpoint}`, {
+      ...options,
+      headers: {
+        "api-key": apiKey,
+        "content-type": "application/json",
+        ...(options.headers ?? {}),
+      },
+    });
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`DEV API ${response.status}: ${text}`);
+    if (response.status !== 429) {
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`DEV API ${response.status}: ${text}`);
+      }
+      return response.status === 204 ? null : response.json();
+    }
+
+    const delayMs = 30_000 * (attempt + 1);
+    console.log(`RATE_LIMITED: retrying in ${delayMs / 1000}s`);
+    await new Promise((resolve) => setTimeout(resolve, delayMs));
   }
-  return response.status === 204 ? null : response.json();
+  throw new Error("DEV API 429: retries exhausted");
 }
 
 const existing = await devRequest("/articles/me/published?per_page=100")
