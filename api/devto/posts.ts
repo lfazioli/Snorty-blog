@@ -16,9 +16,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Keep the public feed working even if Vercel has not propagated the
-  // optional override yet. The default is the site's owner account.
-  const username = process.env.DEVTO_USERNAME?.trim() || "lfazioli";
+  // Keep the public feed pinned to the site's owner account. An incorrect
+  // deployment-level override must not silently switch the displayed author.
+  const username = "lfazioli";
 
   try {
     const response = await fetch(
