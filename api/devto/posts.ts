@@ -32,7 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const articles = (await response.json()) as DevToArticle[];
-    res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
+    res.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
     return res.status(200).json({
       posts: articles.map(({ id, title, description, cover_image, published_at, url, slug }) => ({
         id,

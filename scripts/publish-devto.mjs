@@ -39,13 +39,14 @@ if (!due.length) {
   process.exit(0);
 }
 
-const existing = await devRequest("/articles/me/published?per_page=100")
+const existing = await devRequest("/articles/me/all?per_page=100")
   .catch(() => devRequest("/articles/me?per_page=100"));
-const existingTitles = new Set(existing.map((article) => article.title));
+const existingByTitle = new Map(existing.map((article) => [article.title, article]));
 
 let published = 0;
 for (const entry of due) {
-  if (existingTitles.has(entry.title)) {
+  const existingArticle = existingByTitle.get(entry.title);
+  if (existingArticle?.published) {
     console.log(`SKIP: ${entry.title}`);
     continue;
   }
@@ -53,22 +54,29 @@ for (const entry of due) {
   const footer = `\n\n---\n\n_Originally published by Lorenzo Fazioli at [Snorty](${entry.canonical_url})._\n`;
   const bodyMarkdown = `---\ntitle: ${JSON.stringify(entry.title)}\npublished: true\ndescription: ${JSON.stringify(entry.excerpt)}\ntags: ${entry.tags.join(", ")}\ncover_image: ${JSON.stringify(entry.cover_image ?? "")}\ncanonical_url: ${JSON.stringify(entry.canonical_url)}\n---\n${entry.body_markdown}${footer}`;
 
-  await devRequest("/articles", {
-    method: "POST",
-    body: JSON.stringify({
-      article: {
-        title: entry.title,
-        published: true,
-        description: entry.excerpt,
-        tags: entry.tags,
-        cover_image: entry.cover_image || undefined,
-        canonical_url: entry.canonical_url,
-        body_markdown: bodyMarkdown,
-      },
-    }),
-  });
+  const articlePayload = {
+    title: entry.title,
+    published: true,
+    description: entry.excerpt,
+    tags: entry.tags,
+    cover_image: entry.cover_image || undefined,
+    canonical_url: entry.canonical_url,
+    body_markdown: bodyMarkdown,
+  };
 
-  existingTitles.add(entry.title);
+  if (existingArticle) {
+    await devRequest(`/articles/${existingArticle.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ article: articlePayload }),
+    });
+  } else {
+    await devRequest("/articles", {
+      method: "POST",
+      body: JSON.stringify({ article: articlePayload }),
+    });
+  }
+
+  existingByTitle.set(entry.title, { ...existingArticle, title: entry.title, published: true });
   published += 1;
   console.log(`PUBLISHED: ${entry.title}`);
 

@@ -13,10 +13,32 @@ export default function PostsPage() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    apiFetch<{ posts: DevToPost[] }>("/api/devto/posts")
-      .then((data) => setPosts(data.posts))
-      .catch(() => setError("Failed to load posts."))
-      .finally(() => setLoading(false));
+    let active = true;
+    const loadPosts = () => {
+      apiFetch<{ posts: DevToPost[] }>(`/api/devto/posts?_=${Date.now()}`)
+        .then((data) => {
+          if (active) setPosts(data.posts);
+        })
+        .catch(() => {
+          if (active) setError("Failed to load posts.");
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+    };
+
+    loadPosts();
+    const interval = window.setInterval(loadPosts, 60_000);
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") loadPosts();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
   const filteredPosts = useMemo(() => {
