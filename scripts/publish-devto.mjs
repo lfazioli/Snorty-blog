@@ -59,6 +59,7 @@ async function devRequest(endpoint, options = {}) {
 const existing = await devRequest("/articles/me/published?per_page=100")
   .catch(() => devRequest("/articles/me?per_page=100"));
 const existingTitles = new Set(existing.map((article) => article.title));
+const existingByTitle = new Map(existing.map((article) => [article.title, article]));
 
 const files = (await readdir(articlesDir)).filter((file) => file.endsWith(".md")).sort();
 let published = 0;
@@ -67,24 +68,36 @@ for (const file of files) {
   const markdown = await readFile(path.join(articlesDir, file), "utf8");
   const { metadata, body } = parseFrontmatter(markdown);
   if (!metadata.title) throw new Error(`${file}: missing title`);
+  const tags = typeof metadata.tags === "string"
+    ? metadata.tags.split(",").map((tag) => tag.trim()).filter(Boolean).slice(0, 4)
+    : [];
+
+  const bodyMarkdown = `---\ntitle: ${JSON.stringify(metadata.title)}\npublished: true\ndescription: ${JSON.stringify(metadata.description ?? "")}\ntags: ${tags.join(", ")}\n---\n${body}`;
+
+  const legacyArticle = metadata.legacy_title
+    ? existingByTitle.get(metadata.legacy_title)
+    : undefined;
+
+  if (legacyArticle) {
+    await devRequest(`/articles/${legacyArticle.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ article: { title: metadata.title, published: true, body_markdown: bodyMarkdown } }),
+    });
+    existingTitles.add(metadata.title);
+    existingByTitle.set(metadata.title, legacyArticle);
+    published += 1;
+    console.log(`UPDATED: ${legacyArticle.title} -> ${metadata.title}`);
+    continue;
+  }
+
   if (existingTitles.has(metadata.title)) {
     console.log(`SKIP: ${metadata.title}`);
     continue;
   }
 
-  const tags = typeof metadata.tags === "string"
-    ? metadata.tags.split(",").map((tag) => tag.trim()).filter(Boolean).slice(0, 4)
-    : [];
-
   await devRequest("/articles", {
     method: "POST",
-    body: JSON.stringify({
-      article: {
-        title: metadata.title,
-        published: true,
-        body_markdown: `---\ntitle: ${JSON.stringify(metadata.title)}\npublished: true\ndescription: ${JSON.stringify(metadata.description ?? "")}\ntags: ${tags.join(", ")}\n---\n${body}`,
-      },
-    }),
+    body: JSON.stringify({ article: { title: metadata.title, published: true, body_markdown: bodyMarkdown } }),
   });
   existingTitles.add(metadata.title);
   published += 1;

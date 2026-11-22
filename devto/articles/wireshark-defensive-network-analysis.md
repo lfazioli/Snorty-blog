@@ -1,66 +1,67 @@
 ---
-title: "Wireshark per l'analisi difensiva: leggere il traffico senza indovinare"
+title: "Wireshark for Defensive Network Analysis: Read the Traffic Without Guessing"
+legacy_title: "Wireshark per l'analisi difensiva: leggere il traffico senza indovinare"
 published: false
-description: "Una guida pratica e responsabile per usare Wireshark nel troubleshooting e nella rilevazione di problemi di rete su sistemi propri o autorizzati."
+description: "A practical, responsible guide to using Wireshark for troubleshooting and detecting network problems on systems you own or are authorized to assess."
 tags: cybersecurity, networking, wireshark, devops
 cover_image: ""
 canonical_url: ""
 ---
 
-# Wireshark per l'analisi difensiva
+# Wireshark for Defensive Network Analysis
 
-Wireshark trasforma il traffico di rete in dati osservabili. È utile per diagnosticare timeout, configurazioni DNS errate, certificati non validi e comunicazioni anomale, ma va usato solo su reti proprie o per le quali si ha autorizzazione esplicita.
+Wireshark turns network traffic into observable data. It is useful for diagnosing timeouts, incorrect DNS configuration, invalid certificates, and anomalous communication—but it should only be used on networks you own or are authorized to inspect.
 
-## Prima di iniziare
+## Before you start
 
-- Definisci obiettivo, perimetro e finestra temporale.
-- Usa una cattura limitata e scarta i dati sensibili.
-- Verifica la policy aziendale e le normative applicabili.
-- Evita password, sessioni e dati personali nei pacchetti esportati.
+- Define the objective, scope, and time window.
+- Limit captures and discard sensitive data.
+- Check organizational policy and applicable regulations.
+- Avoid exposing passwords, sessions, or personal data in exported packets.
 
-## Cosa osservare
+## What to observe
 
-Iniziare con una cattura breve, poi isolare il problema con filtri di visualizzazione:
+Start with a short capture, then isolate the problem using display filters:
 
 ```text
-# Solo traffico verso o da un host
+# Traffic to or from a host
 ip.addr == 192.0.2.10
 
 # DNS
 udp.port == 53 || tcp.port == 53
 
-# Traffico HTTP non cifrato
+# Unencrypted HTTP traffic
 http
 
-# Handshake e problemi TCP
+# TCP handshake or retransmission problems
 tcp.flags.syn == 1 || tcp.analysis.retransmission
 ```
 
-In ambiente di laboratorio usa indirizzi di esempio come `192.0.2.10`. Quando possibile, concentrati su handshake TLS, restituzioni DNS, risposte HTTP, retransmission e reset.
+In a lab, use documentation addresses such as `192.0.2.10`. When appropriate, inspect TLS handshakes, DNS responses, HTTP responses, retransmissions, and resets.
 
-## Un flusso di lavoro difensivo
+## A defensive workflow
 
-1. Riproduci il problema una sola volta.
-2. Filtra il traffico pertinente.
-3. Segui il flusso TCP o il stream HTTP.
-4. Cerca risposte anomale, ritardi o protocolli inattesi.
-5. Correla la cattura con log dell'applicazione e dell'infrastruttura.
-6. Conserva solo il minimo necessario, con regole di retention.
+1. Reproduce the problem once.
+2. Filter the relevant traffic.
+3. Follow the TCP or HTTP stream.
+4. Look for anomalous responses, delays, or unexpected protocols.
+5. Correlate the capture with application and infrastructure logs.
+6. Retain only what is necessary, following a retention policy.
 
-## Errori comuni
+## Common mistakes
 
-- Catturare tutto senza limitazioni.
-- Interpretare un pacchetto isolato come prova conclusiva.
-- Condividere `.pcap` contenenti credenziali o dati cliente.
-- Confondere strumenti di osservazione con strumenti di intrusione.
+- Capturing everything without limits
+- Treating an isolated packet as conclusive evidence
+- Sharing `.pcap` files containing credentials or customer data
+- Confusing observation tools with intrusion tools
 
-## Checklist finale
+## Final checklist
 
-- [ ] Autorizzazione documentata
-- [ ] Ambito e durata definita
-- [ ] Dati sensibili esclusi o anonimizzati
-- [ ] Correlazione con log
-- [ ] Evidenze salvate in modo controllato
-- [ ] Incidenti segnalati tramite i canali appropriati
+- [ ] Authorization documented
+- [ ] Scope and duration defined
+- [ ] Sensitive data excluded or anonymized
+- [ ] Evidence correlated with logs
+- [ ] Data stored under controlled access
+- [ ] Incidents reported through the correct channel
 
-Usare Wireshark significa capire cosa comunica un sistema. La parte più importante resta l'autorizzazione e la protezione dei dati catturati.
+Using Wireshark means understanding what a system communicates. Authorization and protection of captured data remain the most important steps.

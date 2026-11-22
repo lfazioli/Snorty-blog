@@ -1,85 +1,86 @@
 ---
-title: "Nmap per un inventario autorizzato: minimo impatto, dati utili"
+title: "Nmap for an Authorized Inventory: Low Impact, Useful Data"
+legacy_title: "Nmap per un inventario autorizzato: minimo impatto, dati utili"
 published: false
-description: "Come usare Nmap in modo misurato per censire servizi e validare una superficie esposta, sempre su sistemi propri o autorizzati."
+description: "How to use Nmap carefully to inventory services and validate an exposed surface, only on systems you own or are authorized to assess."
 tags: cybersecurity, nmap, networking, security
 cover_image: ""
 canonical_url: ""
 ---
 
-# Nmap per un inventario autorizzato
+# Nmap for an Authorized Inventory
 
-Nmap può aiutare a capire quali porte e servizi sono raggiungibili all'interno di un perimetro autorizzato. Non va però considerato un semplice pulsante per scansionare Internet o reti altrui: la scansione deve essere autorizzata, documentata e proporzionata.
+Nmap can help you understand which ports and services are reachable inside an authorized perimeter. It should not be treated as a button for scanning the public Internet or another person's network. Every scan should be authorized, documented, and proportionate.
 
-## Imposta il perimetro
+## Set the perimeter
 
-Prima di eseguire qualsiasi comando:
+Before running any command:
 
-1. Ottieni autorizzazione scritta.
-2. Definisci IP, intervalli temporali e tecniche consentite.
-3. Concorda tassi di scansione e finestre di manutenzione.
-4. Stabilisci chi viene avvisato in caso di instabilità.
+1. Obtain written authorization.
+2. Define IP ranges, time windows, and permitted techniques.
+3. Agree on scan rates and maintenance windows.
+4. Establish who should be notified if a service becomes unstable.
 
-Nell'esempio seguente, `scanme.nmap.org` è descritto solo come esempio pubblico: non eseguire scansioni su bersagli senza permesso.
+The address below uses reserved documentation ranges and is not an invitation to scan third-party systems.
 
-## Un'inventario conservativo
+## Run a conservative inventory
 
-Per limitare il numero di richieste:
+Limit the number of requests:
 
 ```bash
 nmap -sT -sV --top-ports 100 --max-rate 20 192.0.2.0/24
 ```
 
-Questa modalità usa TCP connect, rilevazione delle versioni e le porte principali. Il parametro `--max-rate` limita l'impatto, ma va comunque adattato alla rete reale.
+This uses TCP connect scans, service identification, and the 100 most common ports. The `--max-rate` value should be adapted to the actual network.
 
-Per verificare host già identificati:
+For hosts already identified:
 
 ```bash
 nmap -Pn -p 22,80,443 --reason 192.0.2.10
 ```
 
-## Cosa registrare
+## Record useful data
 
-- Host raggiungibile o non raggiungibile
-- Porte con risposte
-- Stato TCP e motivazione
-- Banner o nome del servizio solo se necessario
-- Sistema di gestione dei risultati
-- Timestamp e parametri della scansione
+- Whether the host is reachable
+- Ports with responses
+- TCP state and reason
+- Service banner only when necessary
+- Scan timestamp and parameters
+- Where and how results are stored
 
-Non presumere che un banner identifichi la versione reale del software: trattalo come un indicatore da verificare con la documentazione e i controlli interni.
+Do not assume that a banner identifies the real software version. Treat it as an indicator to verify through asset records and internal controls.
 
-## Correlazione difensiva
+## Correlate defensively
 
-Confronta l'inventario con:
+Compare your inventory with:
 
-- CMDB e registri asset
-- Regole firewall
-- Registri di deployment
-- Segnalazioni vulnerabilità
-- Baseline e policy aziendali
+- CMDB and asset records
+- Firewall rules
+- Deployment logs
+- Vulnerability reports
+- Baselines and internal policies
 
-Le porte aperte non sono automaticamente vulnerabilità, ma servizi non autorizzati o senza proprietario possono rappresentare rischio operativo.
+An open port is not automatically a vulnerability, but an unknown or unauthorized service is a useful risk signal.
 
-## Evitare l'invasivo
+## Avoid invasive techniques
 
-Sconsigliate senza un'esplicita autorizzazione:
+Do not use the following without explicit authorization:
 
-- Script NSE aggressivi
-- Enumerazione ad alto volume
-- Scan su interi range pubblici
+- Aggressive NSE scripts
+- High-volume enumeration
+- Scans of entire public address ranges
 - Evasion techniques
-- Vulnerability exploitation
+- Exploitation of discovered services
 
-Una buona scansione produce un inventario verificabile, non rumore o disservizi.
+A useful scan produces a verifiable inventory, not noise or service disruption.
 
 ## Checklist
 
-- [ ] Permesso scritto
-- [ ] Target autorizzati
-- [ ] Volume limitato
-- [ ] Contatti di escalation
-- [ ] Risultati protetti
-- [ ] Asset inattesi verificati manualmente
+- [ ] Written permission
+- [ ] Authorized targets
+- [ ] Controlled scan rate
+- [ ] Escalation contacts
+- [ ] Protected results
+- [ ] Unexpected assets verified manually
 
-Nmap è efficace quando viene integrato in un processo autorizzato e misurato, non usato come ricognizione indiscriminata.
+Nmap is most effective as part of a measured, authorized process—not as indiscriminate reconnaissance.

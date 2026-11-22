@@ -1,7 +1,8 @@
 ---
-title: "Security Headers Checker: una prima verifica rapida degli header HTTP"
+title: "Security Headers Checker: A Quick First Look at HTTP Security Headers"
+legacy_title: "Security Headers Checker: una prima verifica rapida degli header HTTP"
 published: false
-description: "Come usare uno scanner di header HTTP per migliorare la postura del tuo sito senza confondere baseline, rischio reale e configurazione completa."
+description: "How to use an HTTP header scanner to improve a website's security posture without confusing a baseline check with a complete security assessment."
 tags: cybersecurity, webdev, security, opensource
 cover_image: ""
 canonical_url: ""
@@ -9,9 +10,9 @@ canonical_url: ""
 
 # Security Headers Checker
 
-[Security Headers Checker](https://github.com/lfazioli/security-headers-checker) è un piccolo tool Python che verifica alcuni degli header di sicurezza HTTP più rilevanti. È adatto a una prima review di siti propri o autorizzati e può essere integrato in una procedura manuale o CI.
+[Security Headers Checker](https://github.com/lfazioli/security-headers-checker) is a small Python tool that checks several relevant HTTP security headers. It is useful for an initial review of websites you own or are authorized to assess and can be incorporated into manual or CI workflows.
 
-## Cosa controlla
+## What it checks
 
 - `Content-Security-Policy`
 - `Strict-Transport-Security`
@@ -23,9 +24,9 @@ canonical_url: ""
 - `Cross-Origin-Resource-Policy`
 - `Cross-Origin-Embedder-Policy`
 
-Lo scanner evidenzia header assenti e configurazioni deboli, offrendo una baseline iniziale. Non sostituisce un test applicativo completo né un assessment professionale.
+The scanner reports missing headers and weak configurations. It provides a baseline, not a complete application security test or professional assessment.
 
-## Installazione
+## Installation
 
 ```bash
 python3 -m venv .venv
@@ -33,50 +34,50 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Su Windows, attiva l'ambiente con:
+On Windows:
 
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
 
-## Uso
+## Usage
 
-Verificare un singolo sito:
+Check one site:
 
 ```bash
 python3 security_headers_checker.py https://www.example.com
 ```
 
-O ottenere JSON leggibile da script:
+Get JSON output:
 
 ```bash
 python3 security_headers_checker.py https://www.example.com --json
 ```
 
-Sostituisci `example.com` con un dominio che possiedi o per il quale hai autorizzazione.
+Replace `example.com` with a domain you own or are authorized to assess.
 
-## Interpretare i risultati
+## Interpret the result
 
-Un header assente può essere un problema reale, ma non tutte le politiche sono valide per ogni applicazione. Per esempio:
+A missing header can indicate real risk, but every policy must fit the application:
 
-- HSTS dovrebbe essere applicato solo dopo aver verificato supporto HTTPS e sottodomini.
-- CSP richiede una configurazione coerente con script, worker, iframe e font usati.
-- CORP e COEP possono cambiare il comportamento di risorse cross-origin.
-- COOP può influire su popup e flussi OAuth.
+- HSTS should be enabled only after HTTPS and subdomain support are verified.
+- CSP must match scripts, workers, frames, and fonts used by the application.
+- CORP and COEP can change cross-origin resource behavior.
+- COOP can affect popups and OAuth flows.
 
-Il risultato deve quindi essere letto insieme ad autenticazione, routing, cookie, caching e Content Security Policy dell'applicazione.
+Read the result together with authentication, routing, cookies, caching, and the application's Content Security Policy.
 
-## Raccomandazione operativa
+## Operational approach
 
-1. Definisci una baseline per ambiente.
-2. Verifica in staging.
-3. Rendi il controllo ripetibile.
-4. Avvia con avvisi non bloccanti.
-5. Mantieni eccezioni motivate.
-6. Evolvi verso test automatici più completi.
+1. Define a baseline for each environment.
+2. Test in staging.
+3. Make checks repeatable.
+4. Begin with non-blocking warnings.
+5. Document exceptions.
+6. Add deeper application tests.
 
-## Limiti
+## Limitations
 
-Questo tool osserva le risposte HTTP. Non trova vulnerabilità lato server, bug applicativi, segreti esposti o autenticazioni non configurate. Non è una prova di conformità completa.
+This tool observes HTTP responses. It does not find server-side vulnerabilities, application bugs, exposed secrets, or misconfigured authentication. It is not proof of compliance.
 
-Un header corretto è un passo utile, non una garanzia di sicurezza. L'integrazione migliore combina verifiche HTTP, code review, test applicativi e gestione delle dipendenze.
+A correct header is a useful improvement—not a guarantee of security. Combine header checks with code review, application testing, and dependency management.
