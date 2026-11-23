@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
+  const [schedule, setSchedule] = useState<Array<{ date: string; title: string }>>([]);
 
   async function load() {
     try {
@@ -30,6 +31,10 @@ export default function Dashboard() {
     // "retry" button too.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
+    fetch("/devto-calendar.json")
+      .then((response) => response.ok ? response.json() : [])
+      .then((entries) => setSchedule(entries))
+      .catch(() => setSchedule([]));
   }, []);
 
   async function handleDelete(slug: string) {
@@ -67,6 +72,29 @@ export default function Dashboard() {
       {!loading && !error && posts.length === 0 && (
         <p className="text-dim text-sm">No posts yet. Create one!</p>
       )}
+
+      <section className="mb-8">
+        <p className="font-mono text-xs text-signal mb-3 tracking-wide">// dev.to publication schedule</p>
+        <div className="rounded-lg border border-line overflow-hidden">
+          {schedule.map((entry) => {
+            const published = entry.date <= new Date().toISOString().slice(0, 10);
+            return (
+              <div key={`${entry.date}-${entry.title}`} className="flex items-center justify-between gap-4 px-4 py-3 border-b border-line last:border-b-0 bg-panel">
+                <div className="min-w-0">
+                  <span className="block text-sm text-ink truncate">{entry.title}</span>
+                  <span className={`text-[10px] font-mono ${published ? "text-signal" : "text-dim"}`}>
+                    {published ? "published / due" : "scheduled"}
+                  </span>
+                </div>
+                <time className="text-xs font-mono text-dim shrink-0">{entry.date}</time>
+              </div>
+            );
+          })}
+          {schedule.length === 0 && (
+            <p className="px-4 py-3 text-sm text-dim bg-panel">Publication schedule unavailable.</p>
+          )}
+        </div>
+      </section>
 
       <div className="flex flex-col gap-2">
         {posts.map((post) => (

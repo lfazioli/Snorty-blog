@@ -1,0 +1,339 @@
+[
+  {
+    "date": "2026-11-22",
+    "title": "What Is Docker and Why Developers Love It",
+    "excerpt": "Discover how Docker simplifies application deployment using lightweight and portable containers.",
+    "cover_image": "https://media.licdn.com/dms/image/v2/C5612AQHl7L73zR11Og/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1634663944447?e=2147483647&v=beta&t=E_dnPmpj4r7wSmAhDOqGGLWDayXmiJgaqytIDSMvyG4",
+    "tags": [
+      "docker",
+      "devops"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/what-is-docker-and-why-developers-love-it",
+    "source_url": "https://www.snorty.space/posts/what-is-docker-and-why-developers-love-it",
+    "body_markdown": "# What Is Docker and Why Developers Love It\n\nDocker is an open-source platform that packages applications and their dependencies into lightweight containers. Containers make software portable, consistent, and easy to deploy across different environments.\n\n---\n\n## What Is a Container?\n\nA container includes everything an application needs to run:\n\n- Source code\n- Libraries\n- Runtime\n- Configuration\n- Dependencies\n\nUnlike virtual machines, containers share the host operating system, making them significantly faster and more efficient.\n\n---\n\n## Containers vs Virtual Machines\n\n| Docker Containers | Virtual Machines |\n|-------------------|------------------|\n| Lightweight | Heavy |\n| Fast startup | Slower startup |\n| Share host kernel | Full guest OS |\n| Lower resource usage | Higher resource usage |\n\n---\n\n## Installing Docker\n\nUbuntu:\n\n```bash\nsudo apt install docker.io\n```\n\nStart Docker:\n\n```bash\nsudo systemctl start docker\n```\n\nEnable Docker at boot:\n\n```bash\nsudo systemctl enable docker\n```\n\n---\n\n## Run Your First Container\n\n```bash\ndocker run hello-world\n```\n\nIf Docker is correctly installed, you'll see a welcome message.\n\n---\n\n## Useful Docker Commands\n\nList running containers:\n\n```bash\ndocker ps\n```\n\nList all containers:\n\n```bash\ndocker ps -a\n```\n\nList downloaded images:\n\n```bash\ndocker images\n```\n\nStop a container:\n\n```bash\ndocker stop <container_id>\n```\n\nRemove a container:\n\n```bash\ndocker rm <container_id>\n```\n\n---\n\n## Docker Hub\n\nDocker Hub is the official repository for container images.\n\nThousands of ready-to-use images are available, including:\n\n- Ubuntu\n- Nginx\n- MySQL\n- PostgreSQL\n- Redis\n- WordPress\n\n---\n\n## Security Best Practices\n\nWhen using Docker:\n\n- Use official images.\n- Keep images updated.\n- Avoid running containers as root.\n- Scan images for vulnerabilities.\n- Remove unused containers and images.\n\n---\n\n## Conclusion\n\nDocker has transformed modern software development by making applications portable and easy to deploy. Whether you're a developer, system administrator, or cybersecurity professional, learning Docker is a valuable investment."
+  },
+  {
+    "date": "2026-11-23",
+    "title": "How to Use tcpdump for Network Troubleshooting",
+    "excerpt": "Learn how tcpdump captures network traffic directly from the Linux terminal using practical command examples.",
+    "cover_image": "https://brendg.co.uk/wp-content/uploads/2026/01/image.png?w=616",
+    "tags": [
+      "tcpdump",
+      "networking"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/how-to-use-tcpdump-for-network-troubleshooting",
+    "source_url": "https://www.snorty.space/posts/how-to-use-tcpdump-for-network-troubleshooting",
+    "body_markdown": "# How to Use tcpdump for Network Troubleshooting\n\ntcpdump is one of the most powerful command-line tools for capturing and analyzing network traffic. It is lightweight, fast, and available on most Linux distributions.\n\n---\n\n## Install tcpdump\n\nUbuntu/Debian:\n\n```bash\nsudo apt install tcpdump\n```\n\nFedora:\n\n```bash\nsudo dnf install tcpdump\n```\n\n---\n\n## Capture Traffic\n\nCapture packets on interface eth0:\n\n```bash\nsudo tcpdump -i eth0\n```\n\n---\n\n## Capture HTTP Traffic\n\n```bash\nsudo tcpdump port 80\n```\n\nOnly HTTP packets will be displayed.\n\n---\n\n## Capture Traffic from a Specific Host\n\n```bash\nsudo tcpdump host 192.168.1.50\n```\n\nUseful when troubleshooting communication with a single device.\n\n---\n\n## Save Packets\n\n```bash\nsudo tcpdump -w capture.pcap\n```\n\nThe capture can later be opened in Wireshark.\n\n---\n\n## Read a Capture\n\n```bash\ntcpdump -r capture.pcap\n```\n\n---\n\n## Filter by Protocol\n\nTCP only:\n\n```bash\nsudo tcpdump tcp\n```\n\nUDP only:\n\n```bash\nsudo tcpdump udp\n```\n\nDNS traffic:\n\n```bash\nsudo tcpdump port 53\n```\n\n---\n\n## Why Use tcpdump?\n\nIt is ideal for:\n\n- Network troubleshooting\n- Malware investigations\n- Security monitoring\n- Learning networking\n- Packet collection\n\n---\n\n## Conclusion\n\nAlthough Wireshark provides a graphical interface, tcpdump remains the preferred packet capture tool for many Linux administrators because of its speed and flexibility."
+  },
+  {
+    "date": "2026-11-24",
+    "title": "OWASP Top 10 Explained: The Biggest Web Security Risks",
+    "excerpt": "Learn about the OWASP Top 10 web application security risks and how developers can protect against them.",
+    "cover_image": "https://www.rapid7.com/_next/image/?url=https%3A%2F%2Fwww.rapid7.com%2Fcdn%2Fimages%2Fblt867f04bdea0dfa71%2F683de193590d7f6bbdde1c18%2Fowasp.png&w=3840&q=75",
+    "tags": [
+      "owasp"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/owasp-top-10-explained-the-biggest-web-security-risks",
+    "source_url": "https://www.snorty.space/posts/owasp-top-10-explained-the-biggest-web-security-risks",
+    "body_markdown": "# OWASP Top 10 Explained: The Biggest Web Security Risks\n\nThe OWASP Top 10 is a globally recognized list of the most critical web application security risks. It helps developers and security professionals understand the vulnerabilities that attackers exploit most frequently.\n\n---\n\n## 1. Broken Access Control\n\nOccurs when users can access resources they shouldn't.\n\n**Example:** A normal user accessing an admin page by changing the URL.\n\n---\n\n## 2. Cryptographic Failures\n\nSensitive information is not properly encrypted.\n\nExamples include weak passwords, outdated TLS versions, or storing plaintext credentials.\n\n---\n\n## 3. Injection\n\nAttackers inject malicious commands into an application.\n\nCommon examples:\n\n- SQL Injection\n- Command Injection\n- LDAP Injection\n\n---\n\n## 4. Insecure Design\n\nApplications are designed without proper security considerations.\n\nSecure design should always be part of the development process.\n\n---\n\n## 5. Security Misconfiguration\n\nIncorrect server or application settings expose systems to attacks.\n\nExamples:\n\n- Default credentials\n- Open ports\n- Debug mode enabled\n\n---\n\n## 6. Vulnerable Components\n\nUsing outdated libraries introduces known vulnerabilities.\n\nAlways update dependencies regularly.\n\n---\n\n## 7. Identification and Authentication Failures\n\nWeak authentication mechanisms allow attackers to compromise accounts.\n\nEnable MFA whenever possible.\n\n---\n\n## 8. Software and Data Integrity Failures\n\nApplications trust software or updates without verification.\n\nCode signing and integrity checks reduce this risk.\n\n---\n\n## 9. Security Logging and Monitoring Failures\n\nWithout proper logs, attacks may remain unnoticed for months.\n\nCentralized logging helps detect suspicious activity quickly.\n\n---\n\n## 10. Server-Side Request Forgery (SSRF)\n\nAttackers force a server to make requests to internal or external systems.\n\nThis can expose internal services that shouldn't be publicly accessible.\n\n---\n\n## Final Thoughts\n\nUnderstanding the OWASP Top 10 helps developers build more secure applications and assists security professionals during vulnerability assessments and penetration tests."
+  },
+  {
+    "date": "2026-11-25",
+    "title": "How to Install Wireshark on Windows, Linux, and macOS",
+    "excerpt": "A step-by-step guide to installing Wireshark on Windows, Linux, and macOS for network analysis and troubleshooting.",
+    "cover_image": "https://www.stationx.net/wp-content/uploads/2023/08/How-to-Install-Wireshark-on-Windows-macOS-and-Linux.png",
+    "tags": [
+      "wireshark",
+      "linux"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/how-to-install-wireshark-on-windows-linux-and-macos",
+    "source_url": "https://www.snorty.space/posts/how-to-install-wireshark-on-windows-linux-and-macos",
+    "body_markdown": "# How to Install Wireshark on Windows, Linux, and macOS\n\nWireshark is the world's leading network protocol analyzer, trusted by network engineers, cybersecurity professionals, and students. It allows you to capture and inspect network packets in real time, making it an invaluable tool for troubleshooting, learning networking, and investigating security incidents.\n\nThis guide explains how to install Wireshark on Windows, Linux, and macOS.\n\n---\n\n## Installing Wireshark on Windows\n\n1. Visit the official Wireshark website.\n2. Download the latest Windows installer.\n3. Run the installer as Administrator.\n4. Install **Npcap** when prompted (required for packet capture).\n5. Finish the installation and launch Wireshark.\n\n---\n\n## Installing Wireshark on Ubuntu/Debian\n\nUpdate your system:\n\n```bash\nsudo apt update\n```\n\nInstall Wireshark:\n\n```bash\nsudo apt install wireshark\n```\n\nAllow non-root users to capture packets:\n\n```bash\nsudo dpkg-reconfigure wireshark-common\n```\n\nAdd your user to the Wireshark group:\n\n```bash\nsudo usermod -aG wireshark $USER\n```\n\nLog out and log back in.\n\n---\n\n## Installing Wireshark on Fedora\n\n```bash\nsudo dnf install wireshark\n```\n\n---\n\n## Installing Wireshark on macOS\n\nInstall Homebrew if necessary, then run:\n\n```bash\nbrew install --cask wireshark\n```\n\n---\n\n## First Packet Capture\n\nAfter launching Wireshark:\n\n1. Select your network interface.\n2. Click **Start Capturing Packets**.\n3. Browse a website.\n4. Stop the capture.\n5. Analyze the collected traffic.\n\n---\n\n## Useful Display Filters\n\nHTTP traffic:\n\n```text\nhttp\n```\n\nDNS traffic:\n\n```text\ndns\n```\n\nTCP only:\n\n```text\ntcp\n```\n\nTraffic from one IP:\n\n```text\nip.addr == 192.168.1.100\n```\n\n---\n\n## Conclusion\n\nWireshark is one of the most powerful networking tools available. Learning how to install and use it is an essential step for anyone interested in networking or cybersecurity."
+  },
+  {
+    "date": "2026-11-26",
+    "title": "How Password Managers Improve Your Online Security",
+    "excerpt": "Learn why password managers are one of the simplest ways to improve online security and protect your accounts.",
+    "cover_image": "https://dnewpydm90vfx.cloudfront.net/wp-content/uploads/2020/01/Sicurezza-delle-password.jpg",
+    "tags": [
+      "passwords"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/how-password-managers-improve-your-online-security",
+    "source_url": "https://www.snorty.space/posts/how-password-managers-improve-your-online-security",
+    "body_markdown": "# How Password Managers Improve Your Online Security\n\nWeak and reused passwords remain one of the biggest cybersecurity risks. Password managers solve this problem by generating, storing, and automatically filling strong passwords for every account.\n\n## Why Passwords Matter\n\nMany users still reuse the same password across multiple websites. If one website suffers a data breach, attackers often try those credentials elsewhere.\n\n## Benefits of Password Managers\n\n- Generate unique passwords.\n- Store credentials securely.\n- Autofill login forms.\n- Synchronize across devices.\n- Reduce phishing risks.\n\n## Popular Password Managers\n\n- Bitwarden\n- 1Password\n- KeePassXC\n- Proton Pass\n- Dashlane\n\n## Best Practices\n\n- Protect your vault with a strong master password.\n- Enable Multi-Factor Authentication.\n- Regularly review saved passwords.\n- Replace weak or reused passwords.\n\n## Conclusion\n\nPassword managers simplify account security and significantly reduce the likelihood of credential theft."
+  },
+  {
+    "date": "2026-11-27",
+    "title": "What Is a DDoS Attack? Everything You Need to Know",
+    "excerpt": "Discover how Distributed Denial-of-Service attacks work and the strategies organizations use to defend against them.",
+    "cover_image": "https://cf-assets.www.cloudflare.com/slt3lc6tev37/1FIBEeoyzoa64lVGlWKaRV/3b878bb03df1729b48cd3f667cdfe3de/amplification_ddos_example.png",
+    "tags": [
+      "ddos"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/what-is-a-ddos-attack-everything-you-need-to-know",
+    "source_url": "https://www.snorty.space/posts/what-is-a-ddos-attack-everything-you-need-to-know",
+    "body_markdown": "# What Is a DDoS Attack?\n\nA Distributed Denial-of-Service (DDoS) attack attempts to overwhelm a server, application, or network by flooding it with massive amounts of traffic.\n\nInstead of attacking from a single computer, DDoS attacks use thousands of compromised devices known as botnets.\n\n## How It Works\n\nAttackers control infected devices that simultaneously send requests to the target server.\n\nEventually, legitimate users can no longer access the service.\n\n## Types of DDoS Attacks\n\n- Volumetric attacks\n- Protocol attacks\n- Application-layer attacks\n\n## Protection Strategies\n\nOrganizations often deploy:\n\n- Firewalls\n- Web Application Firewalls (WAF)\n- Content Delivery Networks (CDNs)\n- Rate limiting\n- Traffic filtering\n\n## Conclusion\n\nAlthough DDoS attacks cannot always be prevented, proper infrastructure and monitoring significantly reduce their impact."
+  },
+  {
+    "date": "2026-11-28",
+    "title": "The Most Common Network Ports Explained",
+    "excerpt": "Understand the purpose of the most commonly used network ports and why they matter in cybersecurity.",
+    "cover_image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
+    "tags": [
+      "networking"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/the-most-common-network-ports-explained",
+    "source_url": "https://www.snorty.space/posts/the-most-common-network-ports-explained",
+    "body_markdown": "# The Most Common Network Ports Explained\n\nEvery network service communicates through ports. Knowing the most common ports helps administrators secure systems and troubleshoot connectivity issues.\n\n## Port 20 & 21 — FTP\n\nUsed for File Transfer Protocol.\n\n## Port 22 — SSH\n\nSecure remote administration.\n\n## Port 25 — SMTP\n\nEmail transfer.\n\n## Port 53 — DNS\n\nDomain name resolution.\n\n## Port 80 — HTTP\n\nUnencrypted web traffic.\n\n## Port 443 — HTTPS\n\nEncrypted web traffic using TLS.\n\n## Port 110 — POP3\n\nEmail retrieval.\n\n## Port 143 — IMAP\n\nModern email synchronization.\n\n## Port 3306 — MySQL\n\nDatabase communication.\n\n## Port 3389 — Remote Desktop\n\nWindows Remote Desktop Protocol.\n\n## Why Are Ports Important?\n\nOpen ports expose services to the network. Unnecessary ports should always be closed to reduce the attack surface.\n\n## Conclusion\n\nKnowing common ports is fundamental for network administrators, ethical hackers, and cybersecurity analysts."
+  },
+  {
+    "date": "2026-11-29",
+    "title": "How to Secure a Linux Server: 15 Essential Best Practices",
+    "excerpt": "Learn the most effective techniques for hardening a Linux server and protecting it from common cyber threats.",
+    "cover_image": "https://cf-assets.www.cloudflare.com/slt3lc6tev37/1FIBEeoyzoa64lVGlWKaRV/3b878bb03df1729b48cd3f667cdfe3de/amplification_ddos_example.png",
+    "tags": [
+      "linux"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/how-to-secure-a-linux-server-15-essential-best-practices",
+    "source_url": "https://www.snorty.space/posts/how-to-secure-a-linux-server-15-essential-best-practices",
+    "body_markdown": "# How to Secure a Linux Server: 15 Essential Best Practices\n\nLinux powers millions of servers worldwide, making it one of the most common targets for cyberattacks. While Linux is known for its security, proper configuration is essential to reduce risks.\n\n## 1. Keep the System Updated\n\nRegularly install security patches.\n\n```bash\nsudo apt update\nsudo apt upgrade -y\n```\n\n## 2. Disable Root Login\n\nUse a regular user account and elevate privileges with `sudo`.\n\n## 3. Enable SSH Key Authentication\n\nReplace passwords with SSH keys whenever possible.\n\n## 4. Change the Default SSH Port\n\nAlthough not a complete security solution, changing the default port can reduce automated scanning attempts.\n\n## 5. Configure a Firewall\n\nUse UFW or nftables to allow only required services.\n\n## 6. Install Fail2Ban\n\nFail2Ban automatically blocks repeated failed login attempts.\n\n## 7. Enable Automatic Security Updates\n\nAutomating updates helps protect against newly discovered vulnerabilities.\n\n## 8. Remove Unused Services\n\nDisable software that isn't actively being used.\n\n## 9. Monitor Logs\n\nReview authentication and system logs regularly.\n\n## 10. Use Strong Passwords\n\nEnforce complex passwords and consider MFA where possible.\n\n## Conclusion\n\nServer security is an ongoing process. Regular updates, monitoring, and secure configurations dramatically reduce the risk of compromise."
+  },
+  {
+    "date": "2026-11-30",
+    "title": "What Is Multi-Factor Authentication (MFA)?",
+    "excerpt": "Learn how Multi-Factor Authentication adds an extra layer of security beyond passwords and protects online accounts.",
+    "cover_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoDEDFyWPxc4u8vIRf_nDYptqnke9LPpU2V2ClzQa-LWYKVP4oIRqubaA&s=10",
+    "tags": [
+      "authentication"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/what-is-multi-factor-authentication-mfa",
+    "source_url": "https://www.snorty.space/posts/what-is-multi-factor-authentication-mfa",
+    "body_markdown": "# What Is Multi-Factor Authentication (MFA)?\n\nPasswords alone are no longer enough to secure online accounts. Multi-Factor Authentication (MFA) adds additional verification steps that significantly reduce the risk of unauthorized access.\n\n## Authentication Factors\n\nAuthentication typically relies on one or more of the following factors:\n\n### Something You Know\n\n- Password\n- PIN\n\n### Something You Have\n\n- Smartphone\n- Security Key\n- Authentication App\n\n### Something You Are\n\n- Fingerprint\n- Face Recognition\n- Iris Scan\n\n## Why MFA Is Important\n\nEven if attackers steal your password, they still need the second authentication factor.\n\nMFA dramatically reduces the effectiveness of:\n\n- Phishing attacks\n- Credential stuffing\n- Password leaks\n- Brute-force attacks\n\n## Best Practices\n\n- Use an authenticator app instead of SMS whenever possible.\n- Enable MFA on all important accounts.\n- Store recovery codes securely.\n- Consider hardware security keys for maximum protection.\n\n## Conclusion\n\nMulti-Factor Authentication is one of the simplest and most effective ways to improve online security. Enabling MFA takes only a few minutes and can prevent many common cyberattacks."
+  },
+  {
+    "date": "2026-12-01",
+    "title": "Understanding DNS: How the Internet Finds Websites",
+    "excerpt": "Learn how the Domain Name System (DNS) translates domain names into IP addresses and keeps the Internet running.",
+    "cover_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsaAyMu7-L2pNd2WjWzu0MeqjbJPpmCxhzMJk0PGAUi6PwOJ4NEAF-JThk&s=10",
+    "tags": [
+      "dns"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/understanding-dns-how-the-internet-finds-websites",
+    "source_url": "https://www.snorty.space/posts/understanding-dns-how-the-internet-finds-websites",
+    "body_markdown": "# Understanding DNS: How the Internet Finds Websites\n\nEvery time you type a website address into your browser, the Domain Name System (DNS) translates that human-readable name into an IP address that computers understand.\n\nWithout DNS, browsing the Internet would require remembering numerical IP addresses instead of simple domain names.\n\n## How DNS Works\n\nA DNS lookup typically follows these steps:\n\n1. The browser requests a domain.\n2. The request reaches a DNS resolver.\n3. The resolver contacts authoritative DNS servers.\n4. The IP address is returned.\n5. The browser connects to the web server.\n\n## Common DNS Record Types\n\n- A Record\n- AAAA Record\n- MX Record\n- CNAME\n- TXT\n- NS\n\n## Security Risks\n\nDNS attacks include:\n\n- DNS Spoofing\n- Cache Poisoning\n- DNS Tunneling\n- Amplification Attacks\n\n## Conclusion\n\nDNS is one of the fundamental technologies behind the Internet. Understanding how it works helps both network administrators and cybersecurity professionals troubleshoot and secure network communications."
+  },
+  {
+    "date": "2026-12-02",
+    "title": "How HTTPS Protects Your Data on the Internet",
+    "excerpt": "Understand how HTTPS encrypts web traffic, protects user privacy, and secures online communications.",
+    "cover_image": "https://images.unsplash.com/photo-1555949963-aa79dcee981c",
+    "tags": [
+      "https"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/how-https-protects-your-data-on-the-internet",
+    "source_url": "https://www.snorty.space/posts/how-https-protects-your-data-on-the-internet",
+    "body_markdown": "# How HTTPS Protects Your Data on the Internet\n\nWhenever you visit a website beginning with **https://**, your browser establishes a secure encrypted connection with the server.\n\nHTTPS combines HTTP with TLS (Transport Layer Security) to ensure confidentiality, integrity, and authenticity.\n\n## Why HTTPS Matters\n\nWithout HTTPS, anyone on the same network could potentially intercept your traffic.\n\nHTTPS protects:\n\n- Passwords\n- Credit card information\n- Personal data\n- Authentication cookies\n\n## TLS Handshake\n\nBefore any encrypted communication begins, the browser and server perform a TLS handshake.\n\nDuring this process they:\n\n- Verify the server identity.\n- Exchange encryption keys.\n- Negotiate encryption algorithms.\n\n## Benefits\n\n- Encryption\n- Authentication\n- Data integrity\n- Improved SEO rankings\n- Greater user trust\n\n## Conclusion\n\nHTTPS is no longer optional. Every modern website should use HTTPS to protect visitors and improve security."
+  },
+  {
+    "date": "2026-12-03",
+    "title": "What Is Cross-Site Scripting (XSS)? A Complete Guide",
+    "excerpt": "Learn what Cross-Site Scripting (XSS) is, how it works, the different attack types, and how developers can prevent it.",
+    "cover_image": "https://blog.nashtechglobal.com/wp-content/uploads/2024/06/cross-site-scripting-xss.jpg",
+    "tags": [
+      "websecurity"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/what-is-cross-site-scripting-xss-a-complete-guide",
+    "source_url": "https://www.snorty.space/posts/what-is-cross-site-scripting-xss-a-complete-guide",
+    "body_markdown": "# What Is Cross-Site Scripting (XSS)? A Complete Guide\n\nCross-Site Scripting (XSS) is one of the most common web application vulnerabilities. It allows attackers to inject malicious JavaScript into web pages viewed by other users, potentially leading to stolen sessions, credential theft, or website defacement.\n\n## Types of XSS\n\n### Stored XSS\n\nMalicious code is permanently stored on the target server, often inside comments, forums, or user profiles.\n\n### Reflected XSS\n\nThe malicious script is included in a URL or request and immediately reflected back to the victim.\n\n### DOM-Based XSS\n\nThe attack manipulates the browser's Document Object Model (DOM) without modifying the server response.\n\n## Risks\n\nSuccessful XSS attacks can:\n\n- Steal cookies\n- Hijack user sessions\n- Redirect visitors\n- Display fake login forms\n- Execute malicious JavaScript\n\n## Prevention\n\nDevelopers should:\n\n- Validate all user input.\n- Escape HTML output.\n- Use Content Security Policy (CSP).\n- Sanitize data before rendering.\n- Keep frameworks updated.\n\n## Testing Tools\n\nPopular tools include:\n\n- Burp Suite\n- OWASP ZAP\n- XSStrike\n\n## Conclusion\n\nCross-Site Scripting remains one of the most exploited web vulnerabilities. Understanding how it works is essential for developers and security professionals alike."
+  },
+  {
+    "date": "2026-12-04",
+    "title": "What Is a VPN and Why Should You Use One?",
+    "excerpt": "Discover how Virtual Private Networks (VPNs) protect your privacy, encrypt your traffic, and improve online security.",
+    "cover_image": "https://vpncdn.protonweb.com/image-transformation/?s=a&image=how_does_a_vpn_work_conceal_f3533056da.png&width=716&height=449",
+    "tags": [
+      "vpn"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/what-is-a-vpn-and-why-should-you-use-one",
+    "source_url": "https://www.snorty.space/posts/what-is-a-vpn-and-why-should-you-use-one",
+    "body_markdown": "# What Is a VPN and Why Should You Use One?\n\nA Virtual Private Network (VPN) creates an encrypted tunnel between your device and a remote server, protecting your data while browsing the Internet.\n\nVPNs are widely used by businesses, remote workers, and privacy-conscious users.\n\n## Benefits\n\nUsing a VPN provides several advantages:\n\n- Encrypts Internet traffic.\n- Protects data on public Wi-Fi.\n- Hides your public IP address.\n- Improves online privacy.\n- Secures remote connections.\n\n## Common Use Cases\n\nVPNs are commonly used for:\n\n- Remote work.\n- Secure browsing.\n- Business networks.\n- Traveling.\n- Protecting sensitive information.\n\n## Choosing a VPN\n\nWhen selecting a VPN provider, consider:\n\n- Strong encryption.\n- No-log policy.\n- Fast servers.\n- Global server locations.\n- Independent security audits.\n\n## Conclusion\n\nAlthough a VPN significantly improves privacy and security, it should be considered one component of a broader cybersecurity strategy that also includes strong passwords, multi-factor authentication, and regular software updates."
+  },
+  {
+    "date": "2026-12-05",
+    "title": "Top Linux Commands Every Cybersecurity Student Should Learn",
+    "excerpt": "Master the essential Linux commands used daily by cybersecurity professionals and system administrators.",
+    "cover_image": "https://images.unsplash.com/photo-1518770660439-4636190af475",
+    "tags": [
+      "linux",
+      "cybersecurity"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/top-linux-commands-every-cybersecurity-student-should-learn",
+    "source_url": "https://www.snorty.space/posts/top-linux-commands-every-cybersecurity-student-should-learn",
+    "body_markdown": "# Top Linux Commands Every Cybersecurity Student Should Learn\n\nLinux is the preferred operating system for many cybersecurity professionals. Learning basic terminal commands is one of the first steps toward becoming comfortable in security environments.\n\n## pwd\n\nDisplays the current working directory.\n\n```bash\npwd\n```\n\n## ls\n\nLists files and directories.\n\n```bash\nls -la\n```\n\n## cd\n\nChanges the current directory.\n\n```bash\ncd /home/user\n```\n\n## cat\n\nDisplays the contents of a file.\n\n```bash\ncat file.txt\n```\n\n## grep\n\nSearches text using patterns.\n\n```bash\ngrep \"error\" logfile.txt\n```\n\n## chmod\n\nChanges file permissions.\n\n```bash\nchmod 755 script.sh\n```\n\n## ps\n\nShows running processes.\n\n```bash\nps aux\n```\n\n## netstat\n\nDisplays active network connections.\n\n```bash\nnetstat -tuln\n```\n\n## Conclusion\n\nMastering these commands makes everyday security tasks much easier and provides a strong foundation for more advanced Linux administration."
+  },
+  {
+    "date": "2026-12-06",
+    "title": "Understanding the TCP/IP Model",
+    "excerpt": "Learn how the TCP/IP model works and why it is the foundation of modern computer networking.",
+    "cover_image": "https://www.ricmedia.com/images/759.webp",
+    "tags": [
+      "cybersecurity",
+      "tutorial",
+      "beginners"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/understanding-the-tcp-ip-model",
+    "source_url": "https://www.snorty.space/posts/understanding-the-tcp-ip-model",
+    "body_markdown": "# Understanding the TCP/IP Model\n\nEvery website, email, and online application relies on the TCP/IP protocol suite to exchange information across networks.\n\nUnderstanding the TCP/IP model is essential for anyone studying networking or cybersecurity.\n\n## The Four Layers\n\n### Network Access Layer\n\nResponsible for transmitting data across the physical network.\n\nExamples include:\n\n- Ethernet\n- Wi-Fi\n\n### Internet Layer\n\nHandles routing between different networks.\n\nMain protocol:\n\n- IP\n\n### Transport Layer\n\nProvides reliable communication.\n\nCommon protocols:\n\n- TCP\n- UDP\n\n### Application Layer\n\nSupports user-facing services such as:\n\n- HTTP\n- HTTPS\n- DNS\n- FTP\n- SMTP\n\n## Why It Matters\n\nUnderstanding each layer helps security professionals troubleshoot issues, detect attacks, and analyze network traffic more effectively.\n\n## Conclusion\n\nThe TCP/IP model forms the backbone of the Internet and remains one of the most important concepts in networking."
+  },
+  {
+    "date": "2026-12-07",
+    "title": "What Is SQL Injection? A Beginner's Guide",
+    "excerpt": "Learn what SQL Injection is, how attackers exploit it, and the best practices to protect your web applications.",
+    "cover_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAHjbI3QoSOOZta_mx-83GMQDwgFMo0qV9VfwHoYGIl31ZwK08kz0Jp-Gm&s=10",
+    "tags": [
+      "databases",
+      "injection"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/what-is-sql-injection-a-beginner-s-guide",
+    "source_url": "https://www.snorty.space/posts/what-is-sql-injection-a-beginner-s-guide",
+    "body_markdown": "# What Is SQL Injection? A Beginner's Guide\n\nSQL Injection (SQLi) is one of the oldest and most dangerous web application vulnerabilities. It allows attackers to manipulate database queries by inserting malicious SQL commands into user input fields.\n\nDespite modern frameworks providing better security, SQL Injection remains one of the most common vulnerabilities found during penetration tests.\n\n## How SQL Injection Works\n\nMany web applications interact with databases to authenticate users, retrieve information, or process transactions.\n\nIf user input is not properly validated, an attacker can inject SQL statements that modify the intended query.\n\nFor example, instead of entering a normal username, an attacker could submit specially crafted input to bypass authentication or retrieve confidential information.\n\n## Risks\n\nSQL Injection can lead to:\n\n- Unauthorized access\n- Database modification\n- Data theft\n- User impersonation\n- Complete application compromise\n\n## Prevention\n\nDevelopers should always:\n\n- Use prepared statements.\n- Validate user input.\n- Escape special characters.\n- Apply least-privilege permissions.\n- Keep database software updated.\n\n## Detection\n\nSecurity professionals often identify SQL Injection using tools such as:\n\n- Burp Suite\n- SQLMap\n- OWASP ZAP\n\n## Conclusion\n\nSQL Injection remains a critical vulnerability because it directly targets the application's data. Proper input validation and secure coding practices are the best defense."
+  },
+  {
+    "date": "2026-12-08",
+    "title": "What Is Ethical Hacking?",
+    "excerpt": "Learn what ethical hacking is, how it differs from malicious hacking, and why organizations rely on ethical hackers to improve security.",
+    "cover_image": "https://media.licdn.com/dms/image/v2/D5612AQF1tvbxW_zMiQ/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1682091867599?e=2147483647&v=beta&t=7cj-XzB-Gxjmvwh_2ceGXdGyW1USroC0zcOaNXTI_VA",
+    "tags": [
+      "ethicalhacking"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/what-is-ethical-hacking",
+    "source_url": "https://www.snorty.space/posts/what-is-ethical-hacking",
+    "body_markdown": "# What Is Ethical Hacking?\n\nEthical hacking is the practice of testing computer systems, applications, and networks for security weaknesses with the owner's permission.\n\nUnlike malicious hackers, ethical hackers follow legal and ethical guidelines while helping organizations strengthen their defenses.\n\n## Responsibilities of an Ethical Hacker\n\nEthical hackers perform tasks such as:\n\n- Identifying vulnerabilities.\n- Testing security controls.\n- Reporting findings.\n- Recommending remediation steps.\n\n## Common Tools\n\nProfessional ethical hackers often use:\n\n- Nmap\n- Wireshark\n- Burp Suite\n- Metasploit\n- Snort\n- Kali Linux\n\n## Required Skills\n\nSuccessful ethical hackers typically understand:\n\n- Linux.\n- Networking.\n- Programming.\n- Web technologies.\n- Operating systems.\n- Security principles.\n\n## Certifications\n\nPopular certifications include:\n\n- CEH\n- CompTIA Security+\n- PNPT\n- OSCP\n\n## Conclusion\n\nEthical hacking plays a critical role in modern cybersecurity by helping organizations discover vulnerabilities before attackers can exploit them."
+  },
+  {
+    "date": "2026-12-09",
+    "title": "Understanding Firewalls: The First Line of Defense",
+    "excerpt": "Discover how firewalls protect computer networks by filtering traffic and blocking unauthorized access.",
+    "cover_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiaanIOk7KN4MGix3l6uWDRj3yQmUI9GdaXBX4T0mlvIxR8-_4lQmxCJK0&s=10",
+    "tags": [
+      "firewalls"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/understanding-firewalls-the-first-line-of-defense",
+    "source_url": "https://www.snorty.space/posts/understanding-firewalls-the-first-line-of-defense",
+    "body_markdown": "# Understanding Firewalls: The First Line of Defense\n\nFirewalls are one of the oldest and most effective security technologies. They act as a barrier between trusted and untrusted networks, controlling which traffic is allowed to pass.\n\n## How Firewalls Work\n\nA firewall examines incoming and outgoing traffic based on predefined security rules.\n\nIt can:\n\n- Allow legitimate traffic.\n- Block unauthorized connections.\n- Log suspicious activity.\n- Prevent many common attacks.\n\n## Types of Firewalls\n\n### Packet Filtering Firewall\n\nFilters packets based on IP addresses and ports.\n\n### Stateful Firewall\n\nTracks active network connections.\n\n### Next-Generation Firewall (NGFW)\n\nProvides advanced inspection, intrusion prevention, and application awareness.\n\n## Why Firewalls Are Important\n\nWithout a firewall, systems are exposed to unnecessary risks.\n\nFirewalls help protect against:\n\n- Port scanning.\n- Unauthorized access.\n- Malware communication.\n- Network attacks.\n\n## Conclusion\n\nA properly configured firewall remains one of the most effective security controls in modern networks."
+  },
+  {
+    "date": "2026-12-10",
+    "title": "How to Scan a Network Using Nmap",
+    "excerpt": "Discover how Nmap can identify hosts, services, and open ports to improve network visibility and security.",
+    "cover_image": "https://www.vaadata.com/wp-content/uploads/2026/03/Nmap.png",
+    "tags": [
+      "nmap",
+      "networking"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/how-to-scan-a-network-using-nmap",
+    "source_url": "https://www.snorty.space/posts/how-to-scan-a-network-using-nmap",
+    "body_markdown": "# How to Scan a Network Using Nmap\n\nNmap (Network Mapper) is one of the most powerful open-source tools for discovering devices and services on a network. Security professionals use it daily for auditing, troubleshooting, and penetration testing.\n\n## Installing Nmap\n\nLinux:\n\n```bash\nsudo apt install nmap\n```\n\nWindows and macOS installers are available from the official website.\n\n## Scan a Single Host\n\n```bash\nnmap 192.168.1.100\n```\n\n## Scan an Entire Network\n\n```bash\nnmap 192.168.1.0/24\n```\n\n## Detect Operating System\n\n```bash\nsudo nmap -O 192.168.1.100\n```\n\n## Service Detection\n\n```bash\nnmap -sV 192.168.1.100\n```\n\n## Why Nmap Matters\n\nNmap helps administrators:\n\n- Discover unknown devices.\n- Identify open ports.\n- Detect unnecessary services.\n- Improve network security.\n\n## Conclusion\n\nNmap is one of the most versatile networking tools available and should be part of every cybersecurity toolkit."
+  },
+  {
+    "date": "2026-12-11",
+    "title": "What Is Wireshark and How to Analyze Network Traffic",
+    "excerpt": "Learn how Wireshark captures and analyzes network traffic to help troubleshoot issues and detect security threats.",
+    "cover_image": "https://miro.medium.com/1*RrNY_2YfqLXVel-07OD3kA.png",
+    "tags": [
+      "wireshark",
+      "networking"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/what-is-wireshark-and-how-to-analyze-network-traffic",
+    "source_url": "https://www.snorty.space/posts/what-is-wireshark-and-how-to-analyze-network-traffic",
+    "body_markdown": "# What Is Wireshark and How to Analyze Network Traffic\n\nWireshark is the world's most popular network protocol analyzer. It allows you to capture, inspect, and analyze network traffic in real time, making it an essential tool for network administrators, security analysts, and penetration testers.\n\n## Why Use Wireshark?\n\nEvery device connected to a network exchanges thousands of packets every second. Wireshark lets you inspect these packets to understand exactly how devices communicate.\n\nIt is commonly used to:\n\n- Troubleshoot network issues.\n- Analyze application traffic.\n- Detect suspicious activity.\n- Learn how networking protocols work.\n\n## Key Features\n\nWireshark supports hundreds of protocols and offers advanced filtering capabilities that make packet analysis much easier.\n\nSome of its main features include:\n\n- Live packet capture.\n- Deep protocol inspection.\n- Packet filtering.\n- Color-coded traffic analysis.\n- Export captured packets.\n\n## Basic Workflow\n\n1. Select a network interface.\n2. Start capturing traffic.\n3. Generate some network activity.\n4. Stop the capture.\n5. Apply filters such as:\n\n```text\nhttp\ndns\ntcp\nudp\nip.addr == 192.168.1.100\n```\n\n## Common Use Cases\n\n- Investigating malware communications.\n- Finding network bottlenecks.\n- Debugging applications.\n- Learning TCP/IP.\n- Monitoring DNS requests.\n\n## Conclusion\n\nWireshark is one of the first tools every cybersecurity professional should master. Understanding packet analysis provides valuable insights into how networks operate and how attacks can be detected."
+  },
+  {
+    "date": "2026-12-12",
+    "title": "Common Cybersecurity Threats and How to Prevent Them",
+    "excerpt": "Learn about the most common cybersecurity threats and the best practices to protect your systems and data.",
+    "cover_image": "https://images.unsplash.com/photo-1563986768609-322da13575f3",
+    "tags": [
+      "cybersecurity"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/common-cybersecurity-threats-and-how-to-prevent-them",
+    "source_url": "https://www.snorty.space/posts/common-cybersecurity-threats-and-how-to-prevent-them",
+    "body_markdown": "# Common Cybersecurity Threats and How to Prevent Them\n\nCyber threats continue to evolve, targeting businesses and individuals alike. Understanding the most common attack methods is the first step toward building effective defenses.\n\n## Phishing\n\nFraudulent emails or websites designed to steal credentials.\n\n**Protection:**\n\n- Verify links before clicking.\n- Enable multi-factor authentication.\n- Train users to recognize scams.\n\n## Malware\n\nMalicious software that damages or steals information.\n\n**Protection:**\n\n- Keep software updated.\n- Install reputable antivirus software.\n- Avoid downloading files from unknown sources.\n\n## Ransomware\n\nEncrypts files and demands payment for their recovery.\n\n**Protection:**\n\n- Maintain offline backups.\n- Apply security patches promptly.\n- Limit administrative privileges.\n\n## DDoS Attacks\n\nDistributed Denial-of-Service attacks overwhelm servers with excessive traffic.\n\n**Protection:**\n\n- Use DDoS mitigation services.\n- Configure firewalls and rate limiting.\n- Monitor unusual traffic spikes.\n\n## Weak Passwords\n\nPoor password practices remain one of the easiest attack vectors.\n\n**Protection:**\n\n- Use strong, unique passwords.\n- Enable password managers.\n- Require multi-factor authentication.\n\n## Conclusion\n\nCybersecurity is an ongoing process rather than a one-time task. Combining secure practices, updated software, and continuous monitoring significantly reduces the risk of successful attacks."
+  },
+  {
+    "date": "2026-12-13",
+    "title": "How Network Packet Analysis Works",
+    "excerpt": "Understand how packet analysis helps security professionals detect attacks and troubleshoot network issues.",
+    "cover_image": "https://ars.els-cdn.com/content/image/1-s2.0-S1742287619302002-gr3.jpg",
+    "tags": [
+      "networking"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/how-network-packet-analysis-works",
+    "source_url": "https://www.snorty.space/posts/how-network-packet-analysis-works",
+    "body_markdown": "# How Network Packet Analysis Works\n\nEvery action performed on the Internet generates network packets. Packet analysis allows administrators to inspect these packets and understand exactly what is happening inside a network.\n\n## What Is a Packet?\n\nA packet is a small unit of data transmitted between devices.\n\nEach packet contains:\n\n- Source IP\n- Destination IP\n- Protocol\n- Payload\n\n## Why Analyze Packets?\n\nPacket inspection helps detect:\n\n- Malware communications\n- Unauthorized access\n- Network bottlenecks\n- Data exfiltration\n- Suspicious behavior\n\n## Common Tools\n\nPopular packet analysis tools include:\n\n- Wireshark\n- Tcpdump\n- Snort\n- Zeek\n\n## Conclusion\n\nUnderstanding packet analysis is one of the most valuable skills in cybersecurity and network administration."
+  },
+  {
+    "date": "2026-12-14",
+    "title": "Top 10 Cybersecurity Tools Every Beginner Should Know",
+    "excerpt": "Discover ten essential cybersecurity tools used by penetration testers, network administrators, and security professionals.",
+    "cover_image": "https://ph-files.imgix.net/7a151821-57e8-448e-824a-b4a2a57d250e.png?auto=format&fit=crop",
+    "tags": [
+      "cybersecurity",
+      "securitytools"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/top-10-cybersecurity-tools-every-beginner-should-know",
+    "source_url": "https://www.snorty.space/posts/top-10-cybersecurity-tools-every-beginner-should-know",
+    "body_markdown": "# Top 10 Cybersecurity Tools Every Beginner Should Know\n\nCybersecurity professionals rely on a wide variety of tools to secure networks, identify vulnerabilities, perform penetration tests, and investigate security incidents. Whether you're just starting your cybersecurity journey or building a home lab, learning these tools will give you a solid foundation.\n\n---\n\n## 1. Snort\n\nSnort is one of the most popular open-source Intrusion Detection and Prevention Systems (IDS/IPS). It monitors network traffic in real time and detects malicious activity using customizable rules and signatures. It's widely used by security teams to identify attacks before they cause damage.\n\n**Best for:**\n\n- Intrusion Detection\n- Network Monitoring\n- Threat Analysis\n\n**Official Website:** https://www.snort.org/\n\n---\n\n## 2. Wireshark\n\nWireshark is the world's leading network protocol analyzer. It captures and inspects packets traveling across your network, making it an essential tool for troubleshooting, network analysis, and security investigations.\n\n**Best for:**\n\n- Packet Analysis\n- Network Troubleshooting\n- Protocol Inspection\n\n**Official Website:** https://www.wireshark.org/\n\n---\n\n## 3. Nmap\n\nNmap (Network Mapper) is a powerful network scanner used to discover hosts, open ports, running services, and operating systems. It is one of the first tools every penetration tester learns.\n\n**Best for:**\n\n- Network Discovery\n- Port Scanning\n- Security Auditing\n\n**Official Website:** https://nmap.org/\n\n---\n\n## 4. Metasploit Framework\n\nMetasploit is one of the most widely used penetration testing frameworks. It contains hundreds of exploits, payloads, and auxiliary modules that allow security professionals to test systems for vulnerabilities in a controlled environment.\n\n**Best for:**\n\n- Penetration Testing\n- Exploit Development\n- Security Validation\n\n**Official Website:** https://www.metasploit.com/\n\n---\n\n## 5. Burp Suite Community Edition\n\nBurp Suite is a comprehensive platform for testing web application security. It intercepts HTTP requests, scans for vulnerabilities, and helps identify common web security flaws such as SQL Injection and Cross-Site Scripting (XSS).\n\n**Best for:**\n\n- Web Application Testing\n- API Security\n- Vulnerability Assessment\n\n**Official Website:** https://portswigger.net/burp\n\n---\n\n## 6. Hydra\n\nHydra is a fast and flexible password auditing tool capable of testing login credentials against dozens of protocols. It is commonly used during authorized penetration tests to evaluate password strength.\n\n**Best for:**\n\n- Password Auditing\n- Authentication Testing\n- Brute Force Simulation\n\n**Official Website:** https://github.com/vanhauser-thc/thc-hydra\n\n---\n\n## 7. John the Ripper\n\nJohn the Ripper is an advanced password recovery tool that supports hundreds of hashing algorithms. Security professionals use it to audit password policies and identify weak passwords.\n\n**Best for:**\n\n- Password Recovery\n- Password Auditing\n- Hash Cracking\n\n**Official Website:** https://www.openwall.com/john/\n\n---\n\n## 8. Nikto\n\nNikto is an open-source web server scanner that searches for dangerous files, outdated software, insecure configurations, and known vulnerabilities.\n\n**Best for:**\n\n- Web Server Auditing\n- Vulnerability Scanning\n- Configuration Analysis\n\n**Official Website:** https://github.com/sullo/nikto\n\n---\n\n## 9. Aircrack-ng\n\nAircrack-ng is a complete suite for auditing Wi-Fi network security. It includes tools for monitoring wireless traffic, capturing packets, testing encryption, and evaluating wireless network security.\n\n**Best for:**\n\n- Wireless Security Testing\n- Wi-Fi Auditing\n- Packet Capture\n\n**Official Website:** https://www.aircrack-ng.org/\n\n---\n\n## 10. Greenbone OpenVAS\n\nOpenVAS, now maintained as part of the Greenbone Community Edition, is a professional vulnerability scanner capable of detecting thousands of known security weaknesses across networks and servers.\n\n**Best for:**\n\n- Vulnerability Assessment\n- Network Security Audits\n- Compliance Scanning\n\n**Official Website:** https://greenbone.github.io/\n\n---\n\n## 11. Netfox\n\nNetfox is a native macOS application that monitors your home network. Every connected device, every Wi-Fi neighbour, every risk worth knowing about — at a glance. No cloud account, no telemetry, no router-vendor lock-in.\n\n**Official Website:** https://netfox.app/\n\n---\n\n# Final Thoughts\n\nThese ten tools represent the foundation of modern cybersecurity. They are used daily by security analysts, penetration testers, incident responders, and network administrators around the world.\n\nIf you're just getting started, a great learning path would be:\n\n1. Wireshark\n2. Nmap\n3. Snort\n4. Burp Suite\n5. Nikto\n6. OpenVAS\n7. Metasploit\n8. Hydra\n9. John the Ripper\n10. Aircrack-ng\n11. Netfox (only if you have a MacOS system)\n\nRemember that these tools should only be used in environments you own or have explicit permission to test. Practicing in a home lab or virtual environment is the safest and most ethical way to build your cybersecurity skills.\n\n"
+  },
+  {
+    "date": "2026-12-15",
+    "title": "How to Install Snort on Ubuntu 24.04",
+    "excerpt": "Learn how to install and configure Snort on Ubuntu 24.04 to start monitoring your network for suspicious activity.",
+    "cover_image": "https://i.ytimg.com/vi/XWpRxRQiLSk/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCYxn9Lc5yxLyutMBsNyuAgcKLUIA",
+    "tags": [
+      "snort"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/how-to-install-snort-on-ubuntu-24-04",
+    "source_url": "https://www.snorty.space/posts/how-to-install-snort-on-ubuntu-24-04",
+    "body_markdown": "# How to Install Snort on Ubuntu 24.04\n\nSnort is one of the most widely used open-source intrusion detection systems available today. Installing it on Ubuntu 24.04 takes only a few minutes and provides a powerful platform for monitoring network traffic.\n\n## Step 1 — Update Your System\n\nBefore installing any package, update your repositories.\n\n```bash\nsudo apt update\nsudo apt upgrade -y\n```\n\n## Step 2 — Install Snort\n\nInstall Snort using APT.\n\n```bash\nsudo apt install snort -y\n```\n\nDuring installation, you'll be asked to enter your local network address.\n\n## Step 3 — Verify the Installation\n\nCheck that Snort is correctly installed.\n\n```bash\nsnort -V\n```\n\nThe installed version should be displayed.\n\n## Step 4 — Test Snort\n\nRun Snort in packet sniffing mode.\n\n```bash\nsudo snort -v\n```\n\nYou'll immediately see packets flowing through your network interface.\n\n## Conclusion\n\nAfter installation, you can customize Snort's rules, enable logging, and integrate it with monitoring dashboards to improve your network security."
+  },
+  {
+    "date": "2026-12-16",
+    "title": "IDS vs IPS: What's the Difference?",
+    "excerpt": "Understand the key differences between Intrusion Detection Systems (IDS) and Intrusion Prevention Systems (IPS) and learn when to use each one.",
+    "cover_image": "https://cdn.educba.com/academy/wp-content/uploads/2020/03/IPS-vs-IDS.jpg",
+    "tags": [
+      "ids",
+      "ips"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/ids-vs-ips",
+    "source_url": "https://www.snorty.space/posts/ids-vs-ips",
+    "body_markdown": "# IDS vs IPS: What's the Difference?\n\nWhen building a secure network, two technologies often come up: **Intrusion Detection Systems (IDS)** and **Intrusion Prevention Systems (IPS)**. Although they serve similar purposes, they operate in very different ways.\n\nUnderstanding the distinction is essential for designing an effective cybersecurity strategy.\n\n## What Is an IDS?\n\nAn Intrusion Detection System continuously monitors network traffic and looks for suspicious activities or known attack signatures.\n\nWhen an attack is detected, the IDS generates an alert, allowing security administrators to investigate the incident.\n\nAn IDS does **not** block malicious traffic automatically.\n\n### Benefits of IDS\n\n- Continuous network monitoring.\n- Detailed security logs.\n- Low impact on network performance.\n- Easy integration with existing infrastructures.\n\n## What Is an IPS?\n\nAn Intrusion Prevention System performs the same traffic analysis as an IDS but goes one step further.\n\nInstead of simply generating alerts, an IPS can automatically block malicious packets before they reach the target system.\n\nThis proactive approach helps reduce the risk of successful cyberattacks.\n\n### Benefits of IPS\n\n- Real-time threat prevention.\n- Automatic attack blocking.\n- Reduced response time.\n- Improved network protection.\n\n## IDS vs IPS Comparison\n\n| IDS | IPS |\n|-----|-----|\n| Detects attacks | Detects and blocks attacks |\n| Generates alerts | Takes automatic action |\n| Passive monitoring | Active protection |\n| Minimal impact on traffic | May introduce slight latency |\n\n## Which One Should You Choose?\n\nIf your goal is to monitor network activity and collect security information, an IDS is an excellent choice.\n\nIf you need automatic protection against known threats, an IPS provides an additional layer of defense.\n\nMany organizations deploy both technologies together to achieve comprehensive network security.\n\n## Conclusion\n\nIDS and IPS are complementary technologies rather than competitors. By understanding how each solution works, you can build a stronger, more resilient security infrastructure capable of detecting and preventing modern cyber threats."
+  },
+  {
+    "date": "2026-12-16",
+    "title": "What Is Snort and Why It Is One of the Best Open Source IDS Solutions",
+    "excerpt": "Learn what Snort is, how it works, and why it remains one of the world's most trusted open-source intrusion detection systems.",
+    "cover_image": "https://miro.medium.com/0*x8lT6cZ0QLAMkCW_",
+    "tags": [
+      "snort",
+      "ids"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/cos-e-snort",
+    "source_url": "https://www.snorty.space/posts/cos-e-snort",
+    "body_markdown": "# What Is Snort and Why It Is One of the Best Open Source IDS Solutions\n\nNetwork security has become more important than ever. Every day, organizations face thousands of cyber threats, making intrusion detection an essential part of any security strategy. One of the most popular tools in this field is **Snort**, an open-source Intrusion Detection System (IDS) trusted by professionals worldwide.\n\n## What Is Snort?\n\nSnort is a network intrusion detection and prevention system developed to monitor network traffic in real time. It analyzes packets as they travel across the network and compares them against a database of predefined rules and signatures.\n\nWhenever suspicious activity matches one of these rules, Snort generates an alert, allowing administrators to investigate potential attacks before they become serious security incidents.\n\n## How Does Snort Work?\n\nSnort captures incoming and outgoing network packets using packet sniffing technology. Each packet is inspected and compared with thousands of security rules that identify known attack patterns.\n\nDepending on its configuration, Snort can:\n\n- Detect network intrusions.\n- Log suspicious activity.\n- Generate real-time alerts.\n- Block malicious traffic when configured as an IPS.\n\n## Key Features\n\nSome of Snort's most important capabilities include:\n\n- Open-source and free to use.\n- Real-time traffic monitoring.\n- Signature-based attack detection.\n- Protocol analysis.\n- Packet logging.\n- Highly customizable rule engine.\n- Large community and frequent updates.\n\n## Common Use Cases\n\nSnort is widely used in:\n\n- Enterprise networks.\n- Security Operations Centers (SOC).\n- Cybersecurity laboratories.\n- Educational environments.\n- Home labs for ethical hacking practice.\n\n## Advantages\n\nUsing Snort provides several benefits:\n\n- Easy deployment.\n- Excellent performance.\n- Strong community support.\n- Continuous rule updates.\n- Flexible configuration options.\n\n## Conclusion\n\nEven after many years, Snort remains one of the most reliable intrusion detection systems available. Whether you're learning cybersecurity or protecting a production environment, it offers powerful monitoring capabilities without requiring expensive commercial solutions."
+  },
+  {
+    "date": "2026-12-16",
+    "title": "Kali Linux on VirtualBox",
+    "excerpt": "Running Kali Linux inside VirtualBox gives you a full, isolated environment — safe, disposable, and flexible.",
+    "cover_image": "https://www.kali.org/wallpapers/images/2024/kali-ferrofluid.jpg",
+    "tags": [
+      "linux",
+      "kali"
+    ],
+    "canonical_url": "https://www.snorty.space/posts/kali-virtualbox",
+    "source_url": "https://www.snorty.space/posts/kali-virtualbox",
+    "body_markdown": "Running Kali Linux inside VirtualBox gives you a full, isolated environment — safe, disposable, and flexible. Choose ISO for full control or OVA for quick setup.\n\n##  Option 1 — Install from ISO\n\nInstallare Kali su VirtualBox da zero — massima personalizzazione:\n\n1. Create a new VM: Type Linux → Debian (64‑bit)\n2. RAM: 2048MB min (4096MB recommended)\n3. Disk: VDI, dynamically allocated, 20‑30 GB\n4. Attach Kali ISO and start → choose **Graphical Install**\n5. Configure language, keyboard, user/password\n6. Partition: guided → install GRUB → reboot\n7. Update system: `sudo apt update && sudo apt upgrade -y`\n\n![Kali Linux logo](https://images2.alphacoders.com/480/thumb-1920-480538.png)\n\n## Option 2 — Use Prebuilt OVA\n\nPer partire subito: importa la VM pre‑configurata su VirtualBox con pochi click.\n\n- Download OVA dal sito ufficiale di Kali.\n- VirtualBox → File → Import Appliance → seleziona il file `.ova`\n- Start VM, login con default credentials e un update rapido.\n\n## Recommendations\n\n- Video Memory: 128 MB+, abilita 3D se necessario\n- Processors: 2+ cores (se l'host lo consente)\n- Network: NAT per internet facile, Bridged per visibilità LAN\n- Guest Additions (opzionale): migliorano clipboard condivisa e drag-drop\n\n**With this setup you'll have a clean, isolated lab: ISO = control, OVA = speed. Test ethically, experiment freely.**\n"
+  }
+]
