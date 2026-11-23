@@ -51,15 +51,17 @@ for (const entry of due) {
     continue;
   }
 
+  const calendarIndex = calendar.findIndex((item) => item.title === entry.title) + 1;
+  const coverImage = `https://www.snorty.space/devto-covers/${String(calendarIndex).padStart(2, "0")}.jpg`;
   const footer = `\n\n---\n\n_Originally published by Lorenzo Fazioli at [Snorty](${entry.canonical_url})._\n`;
-  const bodyMarkdown = `---\ntitle: ${JSON.stringify(entry.title)}\npublished: true\ndescription: ${JSON.stringify(entry.excerpt)}\ntags: ${entry.tags.join(", ")}\ncover_image: ${JSON.stringify(entry.cover_image ?? "")}\ncanonical_url: ${JSON.stringify(entry.canonical_url)}\n---\n${entry.body_markdown}${footer}`;
+  const bodyMarkdown = `---\ntitle: ${JSON.stringify(entry.title)}\npublished: true\ndescription: ${JSON.stringify(entry.title)}\ntags: ${entry.tags.join(", ")}\ncover_image: ${JSON.stringify(coverImage)}\ncanonical_url: ${JSON.stringify(entry.canonical_url)}\n---\n${entry.body_markdown}${footer}`;
 
   const articlePayload = {
     title: entry.title,
     published: true,
-    description: entry.excerpt,
+    description: entry.title,
     tags: entry.tags,
-    cover_image: entry.cover_image || undefined,
+    cover_image: coverImage,
     canonical_url: entry.canonical_url,
     body_markdown: bodyMarkdown,
   };
