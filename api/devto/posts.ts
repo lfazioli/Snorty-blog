@@ -10,6 +10,14 @@ interface DevToArticle {
   slug: string;
 }
 
+interface ScheduledArticle {
+  date: string;
+  title: string;
+  excerpt: string;
+  cover_image?: string;
+  canonical_url: string;
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -32,9 +40,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const articles = (await response.json()) as DevToArticle[];
-    res.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
-    return res.status(200).json({
-      posts: articles.map(({ id, title, description, cover_image, published_at, url, slug }) => ({
+
+    let scheduledArticles: ScheduledArticle[] = [];
+    try {
+      const calendarResponse = await fetch(
+        "https://www.snorty.space/devto-calendar.json",
+        { cache: "no-store", headers: { Accept: "application/json" } }
+      );
+      if (calendarResponse.ok) {
+        scheduledArticles = (await calendarResponse.json()) as ScheduledArticle[];
+      }
+    } catch (error) {
+      console.warn("DEVTO_CALENDAR_FETCH_ERROR:", error);
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    const devTitles = new Set(articles.map((article) => article.title));
+    const scheduledFallback = scheduledArticles
+      .map((entry, index) => ({
+        entry,
+        index,
+      }))
+      .filter(({ entry }) => entry.date <= today)
+      .filter(({ entry }) => !devTitles.has(entry.title))
+      .map(({ entry, index }) => ({
+        id: -(index + 1),
+        title: entry.title,
+        excerpt: entry.excerpt,
+        image: `https://www.snorty.space/devto-covers/${String(
+          scheduledArticles.findIndex((item) => item.title === entry.title) + 1
+        ).padStart(2, "0")}.jpg`,
+        published_at: `${entry.date}T09:00:00Z`,
+        url: entry.canonical_url,
+        slug: entry.canonical_url.split("/").pop() ?? entry.title.toLowerCase().replace(/\s+/g, "-"),
+      }));
+
+    const merged = [
+      ...articles.map(({ id, title, description, cover_image, published_at, url, slug }) => ({
         id,
         title,
         excerpt: description,
@@ -43,6 +85,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         url,
         slug,
       })),
+      ...scheduledFallback,
+    ].sort((a, b) => b.published_at.localeCompare(a.published_at));
+
+    res.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
+    return res.status(200).json({
+      posts: merged,
     });
   } catch (error) {
     console.error("DEVTO_POSTS_ERROR:", error);
