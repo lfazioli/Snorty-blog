@@ -81,11 +81,12 @@ test('delete removes the requested tool', async () => {
   assert.equal(res.code, 200); assert.match(calls[0][0], /DELETE FROM tools/); assert.deepEqual(calls[0][1], ['7']);
 });
 test('tool migrations add the curated tools once without duplicating existing entries', async () => {
-  const applied = new Set(), inserted = [];
+  const applied = new Set(), inserted = [], imageUpdates = [];
   const client = { release() {}, async query(sql, params = []) {
     const migrationName = params[0];
     if (sql.startsWith('SELECT name')) return { rowCount: applied.has(migrationName) ? 1 : 0 };
     if (sql.startsWith('INSERT INTO tools ')) inserted.push(params[0]);
+    if (sql.startsWith('UPDATE tools SET image')) imageUpdates.push(params);
     if (sql.startsWith('INSERT INTO tool_migrations')) applied.add(migrationName);
     return { rowCount: 0 };
   } };
@@ -94,5 +95,6 @@ test('tool migrations add the curated tools once without duplicating existing en
   await load('server/tools.ts', dependencies).ensureTools();
   await load('server/tools.ts', dependencies).ensureTools();
   assert.equal(inserted.length, 1 + seeds.additionalTools.length);
-  assert.equal(applied.size, 2);
+  assert.deepEqual(imageUpdates, [['/tools/burp-suite.jpg', 'https://portswigger.net/burp/communitydownload']]);
+  assert.equal(applied.size, 3);
 });
