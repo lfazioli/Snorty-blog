@@ -67,3 +67,42 @@ export const initialTools = [
 {"name": "VirusTotal", "category": "URL analysis", "description": "Look up reports on files, URLs, domains, and IP addresses from multiple security sources.", "howTo": "Search for a file hash or URL to read existing reports. Review detections and relationships together before drawing conclusions.", "href": "https://www.virustotal.com/", "image": "", "badge": "Web"},
 {"name": "Shodan", "category": "OSINT", "description": "Search public information about Internet-connected devices and exposed services.", "howTo": "Search for your own public IP or organisation, then review the indexed services and banners.", "href": "https://www.shodan.io/", "image": "", "badge": "Web"}
 ];
+
+export const additionalTools = [
+  {
+    name: "OWASP ZAP",
+    category: "Web app security",
+    description: "An open-source web application security testing tool that helps identify common issues during authorized testing.",
+    howTo: "Use the passive scan with your own application or a training lab first. Only run active scans against systems you own or have explicit permission to test.",
+    href: "https://www.zaproxy.org/",
+    image: "https://www.zaproxy.org/img/zap-banner.png",
+    badge: "Open source",
+  },
+  {
+    name: "Burp Suite Community Edition",
+    category: "Web app security",
+    description: "A toolkit for inspecting and understanding web requests and responses while testing applications.",
+    howTo: "Configure the browser proxy for a local training lab or an application you are authorized to assess, then inspect requests in Proxy and Repeater.",
+    href: "https://portswigger.net/burp/communitydownload",
+    image: "https://portswigger.net/content/images/logos/portswigger-twittercardlogo.png",
+    badge: "Community edition",
+  },
+  {
+    name: "Trivy",
+    category: "Vulnerability scanning",
+    description: "An open-source scanner for vulnerabilities and misconfigurations in container images, filesystems, repositories, and infrastructure as code.",
+    howTo: "Run it against a container image or repository you own, then review the findings and update the affected packages or configuration.",
+    href: "https://trivy.dev/",
+    image: "https://trivy.dev/assets/images/trivy-horizontal-featured-image.png",
+    badge: "Open source",
+  },
+  {
+    name: "Semgrep",
+    category: "Code security",
+    description: "A code analysis platform that finds security and quality issues in source code using customizable rules.",
+    howTo: "Run a scan on your own repository with the recommended rules, then review each finding in context before making changes.",
+    href: "https://semgrep.dev/",
+    image: "https://semgrep.dev/assets/content/global/blog-thumbnail-default.png",
+    badge: "Code analysis",
+  },
+];
