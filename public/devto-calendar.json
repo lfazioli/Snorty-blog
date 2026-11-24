@@ -16,7 +16,7 @@
     "date": "2026-11-23",
     "title": "How to Use tcpdump for Network Troubleshooting",
     "excerpt": "Learn how tcpdump captures network traffic directly from the Linux terminal using practical command examples.",
-    "cover_image": "https://brendg.co.uk/wp-content/uploads/2026/01/image.png?w=616",
+    "cover_image": "https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/l4rftevbm29sh7j6e5mn.jpg",
     "tags": [
       "tcpdump",
       "networking"
@@ -29,7 +29,7 @@
     "date": "2026-11-24",
     "title": "OWASP Top 10 Explained: The Biggest Web Security Risks",
     "excerpt": "Learn about the OWASP Top 10 web application security risks and how developers can protect against them.",
-    "cover_image": "https://www.rapid7.com/_next/image/?url=https%3A%2F%2Fwww.rapid7.com%2Fcdn%2Fimages%2Fblt867f04bdea0dfa71%2F683de193590d7f6bbdde1c18%2Fowasp.png&w=3840&q=75",
+    "cover_image": "https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/5qlmftxnscevyvqdiugy.jpg",
     "tags": [
       "owasp"
     ],

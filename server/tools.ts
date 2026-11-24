@@ -1,6 +1,6 @@
 import { parsePublishAt } from "./publication.js";
 import { pool } from "./db.js";
-import { initialTools } from "./tool-seed.js";
+import { additionalTools, initialTools } from "./tool-seed.js";
 
 let ready: Promise<void> | null = null;
 export function ensureTools(): Promise<void> {
@@ -20,13 +20,25 @@ async function migrate() {
     )`);
     await client.query("ALTER TABLE tools ADD COLUMN IF NOT EXISTS publish_at TIMESTAMPTZ");
     await client.query("CREATE TABLE IF NOT EXISTS tool_migrations (name TEXT PRIMARY KEY)");
-    const applied = await client.query("SELECT name FROM tool_migrations WHERE name = 'initial-tools-v1'");
-    if (!applied.rowCount) {
+    const initialMigration = await client.query("SELECT name FROM tool_migrations WHERE name = $1", ["initial-tools-v1"]);
+    if (!initialMigration.rowCount) {
       for (const tool of initialTools) {
         await client.query(`INSERT INTO tools (name, category, description, "howTo", href, image, badge) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
           [tool.name, tool.category, tool.description, tool.howTo, tool.href, tool.image, tool.badge]);
       }
-      await client.query("INSERT INTO tool_migrations (name) VALUES ('initial-tools-v1')");
+      await client.query("INSERT INTO tool_migrations (name) VALUES ($1)", ["initial-tools-v1"]);
+    }
+    const additionalMigration = await client.query("SELECT name FROM tool_migrations WHERE name = $1", ["curated-tools-v2"]);
+    if (!additionalMigration.rowCount) {
+      for (const tool of additionalTools) {
+        await client.query(
+          `INSERT INTO tools (name, category, description, "howTo", href, image, badge)
+           SELECT $1,$2,$3,$4,$5,$6,$7
+           WHERE NOT EXISTS (SELECT 1 FROM tools WHERE href = $5)`,
+          [tool.name, tool.category, tool.description, tool.howTo, tool.href, tool.image, tool.badge],
+        );
+      }
+      await client.query("INSERT INTO tool_migrations (name) VALUES ($1)", ["curated-tools-v2"]);
     }
     await client.query("COMMIT");
   } catch (error) {

@@ -80,16 +80,19 @@ test('delete removes the requested tool', async () => {
   await handler({ method: 'DELETE', query: { id: '7' } }, res);
   assert.equal(res.code, 200); assert.match(calls[0][0], /DELETE FROM tools/); assert.deepEqual(calls[0][1], ['7']);
 });
-test('migration seeds once and does not recreate deleted tools on a new instance', async () => {
-  let applied = false, inserts = 0;
-  const client = { release() {}, async query(sql) {
-    if (sql.startsWith('SELECT name')) return { rowCount: applied ? 1 : 0 };
-    if (sql.startsWith('INSERT INTO tools ')) inserts++;
-    if (sql.startsWith('INSERT INTO tool_migrations')) applied = true;
+test('tool migrations add the curated tools once without duplicating existing entries', async () => {
+  const applied = new Set(), inserted = [];
+  const client = { release() {}, async query(sql, params = []) {
+    const migrationName = params[0];
+    if (sql.startsWith('SELECT name')) return { rowCount: applied.has(migrationName) ? 1 : 0 };
+    if (sql.startsWith('INSERT INTO tools ')) inserted.push(params[0]);
+    if (sql.startsWith('INSERT INTO tool_migrations')) applied.add(migrationName);
     return { rowCount: 0 };
   } };
-  const dependencies = { './db.js': { pool: { connect: async () => client } }, './tool-seed.js': { initialTools: [valid] } };
+  const seeds = load('server/tool-seed.ts', {});
+  const dependencies = { './db.js': { pool: { connect: async () => client } }, './tool-seed.js': { initialTools: [valid], additionalTools: seeds.additionalTools } };
   await load('server/tools.ts', dependencies).ensureTools();
   await load('server/tools.ts', dependencies).ensureTools();
-  assert.equal(inserts, 1);
+  assert.equal(inserted.length, 1 + seeds.additionalTools.length);
+  assert.equal(applied.size, 2);
 });
