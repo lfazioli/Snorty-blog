@@ -3,7 +3,7 @@ name: Publish scheduled DEV articles
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 9 * * *"
+    - cron: "5 9-22 * * *"
 
 permissions:
   contents: read
