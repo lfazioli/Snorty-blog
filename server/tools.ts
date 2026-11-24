@@ -40,6 +40,14 @@ async function migrate() {
       }
       await client.query("INSERT INTO tool_migrations (name) VALUES ($1)", ["curated-tools-v2"]);
     }
+    const burpImageMigration = await client.query("SELECT name FROM tool_migrations WHERE name = $1", ["burp-suite-local-image-v1"]);
+    if (!burpImageMigration.rowCount) {
+      await client.query("UPDATE tools SET image = $1 WHERE href = $2", [
+        "/tools/burp-suite.jpg",
+        "https://portswigger.net/burp/communitydownload",
+      ]);
+      await client.query("INSERT INTO tool_migrations (name) VALUES ($1)", ["burp-suite-local-image-v1"]);
+    }
     await client.query("COMMIT");
   } catch (error) {
     await client.query("ROLLBACK");

@@ -84,7 +84,7 @@ export const additionalTools = [
     description: "A toolkit for inspecting and understanding web requests and responses while testing applications.",
     howTo: "Configure the browser proxy for a local training lab or an application you are authorized to assess, then inspect requests in Proxy and Repeater.",
     href: "https://portswigger.net/burp/communitydownload",
-    image: "https://portswigger.net/content/images/logos/portswigger-twittercardlogo.png",
+    image: "/tools/burp-suite.jpg",
     badge: "Community edition",
   },
   {
