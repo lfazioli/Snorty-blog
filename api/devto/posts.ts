@@ -10,6 +10,38 @@ interface DevToArticle {
   slug: string;
 }
 
+interface DevToRssArticle {
+  title: string;
+  url: string;
+  published_at: string;
+}
+
+function decodeXml(value: string) {
+  return value
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+}
+
+function parseRssArticles(xml: string): DevToRssArticle[] {
+  return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)]
+    .map(([, item]) => {
+      const read = (tag: string) => {
+        const match = item.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`));
+        return match ? decodeXml(match[1].trim()) : "";
+      };
+      return {
+        title: read("title"),
+        url: read("link"),
+        published_at: read("pubDate"),
+      };
+    })
+    .filter((article) => article.title && article.url && article.published_at);
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -21,10 +53,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const username = "lfazioli";
 
   try {
-    const response = await fetch(
-      `https://dev.to/api/articles?username=${encodeURIComponent(username)}&per_page=30&_=${Date.now()}`,
-      { headers: { Accept: "application/json" } }
-    );
+    const [response, rssResponse] = await Promise.all([
+      fetch(
+        `https://dev.to/api/articles?username=${encodeURIComponent(username)}&per_page=100&_=${Date.now()}`,
+        {
+          cache: "no-store",
+          headers: { Accept: "application/json", "Cache-Control": "no-cache" },
+        }
+      ),
+      fetch(`https://dev.to/feed/${encodeURIComponent(username)}?_=${Date.now()}`, {
+        cache: "no-store",
+        headers: { Accept: "application/rss+xml, application/xml", "Cache-Control": "no-cache" },
+      }),
+    ]);
 
     if (!response.ok) {
       console.error("DEVTO_API_ERROR:", response.status, response.statusText);
@@ -32,17 +73,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const articles = (await response.json()) as DevToArticle[];
-
-    const posts = articles
-      .map(({ id, title, description, cover_image, published_at, url, slug }) => ({
-        id,
-        title,
-        excerpt: description,
-        image: cover_image,
-        published_at,
+    const postsByUrl = new Map(
+      articles.map(({ id, title, description, cover_image, published_at, url, slug }) => [
         url,
-        slug,
-      }))
+        { id, title, excerpt: description, image: cover_image, published_at, url, slug },
+      ])
+    );
+
+    if (rssResponse.ok) {
+      const rssArticles = parseRssArticles(await rssResponse.text());
+      rssArticles.forEach(({ title, url, published_at }, index) => {
+        if (!postsByUrl.has(url)) {
+          postsByUrl.set(url, {
+            id: -(index + 1),
+            title,
+            excerpt: "",
+            image: null,
+            published_at: new Date(published_at).toISOString(),
+            url,
+            slug: url.split("/").pop() ?? title.toLowerCase().replace(/\s+/g, "-"),
+          });
+        }
+      });
+    } else {
+      console.warn("DEVTO_RSS_ERROR:", rssResponse.status, rssResponse.statusText);
+    }
+
+    const posts = [...postsByUrl.values()]
       .sort((a, b) => b.published_at.localeCompare(a.published_at));
 
     res.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
